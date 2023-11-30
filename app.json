@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "dino-trak",
+    "slug": "dino-trak",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-router"
+    ],
+    "android": {
+      "package": "com.kyjean.dinotrak"
+    }
+  }
+}
