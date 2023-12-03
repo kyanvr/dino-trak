@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 
 import goals from '../../constants/goals';
 import colors from '../../constants/colors';
+import { Button } from '../../components/design/Button';
 
 const Start2 = () => {
   return (
@@ -15,9 +16,7 @@ const Start2 = () => {
             </Pressable>
         ))}
         </View>
-        <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.textBtn}>Continue</Text>
-        </Pressable>
+        <Button onPress={() => {}} title="Continue" />
     </View>
   );
 };
@@ -25,7 +24,7 @@ const Start2 = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        // justifyContent: 'flex-start',
         alignItems: 'center',
     },
     innerContainer: {
@@ -52,22 +51,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         color: colors.black,
-    },
-    button: {
-        backgroundColor: colors.primary,
-        paddingBottom: 10,
-        paddingTop: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        borderRadius: 10,
-        marginTop: 150,
-        alignSelf: "stretch",
-        alignItems: "center",
-    },
-    textBtn: {
-        fontSize: 16,
-        color: colors.black,
-        fontWeight: "bold",
     },
 });
 

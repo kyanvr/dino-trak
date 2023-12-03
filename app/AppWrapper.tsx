@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
     fontFamily: 'OpenSans',
     padding: 25,
+    paddingTop: 100,
   },
 });
 

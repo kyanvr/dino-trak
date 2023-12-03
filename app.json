@@ -12,8 +12,9 @@
       "**/*"
     ],
     "plugins": [
-      "expo-router"
-    ],
+		"expo-router",
+		"expo-image-picker"
+	],
     "android": {
       "package": "com.kyjean.dinotrak",
       "adaptiveIcon": {
