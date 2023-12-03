@@ -20,6 +20,6 @@ export const AppWrapperNonSync = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.darkBlue,
+    backgroundColor: colors.background,
   },
 });
