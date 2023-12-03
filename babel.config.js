@@ -21,7 +21,7 @@ module.exports = function (api) {
 	return {
 		presets: ["babel-preset-expo"],
 		plugins: [
-			"react-native-health-connect",
+			// "react-native-health-connect",
 			"nativewind/babel",
 			"@realm/babel-plugin",
 			["@babel/plugin-proposal-decorators", { legacy: true }],
