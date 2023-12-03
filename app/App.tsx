@@ -2,12 +2,12 @@ import React from 'react'
 import {View, Text, StyleSheet} from 'react-native'
 
 import Start from './screens/Startup/Start'
-import colors from './constants/colors'
+import Start2 from './screens/Startup/Start2'
 
-const AppNonSync = () => {
+const App = () => {
   return (
     <View style={styles.container}>
-      <Start />
+      <Start2 />
     </View>
   )
 }
@@ -20,5 +20,5 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AppNonSync
+export default App
 

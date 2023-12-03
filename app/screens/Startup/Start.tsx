@@ -12,7 +12,7 @@ const Start = () => {
 			<View style={styles.innerContainer}>
 				<Text style={styles.text}>Start your journey!</Text>
 				<Pressable style={styles.button}  onPress={() => {}}>
-					<AntDesign name="arrowright" size={32} color={colors.background} />
+					<AntDesign name="arrowright" size={32} color={colors.black} />
 				</Pressable>
 			</View>
 		</View>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 		flex: 1,
         justifyContent: "center",
         alignItems: "center",
-		backgroundColor: colors.background,
+		backgroundColor: colors.black ,
 	},
     innerContainer: {
         alignItems: "center",
