@@ -35,8 +35,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     goals: {
-        backgroundColor: colors.primary,
-        paddingBottom: 10,
+        backgroundColor: colors.green,
         paddingTop: 10,
         paddingLeft: 20,
         paddingRight: 20,

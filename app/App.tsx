@@ -10,10 +10,17 @@ const App = () => {
     <View style={styles.container}>
       {/* <Start /> */}
       {/* <Start2 /> */}
-      <Start3 />
+      {/* <Start3 /> */}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  }
+})
 
 export default App
 

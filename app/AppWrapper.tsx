@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import App from './App';
 import * as SplashScreen from "expo-splash-screen";

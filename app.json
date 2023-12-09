@@ -1,26 +1,22 @@
 {
   "expo": {
-    "name": "dino-trak",
-    "slug": "dino-trak",
-    "version": "1.0.0",
-    "splash": {
-      "image": "./assets/splash.png",
-      "backgroundColor": "#161616",
-      "resizeMode": "cover"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "plugins": [
-		"expo-router",
-		"expo-image-picker"
-	],
-    "android": {
-      "package": "com.kyjean.dinotrak",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#161616"
-      }
-    }
+		"name": "dino-trak",
+		"slug": "dino-trak",
+		"scheme": "com.kyjean.dinotrak",
+		"version": "1.0.0",
+		"splash": {
+			"image": "./assets/splash.png",
+			"backgroundColor": "#161616",
+			"resizeMode": "cover"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"plugins": ["expo-router", "expo-image-picker"],
+		"android": {
+			"package": "com.kyjean.dinotrak",
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#161616"
+			}
+		}
   }
 }

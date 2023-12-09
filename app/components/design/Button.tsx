@@ -12,7 +12,7 @@ export const Button = ({ onPress, title }) => {
 
 const styles = StyleSheet.create({
         button: {
-        backgroundColor: colors.primary,
+        backgroundColor: colors.green,
         paddingBottom: 10,
         paddingTop: 10,
         paddingLeft: 20,
