@@ -5,9 +5,7 @@ import {registerRootComponent} from 'expo'
 import AppWrapper from './app/AppWrapper';
 
 const App = () => {
-  return (
-    <AppWrapper />
-  )
+  return <AppWrapper />;
 }
 
 registerRootComponent(App);
