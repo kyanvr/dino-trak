@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 
-import icon from "../../../assets/icon.png";
-import colors from "../../constants/colors";
+import icon from "@assets/icon.png";
+import colors from "@constants/colors";
 import { AntDesign } from "@expo/vector-icons"; 
 
 const Start = () => {
