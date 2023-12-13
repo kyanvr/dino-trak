@@ -1,6 +1,5 @@
 import { Tabs, router } from "expo-router";
 import React from "react";
-import { Button } from "react-native";
 import {
 	Ionicons,
 	FontAwesome,
@@ -14,7 +13,7 @@ export default function _layout() {
 		<Tabs
 			screenOptions={{
 				headerShown: false,
-				tabBarStyle: { backgroundColor: colors.black },
+				tabBarStyle: { backgroundColor: colors.black, borderTopColor: colors.darkGrey, height: 60,  },
 			}}
 		>
 			<Tabs.Screen

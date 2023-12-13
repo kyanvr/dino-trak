@@ -81,7 +81,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.kyjean.dinotrak"
+    namespace 'com.kyjean.dinotrak'
     defaultConfig {
         applicationId 'com.kyjean.dinotrak'
         minSdkVersion rootProject.ext.minSdkVersion

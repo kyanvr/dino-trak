@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Settings = () => {
+export default function Profle () {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Settings Tab</Text>
+            <Text style={styles.title}>Profile Tab</Text>
         </View>
     );
 };
@@ -20,5 +20,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default Settings;
