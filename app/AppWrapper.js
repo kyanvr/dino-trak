@@ -2,8 +2,6 @@ import React, { useCallback } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import colors from "./constants/colors";
-import { RealmProvider } from "@realm/react";
-import { schemas } from "./models";
 import { useFonts, OpenSans_400Regular } from "@expo-google-fonts/open-sans";
 import StackLayout from "./_layout";
 
@@ -27,9 +25,7 @@ export default function AppWrapper() {
 
 	return (
 		<SafeAreaView style={styles.screen} onLayout={onLayoutRootView}>
-			<RealmProvider schema={schemas}>
-				<StackLayout />
-			</RealmProvider>
+			<StackLayout />
 		</SafeAreaView>
 	);
 }

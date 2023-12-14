@@ -23,7 +23,6 @@ module.exports = function (api) {
 		plugins: [
 			"expo-router/babel",
 			"nativewind/babel",
-			"@realm/babel-plugin",
 			["@babel/plugin-proposal-decorators", { legacy: true }],
 			[
 				"module-resolver",
@@ -32,6 +31,7 @@ module.exports = function (api) {
 					alias: {
 						"@assets": "./assets",
 						"@constants": "./app/constants",
+						"@components": "./app/components",
 					},
 				},
 			],

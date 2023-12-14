@@ -1,14 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ProgressBarAndroidComponent, Pressable } from 'react-native';
-import Title from '../../components/design/Title';
-import colors from '../../constants/colors';
-import ChallengeCard from '../../components/design/ChallengeCard';
-import AbsoluteComponent from '../../components/design/AbsoluteComponent';
-import { Button } from '../../components/design/Button';
+import Title from '@components/design/Title';
+import ChallengeCard from '@components/design/ChallengeCard';
+import Button from '@components/design/Button';
+import ViewContainer from '@components/design/ViewContainer';
+import { router } from 'expo-router';
 
-const Start5 = () => {
+export default function Start5 () {
+
+    function handlePress() {
+        router.push("/screens/startup/start6");
+    }
+
     return (
-		<View style={styles.container}>
+		<ViewContainer style={styles.container}>
 			<Title text={"Complete challenges to evolve your buddy!"} />
 			<View style={styles.innerContainer}>
 				<ChallengeCard
@@ -23,28 +28,20 @@ const Start5 = () => {
 					progress={"0/2"}
 					completed={false}
 				/>
-				<ChallengeCard
-					title={"Challenge 3"}
-					description={"Description 3"}
-					progress={"0/2"}
-					completed={false}
-				/>
 			</View>
-			<Button title="Continue" onPress={() => {}} />
-		</View>
+			<Button title="Continue" onPress={() => handlePress()} />
+		</ViewContainer>
 	);
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
+        paddingTop: 100,
+        paddingHorizontal: 20,
     },
     innerContainer: {
-        flex: 1,
+        // flex: 1,
         alignItems: 'center',
         gap: 20,
     }
 });
-
-export default Start5;

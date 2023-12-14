@@ -2,7 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import colors from "../../constants/colors";
 
-export const Button = ({ onPress, title }) => {
+const Button = ({ onPress, title }) => {
 	return (
 		<Pressable onPress={onPress} style={styles.button}>
 			<Text style={styles.text}>{title}</Text>
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         borderRadius: 10,
-        marginTop: 150,
+        marginTop: 50,
         alignSelf: "stretch",
         alignItems: "center",
     },
@@ -28,3 +28,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 });
+
+export default Button;

@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 
-export default function ViewContainer ({ children }) {
+export default function ViewContainer ({ children, style }) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             {children}
         </View>
     );
