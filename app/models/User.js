@@ -1,6 +1,6 @@
 import Realm, { BSON } from "realm";
 
-export class User extends Realm.Object {
+class User extends Realm.Object {
 	// properties
 	_id;
 	username;
@@ -9,9 +9,8 @@ export class User extends Realm.Object {
 	onboarding_completed;
 
 	// required by realm
-	static primaryKey = "_id";
 	static schema = {
-		name: "User",
+		name: "User", // Add the name property to define the object schema name
 		primaryKey: "_id",
 		properties: {
 			// set the realm types
@@ -41,3 +40,5 @@ export class User extends Realm.Object {
 		});
 	}
 }
+
+export { User };

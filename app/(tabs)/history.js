@@ -13,7 +13,7 @@ const STEPS_GOAL = 10000;
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
-	const { steps, flights, distance, calories } = useHealthData(date);
+	const { steps, flights, distance, calories } = useHealthData(date, false);
 
 	const changeDate = (numDays) => {
 		const currentDate = new Date(date); // Create a copy of the current date
@@ -54,10 +54,10 @@ export default function App() {
 					<Value label="Steps" value={steps.toString()} />
 					<Value
 						label="Distance"
-						value={`${(distance / 1000).toFixed(2)} km`}
+						value={`${distance.toString()} km`}
 					/>
 					<Value label="Flights Climbed" value={flights.toString()} />
-					<Value label="Kcal" value={`${(calories).toFixed()}`} />
+					<Value label="Kcal" value={calories} />
 				</View>
 			</ScrollView>
 		</ViewContainer>

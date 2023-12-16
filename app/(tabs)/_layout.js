@@ -6,14 +6,14 @@ import {
 	Feather,
 	MaterialIcons,
 } from "@expo/vector-icons";
-import colors from "../constants/colors";
+import colors from "@constants/colors";
 
 export default function _layout() {
     return (
 		<Tabs
 			screenOptions={{
 				headerShown: false,
-				tabBarStyle: { backgroundColor: colors.black, borderTopColor: colors.darkGrey, height: 60,  },
+				tabBarStyle: { backgroundColor: colors.black, borderTopColor: colors.grey, height: 60,  },
 			}}
 		>
 			<Tabs.Screen

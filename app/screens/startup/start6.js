@@ -12,7 +12,7 @@ export default function Start6 () {
 
     function handlePress() {
         realm.write(() => {
-            user[0].alreadyInitialized = true;
+            user[0].onboarding_completed = true;
         });
 
         router.push("/home");

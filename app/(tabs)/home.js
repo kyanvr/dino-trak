@@ -13,14 +13,17 @@ export default function Home() {
 		realm.write(() => {
 			realm.deleteAll();
 		});
+
+        console.log("Deleted all data");
 	};
 
-	// if (user.length === 0) {
-
-    //     return (
-    //         <Redirect href={"/screens/startup/start"} />
-    //     )
-	// }
+	if (user.length === 0) {
+        return (
+            <Redirect href={"/screens/startup/start"} />
+        )
+	} else if (user[0].onboarding_completed === false) {
+        <Redirect href={"/screens/startup/start"} />
+    }
 
 	return (
 		<View style={styles.container}>

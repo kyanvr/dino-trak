@@ -6,7 +6,7 @@ import {
 	readRecords,
 } from "react-native-health-connect";
 
-const useHealthData = (date) => {
+const useHealthData = (date, monthly) => {
 	const [steps, setSteps] = useState(0);
 	const [flights, setFlights] = useState(0);
 	const [distance, setDistance] = useState(0);
@@ -14,7 +14,6 @@ const useHealthData = (date) => {
 
 	// Android - Health Connect
 	const readHealthData = async () => {
-		
 		// initialize the client
 		const isInitialized = await initialize();
 		if (!isInitialized) {
@@ -29,52 +28,65 @@ const useHealthData = (date) => {
 			{ accessType: "read", recordType: "TotalCaloriesBurned" },
 		]);
 
-		const timeRangeFilter = {
-			operator: "between",
-			startTime: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
-			endTime: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
-		};
+        // Note
+        // JavaScript counts months from 0 to 11:
+        // January = 0
+        // December = 11
+        const timeRangeFilter = monthly
+            ? {
+                operator: "between",
+                startTime: new Date(date.getFullYear(), date.getMonth(), 1).toISOString(),
+                endTime: new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString(),
+            }
+            : {
+                operator: "between",
+                startTime: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
+                endTime: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
+            };
 
-		// Steps
-		const steps = await readRecords("Steps", { timeRangeFilter });
-		const totalSteps = steps.reduce((sum, cur) => sum + cur.count, 0);
-		setSteps(totalSteps);
 
-		// Distance
-		const distance = await readRecords("Distance", { timeRangeFilter });
-		const totalDistance = distance.reduce(
-			(sum, cur) => sum + cur.distance.inMeters,
-			0
-		);
-		setDistance(totalDistance);
+        // Steps
+        const steps = await readRecords("Steps", { timeRangeFilter });
+        const totalSteps = steps.reduce((sum, cur) => sum + cur.count, 0);
+        setSteps(totalSteps);
 
-		// Floors climbed
-		const floorsClimbed = await readRecords("FloorsClimbed", {
-			timeRangeFilter,
-		});
-		const totalFloors = floorsClimbed.reduce(
-			(sum, cur) => sum + cur.floors,
-			0
-		);
-		setFlights(totalFloors);
+        // Distance
+        const distance = await readRecords("Distance", { timeRangeFilter });
+        const totalDistance = distance.reduce(
+            (sum, cur) => sum + cur.distance.inMeters,
+            0
+        );
+        setDistance((totalDistance / 1000).toFixed(2));
 
-		// Calories burned
-		const calories = await readRecords("TotalCaloriesBurned", {
-			timeRangeFilter,
-		});
-		const totalCalories = calories.reduce(
-			(sum, cur) => sum + cur.energy.inKilocalories,
-			0
-		);
-		setCalories(totalCalories);
-	};
+        // Floors climbed
+        const floorsClimbed = await readRecords("FloorsClimbed", {
+            timeRangeFilter,
+        });
+        const totalFloors = floorsClimbed.reduce(
+            (sum, cur) => sum + cur.floors,
+            0
+        );
+        setFlights(totalFloors);
 
-	useEffect(() => {
-		if (Platform.OS !== "android") {
+        // Calories burned
+        const calories = await readRecords("TotalCaloriesBurned", {
+            timeRangeFilter,
+        });
+        const totalCalories = calories.reduce(
+            (sum, cur) => sum + cur.energy.inKilocalories,
+            0
+        );
+        setCalories(totalCalories.toFixed(0));
+    };
+
+    useEffect(() => {
+        if (Platform.OS !== "android") {
 			return;
 		}
 		readHealthData();
 	}, [date]);
+
+    
 
 	return { steps, flights, distance, calories };
 };

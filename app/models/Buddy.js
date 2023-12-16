@@ -3,9 +3,9 @@ import Realm, { BSON } from "realm";
 export class Buddy extends Realm.Object {
 	// properties
 	_id;
-    name;
-    level;
-    attributes;
+	buddy_name;
+	level;
+	attributes;
 
 	// required by realm
 	static primaryKey = "_id";
@@ -15,9 +15,9 @@ export class Buddy extends Realm.Object {
 		properties: {
 			// set the realm types
 			_id: "uuid",
-			name: "string",
-            level: "int",
-            attributes: "string",
+			buddy_name: "string",
+			level: "int",
+			attributes: "string",
 			createdAt: {
 				type: "date",
 				default: new Date(),
@@ -25,13 +25,13 @@ export class Buddy extends Realm.Object {
 		},
 	};
 
-	constructor(realm, name, level, attributes) {
+	constructor(realm, buddy_name, level, attributes) {
 		console.log("in constructor");
 		super(realm, {
 			_id: new BSON.UUID(),
-			name,
-            level,
-            attributes,
+			buddy_name,
+			level,
+			attributes,
 		});
 	}
 }
