@@ -1,6 +1,6 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import RingProgress from "../components/design/RingProgress";
 import useHealthData from "../hooks/useHealthData";
 import Value from "../components/design/Value";
@@ -8,6 +8,8 @@ import colors from "../constants/colors";
 import ViewContainer from "../components/design/ViewContainer";
 import Title from "../components/design/Title";
 import { formatDate } from "../utils/dateFormat";
+import { Button } from "react-native";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 const STEPS_GOAL = 10000;
 
@@ -23,6 +25,24 @@ export default function App() {
 		setDate(currentDate); // Update the state variable
 	};
 
+    const onChange = (event, selectedDate) => {
+		const currentDate = selectedDate;
+		setDate(currentDate);
+	};
+
+	const showMode = (currentMode) => {
+		DateTimePickerAndroid.open({
+			value: date,
+			onChange,
+			mode: currentMode,
+			is24Hour: true,
+		});
+	};
+
+	const showDatepicker = () => {
+		showMode("date");
+	};
+
 	return (
 		<ViewContainer>
 			<Title text="History" />
@@ -32,15 +52,22 @@ export default function App() {
 						onPress={() => changeDate(-1)}
 						name="left"
 						size={20}
-						color={colors.green}
+						color={colors.lightGrey}
 					/>
-					<Text style={styles.date}>{formatDate(date)}</Text>
+					<Pressable onPress={showDatepicker} style={styles.datePressable}>
+						<Text style={styles.date}>{formatDate(date)}</Text>
+						<MaterialIcons
+							name="date-range"
+							size={24}
+							color={colors.green}
+						/>
+					</Pressable>
 
 					<AntDesign
 						onPress={() => changeDate(1)}
 						name="right"
 						size={20}
-						color={colors.green}
+						color={colors.lightGrey}
 					/>
 				</View>
 
@@ -80,7 +107,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		padding: 20,
 		flexDirection: "row",
-		justifyContent: "center",
+		justifyContent: "space-around",
 		marginBottom: 20,
 	},
 	date: {
@@ -89,4 +116,9 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		marginHorizontal: 20,
 	},
+    datePressable: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
 });
