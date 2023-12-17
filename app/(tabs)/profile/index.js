@@ -9,6 +9,7 @@ import ProfileCard from "@components/design/ProfileCard";
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import formatNumber from "../../utils/numberFormat";
 
 export default function Profile() {
     const [username, setUsername] = useState("");
@@ -50,14 +51,14 @@ export default function Profile() {
 				<Text style={styles.username}>{username}</Text>
 			</View>
 			<View style={styles.innerContainer}>
-				<ProfileCard value={steps} text="Total steps" icon="walking" />
+				<ProfileCard value={formatNumber(steps)} text="Total steps" icon="walking" />
 				<ProfileCard
-					value={calories}
+					value={formatNumber(calories)}
 					text="Calories burned"
 					icon="fire"
 				/>
 				<ProfileCard
-					value={distance}
+					value={`${distance} km`}
 					text="Total distance"
 					icon="map-marked-alt"
 				/>
