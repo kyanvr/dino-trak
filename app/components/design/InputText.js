@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.darkGrey,
 		color: colors.white,
 		fontSize: 16,
-		// alignSelf: "stretch",
+		alignSelf: "stretch",
 	},
 });
 

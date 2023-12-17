@@ -1,6 +1,6 @@
 import { useQuery, useRealm } from "@realm/react";
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, Image } from "react-native";
 import { schemas } from "../models";
 import { Redirect } from "expo-router";
 
@@ -27,6 +27,7 @@ export default function Home() {
 
 	return (
 		<View style={styles.container}>
+            <Image source={{uri: user[0].avatar}} style={styles.image} />
 			<Text style={styles.text}>Welcome to the Home screen!</Text>
 			<Button title="Delete all data" onPress={() => deleteAllData()} />
 		</View>
@@ -43,4 +44,10 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "bold",
 	},
+    image: {
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        marginBottom: 16,
+    },
 });

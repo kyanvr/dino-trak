@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Image } from "react-native";
 import colors from "@constants/colors";
 import Button from "@components/design/Button";
 import ViewContainer from "@components/design/ViewContainer";
@@ -7,15 +7,21 @@ import InputText from "@components/design/InputText";
 import Title from "@components/design/Title";
 import { useQuery, useRealm } from "@realm/react";
 import { router } from "expo-router";
+import ImagePicker from "@components/design/ImagePicker";
+import useImagePicker from "../../hooks/useImagePicker";
+import { log } from "util";
 
 export default function Start3() {
 	const realm = useRealm();
     const user = useQuery("User");
 	const usernameRef = useRef("");
 
+    const { selectedImage, pickImageAsync } = useImagePicker();
+
 	function handlePress() {
 		realm.write(() => {
 			user[0].username = usernameRef.current;
+            user[0].avatar = selectedImage;
 		});
 
 		router.push("/screens/startup/start4");
@@ -31,6 +37,7 @@ export default function Start3() {
 						usernameRef.current = text;
 					}}
 				/>
+				<ImagePicker onPress={pickImageAsync} image={selectedImage} />
 			</View>
 			<Button title="Continue" onPress={() => handlePress()} />
 		</ViewContainer>
@@ -44,5 +51,13 @@ const styles = StyleSheet.create({
 	},
 	innerContainer: {
 		alignSelf: "stretch",
+		flexDirection: "column",
+		alignItems: "center",
+	},
+	image: {
+		width: 100,
+		height: 100,
+		marginBottom: 16,
+		borderRadius: 50,
 	},
 });
