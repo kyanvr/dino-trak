@@ -1,11 +1,12 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 
-const Button = ({ onPress, title }) => {
+const Button = ({ onPress, title, children }) => {
 	return (
 		<Pressable onPress={onPress} style={styles.button}>
 			<Text style={styles.text}>{title}</Text>
+            {children}
 		</Pressable>
 	);
 };
@@ -18,9 +19,10 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         borderRadius: 10,
-        marginTop: 50,
         alignSelf: "stretch",
         alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "center",
     },
     text: {
         fontSize: 16,

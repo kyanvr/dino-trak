@@ -22,7 +22,6 @@ module.exports = function (api) {
 		presets: ["babel-preset-expo"],
 		plugins: [
 			"expo-router/babel",
-			"nativewind/babel",
 			["@babel/plugin-proposal-decorators", { legacy: true }],
 			[
 				"module-resolver",
@@ -32,6 +31,7 @@ module.exports = function (api) {
 						"@assets": "./assets",
 						"@constants": "./app/constants",
 						"@components": "./app/components",
+                        "@hooks": "./app/hooks",
 					},
 				},
 			],

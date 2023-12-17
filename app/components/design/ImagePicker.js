@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
         alignSelf: "stretch",
-        marginTop: 40,
 	},
 	avatar: {
 		height: 200,
