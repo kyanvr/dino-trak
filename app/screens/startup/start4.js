@@ -46,11 +46,12 @@ const Start4 = () => {
 
 const styles = StyleSheet.create({
 	container: {
-        paddingTop: 100,
+        paddingTop: 50,
         paddingHorizontal: 20,
 	},
     innerContainer: {
         alignSelf: "stretch",
+        marginBottom: 50,
     },
     image: {
         alignSelf: "center",

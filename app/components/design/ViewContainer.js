@@ -4,7 +4,7 @@ import colors from "@constants/colors";
 
 export default function ViewContainer ({ children, style }) {
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, style]} >
             {children}
         </View>
     );

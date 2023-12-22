@@ -27,6 +27,12 @@
             "minSdkVersion": 26
           }
         }
+      ],
+      [
+        "expo-media-library",
+        {
+          "isAccessMediaLocationEnabled": false
+        }
       ]
     ],
     "android": {

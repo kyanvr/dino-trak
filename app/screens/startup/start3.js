@@ -9,19 +9,23 @@ import { useQuery, useRealm } from "@realm/react";
 import { router } from "expo-router";
 import ImagePicker from "@components/design/ImagePicker";
 import useImagePicker from "../../hooks/useImagePicker";
-import { log } from "util";
 
 export default function Start3() {
 	const realm = useRealm();
     const user = useQuery("User");
 	const usernameRef = useRef("");
 
-    const { selectedImage, pickImageAsync } = useImagePicker();
+    // selectedImage is the image that will be cached to show the user
+    const { selectedImage, pickImageAsync, saveImage, getSavedImage } = useImagePicker();
 
-	function handlePress() {
+	async function handlePress() {
+		await saveImage();
+		// savedImage is the image that will be saved to the database for later use
+		const savedImage = await getSavedImage();
+
 		realm.write(() => {
 			user[0].username = usernameRef.current;
-            user[0].avatar = selectedImage;
+			user[0].avatar = savedImage;
 		});
 
 		router.push("/screens/startup/start4");
@@ -46,13 +50,15 @@ export default function Start3() {
 
 const styles = StyleSheet.create({
 	container: {
-		paddingTop: 100,
+		paddingTop: 50,
 		paddingHorizontal: 20,
 	},
 	innerContainer: {
 		alignSelf: "stretch",
 		flexDirection: "column",
 		alignItems: "center",
+        gap: 50,
+        marginBottom: 50,
 	},
 	image: {
 		width: 100,

@@ -14,7 +14,7 @@ export default function Start() {
 
 	function handlePress() {
 		realm.write(() => {
-			const user = new User(realm, "", "", "");
+			const user = new User(realm, "", "", "", "", false);
 
 			return user;
 		});
@@ -41,7 +41,7 @@ export default function Start() {
 
 const styles = StyleSheet.create({
 	container: {
-		paddingTop: 100,
+		paddingTop: 50,
 	},
 	innerContainer: {
 		alignItems: "center",

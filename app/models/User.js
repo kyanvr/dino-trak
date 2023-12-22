@@ -6,6 +6,7 @@ class User extends Realm.Object {
 	username;
 	avatar;
 	personal_goals;
+    daily_steps;
 	onboarding_completed;
 
 	// required by realm
@@ -18,6 +19,7 @@ class User extends Realm.Object {
 			username: "string",
 			avatar: "string",
 			personal_goals: "string",
+            daily_steps: "string",
 			onboarding_completed: {
 				type: "bool",
 				default: false,
@@ -29,13 +31,14 @@ class User extends Realm.Object {
 		},
 	};
 
-	constructor(realm, username, avatar, personal_goals, onboarding_completed) {
+	constructor(realm, username, avatar, personal_goals, daily_steps, onboarding_completed) {
 		console.log("in constructor");
 		super(realm, {
 			_id: new BSON.UUID(),
 			username,
 			avatar,
 			personal_goals,
+            daily_steps,
 			onboarding_completed,
 		});
 	}

@@ -36,12 +36,12 @@ export default function Start5 () {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 100,
+        paddingTop: 50,
         paddingHorizontal: 20,
     },
     innerContainer: {
-        // flex: 1,
         alignItems: 'center',
         gap: 20,
+        marginBottom: 50,
     }
 });

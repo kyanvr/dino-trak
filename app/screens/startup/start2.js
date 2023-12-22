@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import goals from "@constants/goals";
 import colors from "@constants/colors";
 import Button from "@components/design/Button";
 import BackButton from "@components/design/BackButton";
 import ViewContainer from "@components/design/ViewContainer";
 import Title from "@components/design/Title";
+import InputText from "@components/design/InputText";
 import { useQuery, useRealm } from "@realm/react";
-import { generateUUID } from "three/src/math/MathUtils";
 import { router } from "expo-router";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function Start2() {
 	const [selectedGoals, setSelectedGoals] = useState([]);
@@ -46,53 +44,72 @@ export default function Start2() {
 
 	return (
 		<ViewContainer style={styles.container}>
-			<Title text="What is your ultimate goal?" />
-			<View style={styles.innerContainer}>
-				{goals.map((goal) => (
-					<Pressable
-						key={goal.id}
-						onPress={() => {
-							handleSelect(goal);
-						}}
-						style={
-							selectedGoals.includes(goal)
-								? styles.selectedGoals
-								: styles.goals
-						}
-					>
-						<Text
+			<ScrollView contentContainerStyle={{ alignItems: "center" }}>
+				<Title text="What is your ultimate goal?" />
+				<View style={styles.goalsContainer}>
+					{goals.map((goal) => (
+						<Pressable
+							key={goal.id}
+							onPress={() => {
+								handleSelect(goal);
+							}}
 							style={
 								selectedGoals.includes(goal)
-									? styles.selectedText
-									: styles.text
+									? styles.selectedGoals
+									: styles.goals
 							}
 						>
-							{goal.title}
-						</Text>
-					</Pressable>
-				))}
-			</View>
-			<Button
-				onPress={() => {
-					handlePress();
-				}}
-				title="Continue"
-			/>
-			<BackButton title="Back" />
+							<Text
+								style={
+									selectedGoals.includes(goal)
+										? styles.selectedText
+										: styles.text
+								}
+							>
+								{goal.title}
+							</Text>
+						</Pressable>
+					))}
+				</View>
+				<Title text="Set a daily step target!" />
+				<View style={styles.inputContainer}>
+					<InputText
+						placeholder="Daily step target"
+						keyboardType="numeric"
+						onChangeText={(text) => {
+							realm.write(() => {
+								user[0].daily_steps = text;
+							});
+						}}
+					/>
+				</View>
+				<Button
+					onPress={() => {
+						handlePress();
+					}}
+					title="Continue"
+				/>
+				<BackButton title="Back" />
+			</ScrollView>
 		</ViewContainer>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
-		paddingTop: 100,
+		paddingTop: 50,
 		paddingHorizontal: 20,
 	},
-	innerContainer: {
+	goalsContainer: {
 		display: "flex",
 		flexWrap: "wrap",
 		flexDirection: "row",
 		gap: 10,
+		marginBottom: 50,
+	},
+	inputContainer: {
+		marginBottom: 50,
+        alignSelf: "flex-start",
 	},
 	selectedGoals: {
 		backgroundColor: colors.green,

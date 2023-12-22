@@ -13,6 +13,13 @@ export default function Home() {
 
 	const user = useQuery("User")[0];
 	const buddy = useQuery("Buddy")[0];
+    console.log(user.avatar);
+
+    if (user === undefined || buddy === undefined) {
+        return <Redirect href={"/screens/startup/start"} />;
+    } else if (user.onboarding_completed === false) {
+        <Redirect href={"/screens/startup/start"} />;
+    }
 
 	user.addListener((user) => {
 		setUsername(user.username);
@@ -36,12 +43,6 @@ export default function Home() {
 
 		console.log("Deleted all data");
 	};
-
-	if (user.length === 0) {
-		return <Redirect href={"/screens/startup/start"} />;
-	} else if (user.onboarding_completed === false) {
-		<Redirect href={"/screens/startup/start"} />;
-	}
 
 	return (
 		<View style={styles.container}>

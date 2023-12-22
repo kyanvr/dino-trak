@@ -1,7 +1,8 @@
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 
-export default function useImagePicker () {
+export default function useImagePicker() {
 	const [selectedImage, setSelectedImage] = useState(null);
 	const pickImageAsync = async () => {
 		try {
@@ -27,5 +28,25 @@ export default function useImagePicker () {
 		}
 	};
 
-	return { selectedImage, pickImageAsync };
-};
+    const saveImage = async () => {
+        try {
+            const asset = await MediaLibrary.createAssetAsync(selectedImage);
+            await MediaLibrary.createAlbumAsync("dino-trak", asset, false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getSavedImage = async () => {
+        try {
+            const album = await MediaLibrary.getAlbumAsync("dino-trak");
+            const assets = await MediaLibrary.getAssetsAsync({album: album, sortBy: MediaLibrary.SortBy.creationTime});
+            const asset = await MediaLibrary.getAssetInfoAsync(assets.assets[assets.assets.length - 1]);
+            return asset.uri;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+	return { selectedImage, pickImageAsync, saveImage, getSavedImage };
+}

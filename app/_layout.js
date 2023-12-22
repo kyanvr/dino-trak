@@ -14,7 +14,7 @@ export default function StackLayout() {
 		deleteRealmIfMigrationNeeded: true,
 	};
 
-	// const { RealmProvider} = createRealmContext(config);
+    // const { RealmProvider} = createRealmContext(config);
 
 	return (
 		<ToastProvider
