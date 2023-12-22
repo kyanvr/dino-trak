@@ -6,7 +6,7 @@ import {
 	readRecords,
 } from "react-native-health-connect";
 
-const useHealthData = (date, monthly) => {
+const useHealthData = (date,weekly, monthly) => {
 	const [steps, setSteps] = useState(0);
 	const [flights, setFlights] = useState(0);
 	const [distance, setDistance] = useState(0);
@@ -28,21 +28,53 @@ const useHealthData = (date, monthly) => {
 			{ accessType: "read", recordType: "TotalCaloriesBurned" },
 		]);
 
+        const getWeeklyTimeRangeFilter = (date) => {
+			const startOfWeek = new Date(date);
+			startOfWeek.setDate(date.getDate() - ((date.getDay() + 6) % 7)); // Set to the first day (Monday) of the current week
+
+			const endOfWeek = new Date(date);
+			endOfWeek.setDate(date.getDate() + (7 - date.getDay())); // Set to the last day (Sunday) of the current week
+
+			return {
+				operator: "between",
+				startTime: new Date(
+					startOfWeek.setHours(0, 0, 0, 0)
+				).toISOString(),
+				endTime: new Date(
+					endOfWeek.setHours(23, 59, 59, 999)
+				).toISOString(),
+			};
+		};
+
         // Note
         // JavaScript counts months from 0 to 11:
         // January = 0
         // December = 11
         const timeRangeFilter = monthly
-            ? {
-                operator: "between",
-                startTime: new Date(date.getFullYear(), date.getMonth(), 1).toISOString(),
-                endTime: new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString(),
-            }
-            : {
-                operator: "between",
-                startTime: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
-                endTime: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
-            };
+			? {
+					operator: "between",
+					startTime: new Date(
+						date.getFullYear(),
+						date.getMonth(),
+						1
+					).toISOString(),
+					endTime: new Date(
+						date.getFullYear(),
+						date.getMonth() + 1,
+						0
+					).toISOString(),
+			  }
+			: weekly
+			? getWeeklyTimeRangeFilter(date)
+			: {
+					operator: "between",
+					startTime: new Date(
+						date.setHours(0, 0, 0, 0)
+					).toISOString(),
+					endTime: new Date(
+						date.setHours(23, 59, 59, 999)
+					).toISOString(),
+			  };
 
 
         // Steps

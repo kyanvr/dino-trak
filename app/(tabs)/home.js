@@ -1,8 +1,8 @@
 import { useQuery, useRealm } from "@realm/react";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Button, Image } from "react-native";
-import { schemas } from "../models";
 import { Redirect } from "expo-router";
+import populateChallenges from "../database/seedChallenges";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
@@ -12,6 +12,8 @@ export default function Home() {
 	const realm = useRealm();
 	const user = useQuery("User")[0];
 	const buddy = useQuery("Buddy")[0];
+
+    populateChallenges();
 
     if (user === undefined || buddy === undefined) {
         return <Redirect href={"/screens/startup/start"} />;
@@ -42,6 +44,23 @@ export default function Home() {
 		console.log("Deleted all data");
 	};
 
+    const deleteChallenges = () => {
+        realm.write(() => {
+            realm.delete(realm.objects("Challenges"));
+        });
+
+        console.log("Deleted challenges");
+    }
+
+    const clearBuddyLevelAndXP = () => {
+        realm.write(() => {
+            buddy.level = 1;
+            buddy.xp = 0;
+        });
+
+        console.log("Cleared buddy level and XP");
+    }
+
 	return (
 		<View style={styles.container}>
 			<Image source={{ uri: avatar }} style={styles.image} />
@@ -49,6 +68,8 @@ export default function Home() {
 			<Text style={styles.text}>{buddy_name}</Text>
 			{/* <Text style={styles.text}>Welcome to the Home screen!</Text> */}
 			<Button title="Delete all data" onPress={() => deleteAllData()} />
+            <Button title="Delete challenges" onPress={() => deleteChallenges()} />
+            <Button title="Clear buddy level and XP" onPress={() => clearBuddyLevelAndXP()} />
 		</View>
 	);
 }

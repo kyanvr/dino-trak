@@ -7,6 +7,8 @@ export class Challenges extends Realm.Object {
 	xp;
 	completed;
 	challenge_description;
+    challenge_goal;
+    duration;
 
 	// required by realm
 	static primaryKey = "_id";
@@ -23,6 +25,8 @@ export class Challenges extends Realm.Object {
 				default: false,
 			},
 			challenge_description: "string",
+            challenge_goal: "int",
+            duration: "string",
 			createdAt: {
 				type: "date",
 				default: new Date(),
@@ -30,7 +34,7 @@ export class Challenges extends Realm.Object {
 		},
 	};
 
-	constructor(realm, challenge_name, xp, completed, challenge_description) {
+	constructor(realm, challenge_name, xp, completed, challenge_description, challenge_goal, duration) {
 		console.log("in constructor");
 		super(realm, {
 			_id: new BSON.UUID(),
@@ -38,6 +42,8 @@ export class Challenges extends Realm.Object {
 			xp,
 			completed,
 			challenge_description,
+            challenge_goal,
+            duration,
 		});
 	}
 }

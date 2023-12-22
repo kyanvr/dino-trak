@@ -16,7 +16,7 @@ import progressFormat from "../utils/progressFormat";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
-	const { steps, flights, distance, calories } = useHealthData(date, false);
+	const { steps, flights, distance, calories } = useHealthData(date, false, false);
 
     const realm = useRealm();
     const user = useQuery("User")[0];

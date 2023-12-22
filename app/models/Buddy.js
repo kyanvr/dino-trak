@@ -1,3 +1,4 @@
+
 import Realm, { BSON } from "realm";
 
 export class Buddy extends Realm.Object {
@@ -5,6 +6,7 @@ export class Buddy extends Realm.Object {
 	_id;
 	buddy_name;
 	level;
+    xp;
 	attributes;
 
 	// required by realm
@@ -17,6 +19,7 @@ export class Buddy extends Realm.Object {
 			_id: "uuid",
 			buddy_name: "string",
 			level: "int",
+            xp: "int",
 			attributes: "string",
 			createdAt: {
 				type: "date",
@@ -25,12 +28,13 @@ export class Buddy extends Realm.Object {
 		},
 	};
 
-	constructor(realm, buddy_name, level, attributes) {
+	constructor(realm, buddy_name, level, xp , attributes) {
 		console.log("in constructor");
 		super(realm, {
 			_id: new BSON.UUID(),
 			buddy_name,
 			level,
+            xp,
 			attributes,
 		});
 	}

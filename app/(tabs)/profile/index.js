@@ -17,7 +17,7 @@ export default function Profile() {
 
 	const date = new Date();
 
-	const { steps, flights, distance, calories } = useHealthData(date, true);
+	const { steps, flights, distance, calories } = useHealthData(date, false, true);
 
 	const realm = useRealm();
 	const user = realm.objects("User")[0];

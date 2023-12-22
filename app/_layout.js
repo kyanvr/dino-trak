@@ -6,6 +6,7 @@ import { User } from "./models/User";
 import { Buddy } from "./models/Buddy";
 import colors from "@constants/colors";
 import { ToastProvider } from "react-native-toast-notifications";
+import "react-native-get-random-values";
 
 export default function StackLayout() {
 	const config = {
