@@ -18,7 +18,10 @@ export class Challenges extends Realm.Object {
 			_id: "uuid",
 			challenge_name: "string",
 			xp: "int",
-			completed: "boolean",
+			completed: {
+				type: "bool",
+				default: false,
+			},
 			challenge_description: "string",
 			createdAt: {
 				type: "date",
@@ -32,9 +35,9 @@ export class Challenges extends Realm.Object {
 		super(realm, {
 			_id: new BSON.UUID(),
 			challenge_name,
-            xp,
-            completed,
-            challenge_description,
+			xp,
+			completed,
+			challenge_description,
 		});
 	}
 }

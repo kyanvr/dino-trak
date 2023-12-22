@@ -10,10 +10,8 @@ export default function Home() {
     const [buddy_name, setBuddyName] = useState("");
 
 	const realm = useRealm();
-
 	const user = useQuery("User")[0];
 	const buddy = useQuery("Buddy")[0];
-    console.log(user.avatar);
 
     if (user === undefined || buddy === undefined) {
         return <Redirect href={"/screens/startup/start"} />;

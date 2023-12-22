@@ -10,12 +10,19 @@ import Title from "../components/design/Title";
 import { formatDate } from "../utils/dateFormat";
 import { Button } from "react-native";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-
-const STEPS_GOAL = 10000;
+import { useQuery, useRealm } from "@realm/react";
+import StepsGoal from "../components/StepsGoal";
+import progressFormat from "../utils/progressFormat";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
 	const { steps, flights, distance, calories } = useHealthData(date, false);
+
+    const realm = useRealm();
+    const user = useQuery("User")[0];
+    const stepsGoal = user.daily_steps;
+
+    const progress = progressFormat(steps, stepsGoal);
 
 	const changeDate = (numDays) => {
 		const currentDate = new Date(date); // Create a copy of the current date
@@ -54,7 +61,10 @@ export default function App() {
 						size={20}
 						color={colors.lightGrey}
 					/>
-					<Pressable onPress={showDatepicker} style={styles.datePressable}>
+					<Pressable
+						onPress={showDatepicker}
+						style={styles.datePressable}
+					>
 						<Text style={styles.date}>{formatDate(date)}</Text>
 						<MaterialIcons
 							name="date-range"
@@ -74,8 +84,12 @@ export default function App() {
 				<RingProgress
 					radius={150}
 					strokeWidth={50}
-					progress={(steps / STEPS_GOAL) * 100}
+					progress={progress}
 				/>
+
+				<View>
+					<StepsGoal />
+				</View>
 
 				<View style={styles.values}>
 					<Value label="Steps" value={steps.toString()} />
@@ -99,7 +113,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		gap: 25,
 		flexWrap: "wrap",
-		marginTop: 100,
+		marginTop: 50,
 		paddingHorizontal: 20,
 		paddingBottom: 20,
 	},

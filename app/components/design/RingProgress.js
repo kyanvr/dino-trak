@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 import CircularProgress from "react-native-circular-progress-indicator";
 
 const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
@@ -15,6 +15,7 @@ const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
 		>
 			<CircularProgress
 				value={progress}
+                maxValue={100}
 				inActiveStrokeColor={colors.green}
                 activeStrokeColor={colors.green}
 				inActiveStrokeOpacity={0.2}
