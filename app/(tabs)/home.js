@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Button, Image } from "react-native";
 import { Redirect } from "expo-router";
 import populateChallenges from "../database/seedChallenges";
+import Avatar from "../components/design/Avatar";
+import ViewContainer from "../components/design/ViewContainer";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
@@ -62,15 +64,15 @@ export default function Home() {
     }
 
 	return (
-		<View style={styles.container}>
-			<Image source={{ uri: avatar }} style={styles.image} />
+		<ViewContainer style={styles.container}>
+			<Avatar source={{ uri: avatar }} size={"small"} style={{position: "absolute", top: 50, right: 30}} />
 			<Text style={styles.text}>{username}</Text>
 			<Text style={styles.text}>{buddy_name}</Text>
 			{/* <Text style={styles.text}>Welcome to the Home screen!</Text> */}
 			<Button title="Delete all data" onPress={() => deleteAllData()} />
             <Button title="Delete challenges" onPress={() => deleteChallenges()} />
             <Button title="Clear buddy level and XP" onPress={() => clearBuddyLevelAndXP()} />
-		</View>
+		</ViewContainer>
 	);
 }
 
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 20,
 		fontWeight: "bold",
+        color: "white",
 	},
 	image: {
 		width: 200,

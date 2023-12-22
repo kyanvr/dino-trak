@@ -7,6 +7,7 @@ import ChallengeCard from "@components/design/ChallengeCard";
 import ExpandableCard from "../components/ExpandableCard";
 import { useQuery, useRealm } from "@realm/react";
 import useLevelSystem from "@hooks/useLevelSystem";
+import Avatar from "../components/design/Avatar";
 
 export default function Challenges() {
     const { userLevel, userXP, awardXP } = useLevelSystem();
@@ -16,37 +17,43 @@ export default function Challenges() {
     const realm = useRealm();
     const challenges = useQuery("Challenges");
     const buddy = useQuery("Buddy")[0];
+    const user = useQuery("User")[0];
 
 
     
     return (
-        <ViewContainer>
-            <Title text="Challenges" />
-            <Text style={styles.text}>Your level: {buddy.level}</Text>
-            <Text style={styles.text}>Your XP: {buddy.xp}</Text>
-            <View style={styles.container}>
-                {challenges.map((challenge, index) => {
-                    return (
-                        <ExpandableCard
-                            key={index}
-                            title={challenge.challenge_name}
-                            completed={challenge.completed}
-                            xp={challenge.xp}
-                            description={challenge.challenge_description}
-                            duration={challenge.duration}
-                            target={challenge.challenge_goal}
-                            onPress={() => {
-                                awardXP(challenge.xp);
-                                realm.write(() => {
-                                    challenge.completed = true;
-                                });
-                            }}
-                        />
-                    );
-                })}
-            </View>
-        </ViewContainer>
-    );
+		<ViewContainer>
+			<Title text="Challenges" />
+			<Avatar
+				source={{ uri: user.avatar }}
+				size={"small"}
+				style={{ position: "absolute", top: 50, right: 30 }}
+			/>
+			<Text style={styles.text}>Your level: {buddy.level}</Text>
+			<Text style={styles.text}>Your XP: {buddy.xp}</Text>
+			<View style={styles.container}>
+				{challenges.map((challenge, index) => {
+					return (
+						<ExpandableCard
+							key={index}
+							title={challenge.challenge_name}
+							completed={challenge.completed}
+							xp={challenge.xp}
+							description={challenge.challenge_description}
+							duration={challenge.duration}
+							target={challenge.challenge_goal}
+							onPress={() => {
+								awardXP(challenge.xp);
+								realm.write(() => {
+									challenge.completed = true;
+								});
+							}}
+						/>
+					);
+				})}
+			</View>
+		</ViewContainer>
+	);
 }
 
 const styles = StyleSheet.create({

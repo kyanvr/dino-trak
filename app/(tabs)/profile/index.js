@@ -10,6 +10,7 @@ import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import formatNumber from "../../utils/numberFormat";
+import Avatar from "../../components/design/Avatar";
 
 export default function Profile() {
     const [username, setUsername] = useState("");
@@ -47,11 +48,19 @@ export default function Profile() {
 			</Pressable>
 			<Title text="Profile" />
 			<View style={styles.userContainer}>
-				<Image source={{ uri: avatar }} style={styles.avatar} />
+				<Avatar
+					source={{ uri: avatar }}
+					size={"large"}
+                    style={{marginBottom: 20}}
+				/>
 				<Text style={styles.username}>{username}</Text>
 			</View>
 			<View style={styles.innerContainer}>
-				<ProfileCard value={formatNumber(steps)} text="Total steps" icon="walking" />
+				<ProfileCard
+					value={formatNumber(steps)}
+					text="Total steps"
+					icon="walking"
+				/>
 				<ProfileCard
 					value={formatNumber(calories)}
 					text="Calories burned"

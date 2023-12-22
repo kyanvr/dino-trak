@@ -13,6 +13,7 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useQuery, useRealm } from "@realm/react";
 import StepsGoal from "../components/StepsGoal";
 import progressFormat from "../utils/progressFormat";
+import Avatar from "../components/design/Avatar";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
@@ -53,6 +54,11 @@ export default function App() {
 	return (
 		<ViewContainer>
 			<Title text="History" />
+			<Avatar
+				source={{ uri: user.avatar }}
+				size={"small"}
+				style={{ position: "absolute", top: 50, right: 30 }}
+			/>
 			<ScrollView style={styles.container}>
 				<View style={styles.datePicker}>
 					<AntDesign

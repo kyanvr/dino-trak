@@ -4,7 +4,6 @@ import {
 	StyleSheet,
 	Pressable,
 	ScrollView,
-	ToastAndroid,
 } from "react-native";
 import Title from "@components/design/Title";
 import colors from "@constants/colors";
