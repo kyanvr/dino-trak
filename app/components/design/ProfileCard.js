@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import colors from "@constants/colors";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
-const ProfileCard = ({ value, text, icon }) => {
+const ProfileCard = ({ value, text, icon, loading }) => {
 	return (
 		<View style={styles.card}>
 			{icon === "stairs" ? (
@@ -14,8 +14,14 @@ const ProfileCard = ({ value, text, icon }) => {
 			) : (
 				<FontAwesome5 name={icon} size={40} color={colors.green} />
 			)}
-			<Text style={styles.value}>{value}</Text>
-			<Text style={styles.text}>{text}</Text>
+			{loading ? (
+                <ActivityIndicator size="small" color={colors["grey-600"]} />
+            ) : (
+                <>
+                    <Text style={styles.value}>{value}</Text>
+                    <Text style={styles.text}>{text}</Text>
+                </>
+            )}
 		</View>
 	);
 };
@@ -23,12 +29,12 @@ const ProfileCard = ({ value, text, icon }) => {
 const styles = StyleSheet.create({
 	text: {
 		fontSize: 16,
-		color: colors.lightGrey,
+		color: colors["grey-300"],
 	},
 	value: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: colors.white,
+		color: colors["grey-100"],
 		marginVertical: 10,
 	},
 	card: {

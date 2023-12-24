@@ -4,7 +4,6 @@ import colors from "@constants/colors";
 import CircularProgress from "react-native-circular-progress-indicator";
 
 const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
-
 	return (
 		<View
 			style={{
@@ -16,10 +15,10 @@ const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
 			<CircularProgress
 				value={progress}
                 maxValue={100}
-				inActiveStrokeColor={colors.green}
-                activeStrokeColor={colors.green}
+				inActiveStrokeColor={colors["green-100"]}
+                activeStrokeColor={colors["green-500"]}
 				inActiveStrokeOpacity={0.2}
-				progressValueColor={colors.white}
+				progressValueColor={colors["grey-100"]}
 				valueSuffix={"%"}
                 activeStrokeWidth={strokeWidth}
                 inActiveStrokeWidth={strokeWidth}
@@ -29,11 +28,10 @@ const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
 			<AntDesign
 				name="arrowright"
 				size={strokeWidth * 0.6}
-				color={colors.black}
+				color={colors["grey-900"]}
 				style={{
 					position: "absolute",
 					alignSelf: "center",
-
 					top: strokeWidth * 0.05,
 				}}
 			/>

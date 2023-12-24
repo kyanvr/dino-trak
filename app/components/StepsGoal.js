@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import InputText from "./design/InputText";
 import { StyleSheet } from "react-native";
+import colors from "../constants/colors";
 
 const StepsGoal = () => {
 	const [isEditing, setEditing] = useState(false);
@@ -36,18 +37,28 @@ const StepsGoal = () => {
 					onChangeText={(text) => setStepsGoal(text)}
 				/>
 			) : (
-				<Text style={{ color: "white" }}>
+				<Text style={{ color: colors["grey-100"] }}>
 					{stepsGoal} steps
 				</Text>
 			)}
 
 			{isEditing ? (
 				<TouchableOpacity onPress={handleSavePress}>
-					<FontAwesome name="save" size={24} color="white" style={{ marginLeft: 10 }} />
+					<FontAwesome
+						name="save"
+						size={24}
+						color={colors["green-200"]}
+						style={{ marginLeft: 10 }}
+					/>
 				</TouchableOpacity>
 			) : (
 				<TouchableOpacity onPress={handleEditPress}>
-					<Feather name="edit" size={24} color="white" style={{ marginLeft: 10 }} />
+					<Feather
+						name="edit"
+						size={24}
+						color={colors["green-200"]}
+						style={{ marginLeft: 10 }}
+					/>
 				</TouchableOpacity>
 			)}
 		</View>

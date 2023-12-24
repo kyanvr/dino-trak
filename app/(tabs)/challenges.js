@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import ViewContainer from "@components/design/ViewContainer";
 import Title from "@components/design/Title";
 import ExpandableCard from "../components/ExpandableCard";
@@ -7,6 +7,7 @@ import { useQuery, useRealm } from "@realm/react";
 import useLevelSystem from "@hooks/useLevelSystem";
 import Avatar from "../components/Avatar";
 import useHealthData from "../hooks/useHealthData";
+import colors from "../constants/colors";
 
 export default function Challenges() {
 	const [data, setData] = useState([]);
@@ -43,7 +44,7 @@ export default function Challenges() {
 			/>
 			<Text style={styles.text}>Your level: {buddy.level}</Text>
 			<Text style={styles.text}>Your XP: {buddy.xp}</Text>
-			{!loading && (
+			{!loading ? (
 				<ScrollView
 					contentContainerStyle={{
 						width: "100%",
@@ -78,7 +79,9 @@ export default function Challenges() {
 						})}
 					</View>
 				</ScrollView>
-			)}
+			) : (
+                <ActivityIndicator size="large" color={colors["grey-600"]} />
+            )}
 		</ViewContainer>
 	);
 }

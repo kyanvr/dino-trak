@@ -118,7 +118,7 @@ const useHealthData = (date, weekly, monthly) => {
 			return;
 		}
 		fetchData();
-	}, []);
+	}, [date, weekly, monthly]);
 
 	return { healthData, loading, error };
 };

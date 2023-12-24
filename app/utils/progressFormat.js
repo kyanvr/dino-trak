@@ -7,5 +7,5 @@ export default function progressFormat(steps, stepsGoal) {
         return 0;
     }
     
-    return progress.toFixed();
+    return progress.toFixed(0);
 }

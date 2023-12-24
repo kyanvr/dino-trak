@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import RingProgress from "../components/design/RingProgress";
 import useHealthData from "../hooks/useHealthData";
@@ -17,19 +17,27 @@ import Avatar from "../components/Avatar";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
-	const { healthData, loading, error } = useHealthData(
-		new Date(),
-		false,
-		false
-	);
-
-    // console.log(steps, flights, distance, calories);
-
-    const realm = useRealm();
-    const user = useQuery("User")[0];
-    const stepsGoal = user.daily_steps;
-
+    // const [progress, setProgress] = useState(0);
+	const { healthData, loading, error } = useHealthData(date, false, false);
+	const realm = useRealm();
+	const user = useQuery("User")[0];
+	const [stepsGoal, setStepsGoal] = useState(0);
+    // const stepsGoal = user.daily_steps;
     const progress = progressFormat(healthData.steps, stepsGoal);
+    console.log(progress);
+
+    // useEffect(() => {
+    //     updateProgress();
+    // }, [stepsGoal, date]);
+
+    // const updateProgress = () => {
+    //     const progress = progressFormat(healthData.steps, stepsGoal);
+    //     setProgress(progress);
+    // }
+
+    user.addListener((user) => {
+		setStepsGoal(user.daily_steps);
+	});
 
 	const changeDate = (numDays) => {
 		const currentDate = new Date(date); // Create a copy of the current date
@@ -39,7 +47,7 @@ export default function App() {
 		setDate(currentDate); // Update the state variable
 	};
 
-    const onChange = (event, selectedDate) => {
+	const onChange = (event, selectedDate) => {
 		const currentDate = selectedDate;
 		setDate(currentDate);
 	};
@@ -64,34 +72,48 @@ export default function App() {
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
-			<ScrollView style={styles.container}>
-				<View style={styles.datePicker}>
+			<View style={styles.datePicker}>
+				<Pressable
+					style={{
+						justifyContent: "center",
+                        alignItems: "flex-start",
+                        width: 44,
+                        height: 44,
+					}}
+					onPress={() => changeDate(-1)}
+				>
 					<AntDesign
-						onPress={() => changeDate(-1)}
 						name="left"
 						size={20}
-						color={colors.lightGrey}
+						color={colors["grey-300"]}
 					/>
-					<Pressable
-						onPress={showDatepicker}
-						style={styles.datePressable}
-					>
-						<Text style={styles.date}>{formatDate(date)}</Text>
-						<MaterialIcons
-							name="date-range"
-							size={24}
-							color={colors.green}
-						/>
-					</Pressable>
+				</Pressable>
 
+				<Pressable
+					onPress={showDatepicker}
+					style={styles.datePressable}
+				>
+					<Text style={styles.date}>{formatDate(date)}</Text>
+					<MaterialIcons
+						name="date-range"
+						size={24}
+						color={colors["green-200"]}
+                        style={{ marginLeft: 10 }}
+					/>
+				</Pressable>
+
+				<Pressable
+					onPress={() => changeDate(1)}
+					style={{ justifyContent: "center", width: 44, height: 44, alignItems: "flex-end" }}
+				>
 					<AntDesign
-						onPress={() => changeDate(1)}
 						name="right"
 						size={20}
-						color={colors.lightGrey}
+						color={colors["grey-300"]}
 					/>
-				</View>
-
+				</Pressable>
+			</View>
+			<ScrollView style={styles.container}>
 				<RingProgress
 					radius={150}
 					strokeWidth={50}
@@ -103,13 +125,22 @@ export default function App() {
 				</View>
 
 				<View style={styles.values}>
-					<Value label="Steps" value={healthData.steps.toString()} />
+					<Value label="Steps" value={healthData.steps} loading={loading} />
 					<Value
 						label="Distance"
-						value={`${healthData.distance.toString()} km`}
+						value={`${healthData.distance} km`}
+						loading={loading}
 					/>
-					<Value label="Flights Climbed" value={healthData.flights.toString()} />
-					<Value label="Kcal" value={healthData.calories} />
+					<Value
+						label="Flights Climbed"
+						value={healthData.flights}
+						loading={loading}
+					/>
+					<Value
+						label="Kcal"
+						value={healthData.calories}
+						loading={loading}
+					/>
 				</View>
 			</ScrollView>
 		</ViewContainer>
@@ -119,9 +150,11 @@ export default function App() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		paddingVertical: 20,
 	},
 	values: {
 		flexDirection: "row",
+		justifyContent: "center",
 		gap: 25,
 		flexWrap: "wrap",
 		marginTop: 50,
@@ -129,21 +162,24 @@ const styles = StyleSheet.create({
 		paddingBottom: 20,
 	},
 	datePicker: {
-		alignItems: "center",
-		padding: 20,
+		alignItems: "stretch",
+		justifyContent: "center",
 		flexDirection: "row",
-		justifyContent: "space-around",
 		marginBottom: 20,
+		paddingHorizontal: 20,
+		justifyContent: "center",
 	},
 	date: {
-		color: "white",
+		color: colors["grey-100"],
 		fontWeight: "500",
 		fontSize: 20,
-		marginHorizontal: 20,
 	},
-    datePressable: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-    },
+	datePressable: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		paddingHorizontal: 20,
+		backgroundColor: colors["grey-800"],
+        borderRadius: 10,
+	},
 });

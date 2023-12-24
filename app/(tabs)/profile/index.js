@@ -13,23 +13,31 @@ import formatNumber from "../../utils/numberFormat";
 import Avatar from "../../components/Avatar";
 
 export default function Profile() {
-    const [username, setUsername] = useState("");
-
+	const [username, setUsername] = useState("");
+	const [data, setData] = useState([
+		{
+			steps: 0,
+			flights: 0,
+			distance: 0,
+			calories: 0,
+		},
+	]);
 	const date = new Date();
-
-	const { steps, flights, distance, calories } = useHealthData(date, false, true);
-
+	const { healthData, loading, error } = useHealthData(date, false, true);
 	const realm = useRealm();
 	const user = realm.objects("User")[0];
 
-    user.addListener((user) => {
-        setUsername(user.username);
-    });
+	useEffect(() => {
+		if (!loading && !error) {
+			setData(healthData);
+		} else if (error) {
+			console.log(error);
+		}
+	}, [loading, error]);
 
-    // useEffect(() => {
-    //     setUsername(user.username);
-    // }
-    // , []);
+	user.addListener((user) => {
+		setUsername(user.username);
+	});
 
 	return (
 		<ViewContainer style={styles.container}>
@@ -45,32 +53,33 @@ export default function Profile() {
 			</Pressable>
 			<Title text="Profile" />
 			<View style={styles.userContainer}>
-				<Avatar
-					size={"large"}
-                    style={{marginBottom: 20}}
-				/>
+				<Avatar size={"large"} style={{ marginBottom: 20 }} />
 				<Text style={styles.username}>{username}</Text>
 			</View>
 			<View style={styles.innerContainer}>
 				<ProfileCard
-					value={formatNumber(steps)}
+					value={data.steps}
 					text="Total steps"
 					icon="walking"
+					loading={data !== "undefined" ? false : true}
 				/>
 				<ProfileCard
-					value={formatNumber(calories)}
+					value={data.calories}
 					text="Calories burned"
 					icon="fire"
+					loading={data !== "undefined" ? false : true}
 				/>
 				<ProfileCard
-					value={`${distance} km`}
+					value={`${data.distance} km`}
 					text="Total distance"
 					icon="map-marked-alt"
+					loading={data !== "undefined" ? false : true}
 				/>
 				<ProfileCard
-					value={flights}
+					value={data.flights}
 					text="Flights climbed"
 					icon="stairs"
+					loading={data !== "undefined" ? false : true}
 				/>
 			</View>
 		</ViewContainer>
