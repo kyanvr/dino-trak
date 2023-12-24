@@ -1,21 +1,17 @@
 import { useQuery, useRealm } from "@realm/react";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
-import { Redirect } from "expo-router";
-import populateChallenges from "../database/seedChallenges";
-import Avatar from "../components/design/Avatar";
+import { View, Text, StyleSheet, Button } from "react-native";
+import { Redirect, router } from "expo-router";
+import Avatar from "../components/Avatar";
 import ViewContainer from "../components/design/ViewContainer";
+import populateChallenges from "../database/seedChallenges";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
-	const [avatar, setAvatar] = useState("");
     const [buddy_name, setBuddyName] = useState("");
-
 	const realm = useRealm();
 	const user = useQuery("User")[0];
 	const buddy = useQuery("Buddy")[0];
-
-    populateChallenges();
 
     if (user === undefined || buddy === undefined) {
         return <Redirect href={"/screens/startup/start"} />;
@@ -25,7 +21,6 @@ export default function Home() {
 
 	user.addListener((user) => {
 		setUsername(user.username);
-		setAvatar(user.avatar);
 	});
 
     buddy.addListener((buddy) => {
@@ -34,7 +29,6 @@ export default function Home() {
 
 	useEffect(() => {
 		setUsername(user.username);
-		setAvatar(user.avatar);
         setBuddyName(buddy.buddy_name);
 	}, []);
 
@@ -65,10 +59,9 @@ export default function Home() {
 
 	return (
 		<ViewContainer style={styles.container}>
-			<Avatar source={{ uri: avatar }} size={"small"} style={{position: "absolute", top: 50, right: 30}} />
+			<Avatar size={"small"} style={{position: "absolute", top: 50, right: 30}} />
 			<Text style={styles.text}>{username}</Text>
 			<Text style={styles.text}>{buddy_name}</Text>
-			{/* <Text style={styles.text}>Welcome to the Home screen!</Text> */}
 			<Button title="Delete all data" onPress={() => deleteAllData()} />
             <Button title="Delete challenges" onPress={() => deleteChallenges()} />
             <Button title="Clear buddy level and XP" onPress={() => clearBuddyLevelAndXP()} />

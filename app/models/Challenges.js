@@ -1,3 +1,4 @@
+import "react-native-get-random-values";
 import Realm, { BSON } from "realm";
 
 export class Challenges extends Realm.Object {
@@ -7,8 +8,9 @@ export class Challenges extends Realm.Object {
 	xp;
 	completed;
 	challenge_description;
-    challenge_goal;
-    duration;
+	challenge_goal;
+	duration;
+	type;
 
 	// required by realm
 	static primaryKey = "_id";
@@ -25,8 +27,9 @@ export class Challenges extends Realm.Object {
 				default: false,
 			},
 			challenge_description: "string",
-            challenge_goal: "int",
-            duration: "string",
+			challenge_goal: "int",
+			duration: "string",
+			type: "string",
 			createdAt: {
 				type: "date",
 				default: new Date(),
@@ -34,7 +37,16 @@ export class Challenges extends Realm.Object {
 		},
 	};
 
-	constructor(realm, challenge_name, xp, completed, challenge_description, challenge_goal, duration) {
+	constructor(
+		realm,
+		challenge_name,
+		xp,
+		completed,
+		challenge_description,
+		challenge_goal,
+		duration,
+		type
+	) {
 		console.log("in constructor");
 		super(realm, {
 			_id: new BSON.UUID(),
@@ -42,8 +54,9 @@ export class Challenges extends Realm.Object {
 			xp,
 			completed,
 			challenge_description,
-            challenge_goal,
-            duration,
+			challenge_goal,
+			duration,
+			type,
 		});
 	}
 }

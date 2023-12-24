@@ -1,13 +1,19 @@
-import React, { useState, useEffect, memo } from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { View, Image, Animated } from "react-native";
+// ExpandableCard.js
+import React, { useState, useEffect, memo, useCallback } from "react";
+import {
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+	Image,
+	Animated,
+} from "react-native";
 import colors from "../constants/colors";
-import useHealthData from "@hooks/useHealthData";
 import { debounce } from "lodash";
 import progressFormat from "../utils/progressFormat";
-import useLevelSystem from "@hooks/useLevelSystem";
+import Button from "./design/Button";
 
-const ExpandableCard = ({
+export default function ExpandableCard({
 	title,
 	imageUrl,
 	description,
@@ -16,82 +22,65 @@ const ExpandableCard = ({
 	duration,
 	target,
 	onPress,
-}) => {
+	type,
+	healthData,
+	loading,
+}) {
 	const [expanded, setExpanded] = useState(false);
 	const [animation] = useState(new Animated.Value(0));
 	const [progress, setProgress] = useState(0);
+	const [stepsReached, setStepsReached] = useState(false);
 	const [weekly, setWeekly] = useState(false);
 	const [monthly, setMonthly] = useState(false);
-	const [stepsReached, setStepsReached] = useState(false);
+	const [steps, setSteps] = useState(0);
 
 	useEffect(() => {
-		// Set weekly or monthly based on the challenge's duration
-		switch (duration) {
-			case "week":
-				setWeekly(true);
-				break;
-			case "month":
-				setMonthly(true);
-				break;
-			default:
-				setWeekly(false);
-				setMonthly(false);
-				break;
-		}
-	}, [duration]);
-
-	const { steps, flights, distance, calories } = useHealthData(
-		new Date(),
-		weekly,
-		monthly
-	);
+		// Set initial health data
+		setSteps(healthData.steps);
+	}, [healthData.steps]);
 
 	useEffect(() => {
-		// Check if steps reached the target based on the duration
+		const [startDate, endDate] = calculateDateRange();
+		setWeekly(startDate !== endDate);
+		setMonthly(startDate.getMonth() !== endDate.getMonth());
+		updateProgress();
+	}, [duration, steps, target]);
+
+	const calculateDateRange = () => {
+		const today = new Date();
 		switch (duration) {
 			case "day":
-				setStepsReached(steps >= target);
-				setProgress(progressFormat(steps, target));
-				break;
+				return [today, today];
 			case "week":
-				const startOfWeek = new Date();
+				const startOfWeek = new Date(today);
 				startOfWeek.setDate(
-					startOfWeek.getDate() - ((startOfWeek.getDay() + 6) % 7)
+					today.getDate() - ((today.getDay() + 6) % 7)
 				);
-				const endOfWeek = new Date();
-				endOfWeek.setDate(
-					endOfWeek.getDate() + (7 - endOfWeek.getDay())
-				);
-				setStepsReached(
-					steps >= target &&
-						steps >= 0 &&
-						steps < target &&
-						new Date() >= startOfWeek &&
-						new Date() <= endOfWeek
-				);
-				setProgress(progressFormat(steps, target));
-				break;
+				const endOfWeek = new Date(today);
+				endOfWeek.setDate(today.getDate() + (7 - today.getDay()));
+				return [startOfWeek, endOfWeek];
 			case "month":
-				const startOfMonth = new Date();
+				const startOfMonth = new Date(today);
 				startOfMonth.setDate(1);
 				const endOfMonth = new Date(startOfMonth);
 				endOfMonth.setMonth(endOfMonth.getMonth() + 1);
 				endOfMonth.setDate(endOfMonth.getDate() - 1);
-				setStepsReached(
-					steps >= target &&
-						steps >= 0 &&
-						steps < target &&
-						new Date() >= startOfMonth &&
-						new Date() <= endOfMonth
-				);
-				setProgress(progressFormat(steps, target));
-				break;
+				return [startOfMonth, endOfMonth];
 			default:
-				setStepsReached(false);
-				setProgress(0);
-				break;
+				return [today, today];
 		}
-	}, [duration, steps, target]);
+	};
+
+	const updateProgress = () => {
+		const [startDate, endDate] = calculateDateRange();
+		setStepsReached(
+			steps >= target &&
+				steps >= 0 &&
+				startDate <= new Date() &&
+				new Date() <= endDate
+		);
+		setProgress(progressFormat(steps, target));
+	};
 
 	const toggleCard = () => {
 		const toValue = expanded ? 0 : 1;
@@ -105,7 +94,11 @@ const ExpandableCard = ({
 		setExpanded(!expanded);
 	};
 
-    if (completed) {
+	if (completed) {
+		return null;
+	}
+
+    if (loading) {
         return null;
     }
 
@@ -113,82 +106,39 @@ const ExpandableCard = ({
 		<TouchableOpacity
 			activeOpacity={0.8}
 			onPress={toggleCard}
-			style={{ paddingHorizontal: 20 }}
+			style={styles.container}
 		>
-			<Animated.View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					padding: 16,
-					marginBottom: 16,
-					backgroundColor: colors["grey-800"],
-					borderRadius: 8,
-					overflow: "hidden",
-					// height: cardHeight,
-					width: "100%",
-				}}
-			>
+			<Animated.View style={styles.card}>
 				<Image
 					source={require("@assets/test.png")}
-					style={{
-						width: 80,
-						height: "100%",
-						marginRight: 16,
-						objectFit: "contain",
-					}}
+					style={styles.image}
 				/>
-				<View style={{ flex: 1 }}>
-					<Text
-						style={{
-							fontSize: 18,
-							fontWeight: "bold",
-							color: "white",
-						}}
-					>
-						{title}
-					</Text>
-					<View style={{ marginTop: 8 }}>
-						<Text style={{ color: "white" }}>
+				<View style={styles.content}>
+					<Text style={styles.title}>{title}</Text>
+					<View style={styles.progressContainer}>
+						<Text style={styles.progressText}>
 							Progress: {progress}%
 						</Text>
-						<View
-							style={{
-								height: 8,
-								backgroundColor: colors["grey-100"],
-								borderRadius: 4,
-								marginTop: 4,
-							}}
-						>
+						<View style={styles.progressBar}>
 							<View
-								style={{
-									height: "100%",
-									width: `${progress}%`,
-									backgroundColor: colors["green-300"],
-									borderRadius: 4,
-								}}
+								style={[
+									styles.progressFill,
+									{ width: `${progress}%` },
+								]}
 							/>
 						</View>
 					</View>
 					{expanded && (
-						<View style={{ marginTop: 8 }}>
-							<Text style={{ color: "white" }}>
+						<View style={styles.additionalInfo}>
+							<Text style={styles.additionalText}>
 								Description: {description}
 							</Text>
-							<Text style={{ color: "white" }}>XP: {xp}</Text>
+							<Text style={styles.additionalText}>XP: {xp}</Text>
 							{stepsReached && (
-								<TouchableOpacity
-									style={{
-										backgroundColor: colors["green-500"],
-										padding: 8,
-										borderRadius: 4,
-										marginTop: 8,
-									}}
+								<Button
+									title="Claim Reward"
 									onPress={onPress}
-								>
-									<Text style={{ color: "white" }}>
-										Claim Reward
-									</Text>
-								</TouchableOpacity>
+								/>
 							)}
 						</View>
 					)}
@@ -196,6 +146,68 @@ const ExpandableCard = ({
 			</Animated.View>
 		</TouchableOpacity>
 	);
-};
+}
 
-export default ExpandableCard;
+const styles = StyleSheet.create({
+	container: {
+		paddingHorizontal: 20,
+	},
+	card: {
+		flexDirection: "row",
+		alignItems: "center",
+		padding: 16,
+		marginBottom: 16,
+		backgroundColor: colors["grey-800"],
+		borderRadius: 8,
+		overflow: "hidden",
+		width: "100%",
+	},
+	image: {
+		width: 80,
+		height: "100%",
+		marginRight: 16,
+		objectFit: "contain",
+	},
+	content: {
+		flex: 1,
+	},
+	title: {
+		fontSize: 18,
+		fontWeight: "bold",
+		color: "white",
+	},
+	progressContainer: {
+		marginTop: 8,
+	},
+	progressText: {
+		color: "white",
+	},
+	progressBar: {
+		height: 8,
+		backgroundColor: colors["grey-100"],
+		borderRadius: 4,
+		marginTop: 4,
+	},
+	progressFill: {
+		height: "100%",
+		backgroundColor: colors["green-300"],
+		borderRadius: 4,
+	},
+	additionalInfo: {
+		marginTop: 8,
+	},
+	additionalText: {
+		color: "white",
+	},
+	rewardButton: {
+		backgroundColor: colors["green-500"],
+		padding: 8,
+		borderRadius: 4,
+		marginTop: 8,
+	},
+	rewardButtonText: {
+		color: "white",
+	},
+});
+
+// export default ExpandableCard;

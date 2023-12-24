@@ -1,4 +1,4 @@
-import { RealmProvider, createRealmContext } from "@realm/react";
+import { RealmProvider, createRealmContext, useRealm } from "@realm/react";
 import { Stack } from "expo-router";
 import React from "react";
 import { schemas } from "./models";
@@ -7,8 +7,10 @@ import { Buddy } from "./models/Buddy";
 import colors from "@constants/colors";
 import { ToastProvider } from "react-native-toast-notifications";
 import "react-native-get-random-values";
+import populateChallenges from "./database/seedChallenges";
 
 export default function StackLayout() {
+
 	const config = {
 		schema: [User, Buddy],
 		schemaVersion: 0,

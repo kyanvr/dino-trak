@@ -21,7 +21,8 @@ export default async function populateChallenges() {
 					challenge.completed,
 					challenge.challenge_description,
 					challenge.challenge_goal,
-                    challenge.duration
+                    challenge.duration,
+                    challenge.type
 				);
 
 				return newChallenge;

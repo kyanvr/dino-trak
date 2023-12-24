@@ -1,7 +1,13 @@
+import { useQuery, useRealm } from "@realm/react";
 import React from "react";
 import { View, Image, StyleSheet, SafeAreaView } from "react-native";
 
-const Avatar = ({ size, source, style }) => {
+const Avatar = ({ size, style }) => {
+
+    const realm = useRealm();
+    const user = useQuery("User")[0];
+    const avatar = user.avatar;
+
 	const getSizeStyles = () => {
 		switch (size) {
 			case "small":
@@ -17,7 +23,7 @@ const Avatar = ({ size, source, style }) => {
 
 	return (
 		<SafeAreaView style={[styles.avatarContainer, getSizeStyles(), style]}>
-			<Image source={source} style={styles.avatarImage} />
+			<Image source={{uri: avatar}} style={styles.avatarImage} />
 		</SafeAreaView>
 	);
 };

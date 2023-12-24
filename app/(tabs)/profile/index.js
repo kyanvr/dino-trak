@@ -10,11 +10,10 @@ import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import formatNumber from "../../utils/numberFormat";
-import Avatar from "../../components/design/Avatar";
+import Avatar from "../../components/Avatar";
 
 export default function Profile() {
     const [username, setUsername] = useState("");
-    const [avatar, setAvatar] = useState("");
 
 	const date = new Date();
 
@@ -25,14 +24,12 @@ export default function Profile() {
 
     user.addListener((user) => {
         setUsername(user.username);
-        setAvatar(user.avatar);
     });
 
-    useEffect(() => {
-        setUsername(user.username);
-        setAvatar(user.avatar);
-    }
-    , []);
+    // useEffect(() => {
+    //     setUsername(user.username);
+    // }
+    // , []);
 
 	return (
 		<ViewContainer style={styles.container}>
@@ -49,7 +46,6 @@ export default function Profile() {
 			<Title text="Profile" />
 			<View style={styles.userContainer}>
 				<Avatar
-					source={{ uri: avatar }}
 					size={"large"}
                     style={{marginBottom: 20}}
 				/>

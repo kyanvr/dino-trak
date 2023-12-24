@@ -13,7 +13,7 @@ const Button = ({ onPress, title, children }) => {
 
 const styles = StyleSheet.create({
         button: {
-        backgroundColor: colors.green,
+        backgroundColor: colors["green-400"],
         paddingBottom: 10,
         paddingTop: 10,
         paddingLeft: 20,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: colors.black,
+        color: colors["grey-900"],
         fontWeight: "bold",
     },
 });

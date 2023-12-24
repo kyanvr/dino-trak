@@ -1,70 +1,96 @@
-import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import ViewContainer from "@components/design/ViewContainer";
 import Title from "@components/design/Title";
-import ChallengeCard from "@components/design/ChallengeCard";
 import ExpandableCard from "../components/ExpandableCard";
 import { useQuery, useRealm } from "@realm/react";
 import useLevelSystem from "@hooks/useLevelSystem";
-import Avatar from "../components/design/Avatar";
+import Avatar from "../components/Avatar";
+import useHealthData from "../hooks/useHealthData";
 
 export default function Challenges() {
-    const { userLevel, userXP, awardXP } = useLevelSystem();
-    const [level, setLevel] = useState(userLevel);
-    const [xp, setXP] = useState(userXP);
+	const [data, setData] = useState([]);
+    const [date, setDate] = useState(new Date());
+	const { userLevel, userXP, awardXP } = useLevelSystem();
+	const realm = useRealm();
+	const challenges = useQuery("Challenges");
+	const buddy = useQuery("Buddy")[0];
+	const user = useQuery("User")[0];
 
-    const realm = useRealm();
-    const challenges = useQuery("Challenges");
-    const buddy = useQuery("Buddy")[0];
-    const user = useQuery("User")[0];
+	const { healthData, loading, error } = useHealthData(
+		date,
+		false,
+		false
+	);
 
+	useEffect(() => {
+		// Fetch initial health data on component mount
+		if (!loading && !error) {
+			// You can access healthData.steps, healthData.flights, etc. here
+			setData(healthData);
+            // console.log("healthData", healthData);
+		} else if (error) {
+            console.log(error);
+        }
+	}, [loading, error]);
 
-    
-    return (
+	return (
 		<ViewContainer>
 			<Title text="Challenges" />
 			<Avatar
-				source={{ uri: user.avatar }}
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
 			<Text style={styles.text}>Your level: {buddy.level}</Text>
 			<Text style={styles.text}>Your XP: {buddy.xp}</Text>
-			<View style={styles.container}>
-				{challenges.map((challenge, index) => {
-					return (
-						<ExpandableCard
-							key={index}
-							title={challenge.challenge_name}
-							completed={challenge.completed}
-							xp={challenge.xp}
-							description={challenge.challenge_description}
-							duration={challenge.duration}
-							target={challenge.challenge_goal}
-							onPress={() => {
-								awardXP(challenge.xp);
-								realm.write(() => {
-									challenge.completed = true;
-								});
-							}}
-						/>
-					);
-				})}
-			</View>
+			{!loading && (
+				<ScrollView
+					contentContainerStyle={{
+						width: "100%",
+						alignItems: "center",
+						paddingVertical: 20,
+					}}
+				>
+					<View style={styles.container}>
+						{challenges.map((challenge, index) => {
+							return (
+								<ExpandableCard
+									key={index}
+									title={challenge.challenge_name}
+									completed={challenge.completed}
+									xp={challenge.xp}
+									description={
+										challenge.challenge_description
+									}
+									duration={challenge.duration}
+									target={challenge.challenge_goal}
+									onPress={() => {
+										awardXP(challenge.xp);
+										realm.write(() => {
+											challenge.completed = true;
+										});
+									}}
+									type={challenge.type}
+									healthData={data} // Pass healthData as a prop to ExpandableCard
+									loading={loading}
+								/>
+							);
+						})}
+					</View>
+				</ScrollView>
+			)}
 		</ViewContainer>
 	);
 }
 
 const styles = StyleSheet.create({
-    container: {
-        // flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    text: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-    },
+	container: {
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	text: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: "white",
+	},
 });

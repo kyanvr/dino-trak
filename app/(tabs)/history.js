@@ -13,17 +13,23 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useQuery, useRealm } from "@realm/react";
 import StepsGoal from "../components/StepsGoal";
 import progressFormat from "../utils/progressFormat";
-import Avatar from "../components/design/Avatar";
+import Avatar from "../components/Avatar";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
-	const { steps, flights, distance, calories } = useHealthData(date, false, false);
+	const { healthData, loading, error } = useHealthData(
+		new Date(),
+		false,
+		false
+	);
+
+    // console.log(steps, flights, distance, calories);
 
     const realm = useRealm();
     const user = useQuery("User")[0];
     const stepsGoal = user.daily_steps;
 
-    const progress = progressFormat(steps, stepsGoal);
+    const progress = progressFormat(healthData.steps, stepsGoal);
 
 	const changeDate = (numDays) => {
 		const currentDate = new Date(date); // Create a copy of the current date
@@ -55,7 +61,6 @@ export default function App() {
 		<ViewContainer>
 			<Title text="History" />
 			<Avatar
-				source={{ uri: user.avatar }}
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
@@ -98,13 +103,13 @@ export default function App() {
 				</View>
 
 				<View style={styles.values}>
-					<Value label="Steps" value={steps.toString()} />
+					<Value label="Steps" value={healthData.steps.toString()} />
 					<Value
 						label="Distance"
-						value={`${distance.toString()} km`}
+						value={`${healthData.distance.toString()} km`}
 					/>
-					<Value label="Flights Climbed" value={flights.toString()} />
-					<Value label="Kcal" value={calories} />
+					<Value label="Flights Climbed" value={healthData.flights.toString()} />
+					<Value label="Kcal" value={healthData.calories} />
 				</View>
 			</ScrollView>
 		</ViewContainer>
