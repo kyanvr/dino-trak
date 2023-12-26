@@ -7,7 +7,6 @@ import { Buddy } from "./models/Buddy";
 import colors from "@constants/colors";
 import { ToastProvider } from "react-native-toast-notifications";
 import "react-native-get-random-values";
-import populateChallenges from "./database/seedChallenges";
 
 export default function StackLayout() {
 

@@ -22,18 +22,7 @@ export default function App() {
 	const realm = useRealm();
 	const user = useQuery("User")[0];
 	const [stepsGoal, setStepsGoal] = useState(0);
-    // const stepsGoal = user.daily_steps;
     const progress = progressFormat(healthData.steps, stepsGoal);
-    console.log(progress);
-
-    // useEffect(() => {
-    //     updateProgress();
-    // }, [stepsGoal, date]);
-
-    // const updateProgress = () => {
-    //     const progress = progressFormat(healthData.steps, stepsGoal);
-    //     setProgress(progress);
-    // }
 
     user.addListener((user) => {
 		setStepsGoal(user.daily_steps);

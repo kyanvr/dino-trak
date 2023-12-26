@@ -1,8 +1,10 @@
 import { useQuery, useRealm } from "@realm/react";
 import { useState, useEffect } from "react";
+import LevelUpModal from "../components/LevelUpModal";
 
 const useLevelSystem = () => {
-	const [userXP, setUserXP] = useState(0);
+	const [buddyXP, setbuddyXP] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
     const realm = useRealm();
     const buddy = useQuery("Buddy")[0];
 
@@ -24,11 +26,16 @@ const useLevelSystem = () => {
 	};
 
 	const checkLevelUp = () => {
-		const currentLevel = calculateLevel(userXP);
-		// Optionally, provide level-up rewards here
+		const currentLevel = calculateLevel(buddyXP);
 
-		// Display level-up message or update UI if needed
-		console.log(`Congratulations! You reached Level ${currentLevel}`);
+        if (currentLevel === 1) return;
+
+        setModalVisible(true);
+
+		// You might want to close the modal after a certain duration
+		setTimeout(() => {
+			setModalVisible(false);
+		}, 3000);
 	};
 
 	const awardXP = (baseXP, bonusMultiplier = 1) => {
@@ -37,17 +44,19 @@ const useLevelSystem = () => {
 			buddy.level = calculateLevel(buddy.xp + totalXP);
 			buddy.xp += totalXP;
 		});
-		setUserXP((prevXP) => prevXP + totalXP);
+		setbuddyXP((prevXP) => prevXP + totalXP);
 	};
 
 	useEffect(() => {
 		checkLevelUp();
-	}, [userXP]); // Run checkLevelUp whenever userXP changes
+	}, [buddyXP]); // Run checkLevelUp whenever buddyXP changes
 
 	return {
-		userLevel: calculateLevel(userXP),
-		userXP,
+		buddyLevel: calculateLevel(buddyXP),
+		buddyXP,
 		awardXP,
+        modalVisible,
+        setModalVisible,
 	};
 };
 

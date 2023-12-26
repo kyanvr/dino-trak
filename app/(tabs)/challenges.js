@@ -8,11 +8,12 @@ import useLevelSystem from "@hooks/useLevelSystem";
 import Avatar from "../components/Avatar";
 import useHealthData from "../hooks/useHealthData";
 import colors from "../constants/colors";
+import LevelUpModal from "../components/LevelUpModal";
 
 export default function Challenges() {
 	const [data, setData] = useState([]);
     const [date, setDate] = useState(new Date());
-	const { userLevel, userXP, awardXP } = useLevelSystem();
+	const { userLevel, userXP, awardXP, modalVisible } = useLevelSystem();
 	const realm = useRealm();
 	const challenges = useQuery("Challenges");
 	const buddy = useQuery("Buddy")[0];
@@ -29,11 +30,10 @@ export default function Challenges() {
 		if (!loading && !error) {
 			// You can access healthData.steps, healthData.flights, etc. here
 			setData(healthData);
-            // console.log("healthData", healthData);
 		} else if (error) {
             console.log(error);
         }
-	}, [loading, error]);
+	}, [loading, error, date]);
 
 	return (
 		<ViewContainer>
@@ -44,6 +44,8 @@ export default function Challenges() {
 			/>
 			<Text style={styles.text}>Your level: {buddy.level}</Text>
 			<Text style={styles.text}>Your XP: {buddy.xp}</Text>
+            <LevelUpModal visible={modalVisible} currentLevel={buddy.level} />
+            
 			{!loading ? (
 				<ScrollView
 					contentContainerStyle={{
