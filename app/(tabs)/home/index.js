@@ -1,10 +1,14 @@
 import { useQuery, useRealm } from "@realm/react";
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, Pressable } from "react-native";
 import { Redirect, router } from "expo-router";
-import Avatar from "../components/Avatar";
-import ViewContainer from "../components/design/ViewContainer";
-import LevelUpModal from "../components/LevelUpModal";
+import Avatar from "@components/Avatar";
+import ViewContainer from "@components/design/ViewContainer";
+import { Ionicons } from "@expo/vector-icons";
+import colors from "@constants/colors";
+
+import Title from "@components/design/Title";
+import DailyCard from "../../components/DailyCard";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
@@ -32,60 +36,36 @@ export default function Home() {
 		setBuddyName(buddy.buddy_name);
 	}, []);
 
-	const deleteAllData = () => {
-		realm.write(() => {
-			realm.deleteAll();
-		});
-
-		console.log("Deleted all data");
-	};
-
-	const deleteChallenges = () => {
-		realm.write(() => {
-			realm.delete(realm.objects("Challenges"));
-		});
-
-		console.log("Deleted challenges");
-	};
-
-	const clearBuddyLevelAndXP = () => {
-		realm.write(() => {
-			buddy.level = 1;
-			buddy.xp = 0;
-		});
-
-		console.log("Cleared buddy level and XP");
-	};
-
 	return (
-		<ViewContainer style={styles.container}>
+		<ViewContainer>
+			<Pressable
+				onPress={() => router.push("/home/homeSettings")}
+				style={styles.settings}
+			>
+				<Ionicons
+					name="ios-settings-sharp"
+					size={24}
+					color={colors.lightGrey}
+				/>
+			</Pressable>
 			<Avatar
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
 
-			<Text style={styles.text}>{username}</Text>
-			<Text style={styles.text}>{buddy_name}</Text>
-			<View style={{ gap: 20 }}>
-                <Button title="Delete all data" onPress={() => deleteAllData()}   />
-			<Button
-				title="Delete challenges"
-				onPress={() => deleteChallenges()}
-                style={{ marginTop: 10 }}
-			/>
-			<Button
-				title="Clear buddy level and XP"
-				onPress={() => clearBuddyLevelAndXP()}
-			/>
-            </View>
+			<View>
+				<Title text={"Hello there,"} subtitle={username}/>
+			</View>
+
+            <DailyCard />
+			
 		</ViewContainer>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		justifyContent: "center",
+        paddingTop: 100,
 		alignItems: "center",
 	},
 	text: {
@@ -98,5 +78,12 @@ const styles = StyleSheet.create({
 		height: 200,
 		borderRadius: 100,
 		marginBottom: 16,
+	},
+	settings: {
+		position: "absolute",
+		top: 50,
+		left: 20,
+		width: 40,
+		height: 40,
 	},
 });
