@@ -26,9 +26,7 @@ export default function Challenges() {
 	);
 
 	useEffect(() => {
-		// Fetch initial health data on component mount
 		if (!loading && !error) {
-			// You can access healthData.steps, healthData.flights, etc. here
 			setData(healthData);
 		} else if (error) {
             console.log(error);

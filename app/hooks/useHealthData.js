@@ -18,11 +18,15 @@ const useHealthData = (date, weekly, monthly) => {
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(null)
 
-	const apiRateLimiter = new RateLimiter(1, "minute"); // 1 request per minute
+	const apiRateLimiter = new RateLimiter({ tokensPerInterval: 5, interval: "minute"}); // 1 request per minute
 
 	const fetchData = async () => {
 		try {
-			await apiRateLimiter.removeTokens(1); // Wait for tokens before making the request
+			await apiRateLimiter.removeTokens(5); // Wait for tokens before making the request
+
+            if (apiRateLimiter.getTokensRemaining() === 0) {
+                throw new Error("API rate limit reached.");
+            };
 
 			// initialize the client
 			const isInitialized = await initialize();

@@ -23,7 +23,7 @@ const DailyCard = () => {
 		} else {
 			console.log(error);
 		}
-	}, [steps, flights, distance, calories, date]);
+	}, [loading, error, date]);
 
 	return (
 		<View style={styles.container}>
