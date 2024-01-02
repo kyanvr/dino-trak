@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Modal, View, Text, StyleSheet, Animated, Image } from "react-native";
 import dino from "@assets/dino.png";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 import LottieView from "lottie-react-native";
 import levelup from "@assets/lottie/levelup2.json";
+import levels from "../../constants/levels";
+import accessories from "../../constants/accessories";
 
 const LevelUpModal = ({ visible, currentLevel }) => {
 	const animatedValue = new Animated.Value(0);
@@ -21,6 +23,15 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 		}).start();
 	}, [visible]);
 
+    const getAccessory = (accessory) => {
+        return accessories[accessory]
+    }
+    const getAccessoryPerLevel = (level) => {
+        if (level < 2) return null;
+        const accessory = levels[level - 2].attribute;
+        return getAccessory(accessory);
+    }
+
 	return (
 		<Modal transparent visible={visible} animationType="slide">
 			<View style={styles.modalContainer}>
@@ -32,14 +43,14 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 						position: "absolute",
 						top: 100,
 						right: "50%",
-                        transform: [{ translateX: 150 }, { translateY: 150 }],
-                        zIndex: -1,
+						transform: [{ translateX: 150 }, { translateY: 150 }],
+						zIndex: -1,
 					}}
 				>
 					<LottieView
 						ref={animation}
 						autoPlay
-                        loop={false}
+						loop={false}
 						source={levelup}
 						style={{ width: 300, height: 300 }}
 					/>
@@ -51,6 +62,13 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 						Your buddy reached level{" "}
 						<Text style={styles.level}>{currentLevel}</Text>
 					</Text>
+					<View style={{alignItems: 'center'}}>
+                        <Text style={styles.modalText}>You unlocked a new item!</Text>
+						<Image
+							source={getAccessoryPerLevel(currentLevel)}
+							style={{ width: 50, height: 50, objectFit: "contain" }}
+						/>
+					</View>
 				</View>
 
 				<View style={styles.triangle} />
@@ -75,7 +93,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		position: "relative",
 		zIndex: 1,
-		height: 100,
+		height: 150,
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -97,11 +115,11 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 20,
 		borderLeftColor: "transparent",
 		borderRightColor: "transparent",
-		borderBottomColor: colors["grey-100"], // Match the modal content background color
+		borderBottomColor: colors["grey-100"],
 		position: "absolute",
-		bottom: 325, // Adjust the distance from the top of the card
+		bottom: 300,
 		left: 85,
-		zIndex: 2, // Ensure the triangle is above the modal content
+		zIndex: 2,
 		transform: [{ rotate: "180deg" }],
 	},
 	dino: {

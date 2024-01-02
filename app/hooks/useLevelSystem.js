@@ -57,6 +57,7 @@ const useLevelSystem = () => {
 
 	const unlockItemsForLevel = (level) => {
         const modifiedLevel = level - 2;
+        console.log("unlocking items for level: ", modifiedLevel)
 
 		setUnlockedItems((prevItems) => {
 			return [...prevItems, levels[modifiedLevel]]

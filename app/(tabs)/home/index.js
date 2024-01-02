@@ -37,15 +37,6 @@ export default function Home() {
 		setUsername(user.username);
 	}, [user]);
 
-	// useEffect(() => {
-	// 	const timeout = setTimeout(() => {
-	// 		setIsLoaded(true);
-	// 		console.log("loaded");
-	// 	}, 3000);
-
-	// 	return () => clearTimeout(timeout);
-	// }, []);
-
 	return (
 		<ViewContainer>
 			<Pressable
@@ -55,7 +46,7 @@ export default function Home() {
 				<Ionicons
 					name="ios-settings-sharp"
 					size={24}
-					color={colors.lightGrey}
+					color={colors["green-200"]}
 				/>
 			</Pressable>
 			<Avatar

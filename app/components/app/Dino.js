@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import React, { useEffect, useState, useMemo, useReducer } from "react";
+import {
+	Image,
+	StyleSheet,
+	View,
+	TouchableOpacity,
+	Text,
+	ScrollView,
+	Dimensions,
+} from "react-native";
 import dino from "@assets/dino.png";
 import { useCombination } from "@hooks/useCombination";
 import accessories from "@constants/accessories";
@@ -11,9 +19,13 @@ import BackButton from "@components/design/BackButton";
 import { useToast } from "react-native-toast-notifications";
 import { router } from "expo-router";
 
+const screenWidth = Dimensions.get("window").width;
+
 const Dino = ({ screen }) => {
 	// Local state to track changes made by the user
-	const [changesMade, setChangesMade] = useState(false);
+	const [changesMade, setChangesMade] = useState(0);
+	const [categories, setCategories] = useState([]);
+	const [itemsByCategory, setItemsByCategory] = useState({});
 	const { accessoryPaths, toggleAccessory, unlockAccessory, unlockedPaths } =
 		useCombination();
 	const realm = useRealm();
@@ -32,7 +44,6 @@ const Dino = ({ screen }) => {
 	// console.log("unlockedAttributes: ", unlockedAttributes)
 	// console.log("activeAttributes: ", activeAttributes)
 	// console.log("unlockedPaths: ", unlockedPaths)\
-	// console.log("unlockedItems: ", unlockedItems);
 	// console.log("unlocked: ", unlocked);
 
 	const handlePress = () => {
@@ -51,7 +62,7 @@ const Dino = ({ screen }) => {
 			});
 
 			// Reset the local state when changes are saved
-			setChangesMade(false);
+			setChangesMade(0);
 
 			// Navigate back
 			router.back();
@@ -67,7 +78,7 @@ const Dino = ({ screen }) => {
 	};
 
 	const handleBack = () => {
-		if (changesMade) {
+		if (changesMade > 0) {
 			toast.show("You have unsaved changes!", {
 				type: "warning",
 				placement: "bottom",
@@ -112,6 +123,121 @@ const Dino = ({ screen }) => {
 			});
 		}
 	}, [active]);
+
+	// Load categories with unlocked if it is not empty
+	useEffect(() => {
+		if (unlocked.length > 0) {
+			const paths = unlocked.split(",");
+			setCategories((prevCategories) => {
+				const updatedCategories = [...prevCategories];
+				const updatedItemsByCategory = { ...itemsByCategory };
+
+				paths.forEach((path) => {
+					const attribute = path.split("_");
+					const attributeCategory = attribute[0];
+
+					// Update or add the category to the state
+					if (!updatedCategories.includes(attributeCategory)) {
+						updatedCategories.push(attributeCategory);
+					}
+
+					// Update or add the item to the respective category in the state
+					if (!updatedItemsByCategory[attributeCategory]) {
+						updatedItemsByCategory[attributeCategory] = [];
+					}
+
+					// Check if the item is not already in the category before adding
+					if (
+						!updatedItemsByCategory[attributeCategory].includes(
+							attribute[1]
+						)
+					) {
+						updatedItemsByCategory[attributeCategory].push(
+							attribute[1]
+						);
+					}
+				});
+
+				setItemsByCategory(updatedItemsByCategory);
+				return updatedCategories;
+			});
+		}
+	}, [unlocked]);
+
+    console.log("itemsByCategory: ", itemsByCategory);
+
+	const Item = React.memo(
+		({
+			accessoryPath,
+			toggleAccessory,
+			isAccessorySelected,
+			setChangesMade,
+		}) => {
+			return (
+				<TouchableOpacity
+					onPress={() => {
+						toggleAccessory(accessoryPath);
+						setChangesMade((prev) => prev + 1);
+					}}
+				>
+					<Image
+						source={accessories[accessoryPath]}
+						style={[
+							styles.thumbnail,
+							isAccessorySelected(accessoryPath) &&
+								styles.selectedThumbnail,
+						]}
+					/>
+				</TouchableOpacity>
+			);
+		}
+	);
+
+	const ItemsView = ({
+		categories,
+		itemsByCategory,
+		toggleAccessory,
+		isAccessorySelected,
+		setChangesMade,
+	}) => {
+		// Use useMemo to memoize the View component
+		return useMemo(() => {
+			return (
+				<ScrollView contentContainerStyle={styles.items}>
+					{categories.map((category, categoryIndex) => (
+						<View
+							key={categoryIndex}
+							style={styles.categoryContainer}
+						>
+							<Text style={styles.categoryTitle}>{category}</Text>
+							<View style={styles.categoryItems}>
+								{(itemsByCategory[category] || []).map(
+									(accessoryPath, index) => (
+										// Use the Item component instead of TouchableOpacity
+										<Item
+											key={index}
+											accessoryPath={accessoryPath}
+											toggleAccessory={toggleAccessory}
+											isAccessorySelected={
+												isAccessorySelected
+											}
+											setChangesMade={setChangesMade}
+										/>
+									)
+								)}
+							</View>
+						</View>
+					))}
+				</ScrollView>
+			);
+		}, [
+			categories,
+			itemsByCategory,
+			toggleAccessory,
+			isAccessorySelected,
+			setChangesMade,
+		]);
+	};
 
 	return (
 		<View style={styles.container}>
@@ -159,27 +285,13 @@ const Dino = ({ screen }) => {
 			</View>
 
 			{screen !== "home" && (
-				<View style={styles.items}>
-					{unlockedPaths.map((accessoryPath, index) => (
-						<TouchableOpacity
-							key={index}
-							onPress={() => {
-								toggleAccessory(accessoryPath);
-								// Set the local state to indicate changes
-								setChangesMade(!changesMade);
-							}}
-						>
-							<Image
-								source={accessories[accessoryPath]}
-								style={[
-									styles.thumbnail,
-									isAccessorySelected(accessoryPath) &&
-										styles.selectedThumbnail,
-								]}
-							/>
-						</TouchableOpacity>
-					))}
-				</View>
+				<ItemsView
+					categories={categories}
+					itemsByCategory={itemsByCategory}
+					toggleAccessory={toggleAccessory}
+					isAccessorySelected={isAccessorySelected}
+					setChangesMade={setChangesMade}
+				/>
 			)}
 		</View>
 	);
@@ -189,10 +301,12 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
 		flex: 1,
+		paddingHorizontal: 20,
 	},
 	dinoContainer: {
 		position: "relative",
 		zIndex: -1,
+		marginBottom: 20,
 	},
 	top: {
 		flexDirection: "row",
@@ -209,16 +323,36 @@ const styles = StyleSheet.create({
 	items: {
 		flexDirection: "row",
 		flexWrap: "wrap",
-		justifyContent: "center",
+		alignItems: "flex-start",
+		alignSelf: "stretch",
+		width: screenWidth,
+		paddingVertical: 20,
+	},
+	categoryContainer: {
+		marginBottom: 30,
+		alignItems: "flex-start",
+		alignSelf: "stretch",
+		width: "100%",
+	},
+	categoryTitle: {
+		fontSize: 16,
+		marginBottom: 10,
+		color: colors["grey-300"],
+		textTransform: "capitalize",
+	},
+	categoryItems: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "flex-start",
 		alignItems: "center",
 		alignSelf: "stretch",
-		marginTop: 50,
+		width: "100%",
 	},
 	thumbnail: {
 		alignItems: "center",
 		justifyContent: "center",
-		width: 50,
-		height: 50,
+		width: 75,
+		height: 75,
 		resizeMode: "contain",
 		margin: 5,
 	},
@@ -240,12 +374,37 @@ const styles = StyleSheet.create({
 	},
 	sunglasses: {
 		position: "absolute",
-		top: -15,
-		left: 100,
+		top: -24,
+		left: 90,
+		width: 120,
+		height: 120,
+		resizeMode: "contain",
+	},
+	shield: {
+		position: "absolute",
+		top: 165,
+		right: 40,
+		width: 120,
+		height: 120,
+		resizeMode: "contain",
+	},
+	sword: {
+		position: "absolute",
+		top: 175,
+		left: 70,
 		width: 100,
 		height: 100,
 		resizeMode: "contain",
 	},
+    wand: {
+        position: "absolute",
+        top: 105,
+        left: -5,
+        width: 200,
+        height: 200,
+        resizeMode: "contain",
+        transform: [{ rotate: "-30deg" }],
+    },
 });
 
 export default Dino;
