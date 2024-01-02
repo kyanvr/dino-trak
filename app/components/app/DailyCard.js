@@ -17,7 +17,7 @@ const DailyCard = () => {
 	useEffect(() => {
 		if (!loading && !error) {
 			setSteps(healthData.steps);
-			setFlights(healthData.flights);
+			setFlights(healthData.floors);
 			setDistance(healthData.distance);
 			setCalories(healthData.calories);
 		} else {
@@ -49,7 +49,7 @@ const DailyCard = () => {
 						{ alignItems: "flex-start" },
 					]}
 				>
-					<Text style={styles.valueTextBottom}>Flights climbed</Text>
+					<Text style={styles.valueTextBottom}>Floors climbed</Text>
 					{!loading && !error ? (
                         <Text style={styles.valueBottom}>{flights}</Text>
                     ) : (
@@ -75,7 +75,7 @@ const DailyCard = () => {
 						{ alignItems: "flex-end" },
 					]}
 				>
-					<Text style={styles.valueTextBottom}>Calories</Text>
+					<Text style={styles.valueTextBottom}>Calories burned</Text>
 					{!loading && !error ? (
                         <Text style={styles.valueBottom}>{calories} kcal</Text>
                     ) : (
@@ -94,14 +94,14 @@ const styles = StyleSheet.create({
 		borderColor: colors["grey-600"],
 		borderWidth: 2,
 		alignSelf: "stretch",
-		marginHorizontal: 40,
 		padding: 20,
 		borderRadius: 10,
+
 	},
 	top: {
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between",
+		justifyContent: "space-around",
 		alignSelf: "stretch",
 	},
 	topTextContainer: {

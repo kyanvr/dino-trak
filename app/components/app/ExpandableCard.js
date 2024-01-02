@@ -8,10 +8,10 @@ import {
 	Image,
 	Animated,
 } from "react-native";
-import colors from "../constants/colors";
+import colors from "../../constants/colors";
 import { debounce } from "lodash";
-import progressFormat from "../utils/progressFormat";
-import Button from "./design/Button";
+import progressFormat from "../../utils/progressFormat";
+import Button from "../design/Button";
 
 export default function ExpandableCard({
 	title,

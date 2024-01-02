@@ -12,11 +12,14 @@ import useImagePicker from "../../hooks/useImagePicker";
 
 export default function Start3() {
 	const realm = useRealm();
-    const user = useQuery("User");
+	const user = useQuery("User");
 	const usernameRef = useRef("");
 
-    // selectedImage is the image that will be cached to show the user
-    const { selectedImage, pickImageAsync, saveImage, getSavedImage } = useImagePicker();
+    const placeholder = require("@assets/avatar_placeholder.png");
+
+	// selectedImage is the image that will be cached to show the user
+	const { selectedImage, pickImageAsync, saveImage, getSavedImage } =
+		useImagePicker();
 
 	async function handlePress() {
 		await saveImage();
@@ -25,7 +28,11 @@ export default function Start3() {
 
 		realm.write(() => {
 			user[0].username = usernameRef.current;
-			user[0].avatar = savedImage;
+			if (savedImage !== undefined) {
+				user[0].avatar = savedImage;
+			} else {
+                user[0].avatar = "";
+            }
 		});
 
 		router.push("/screens/startup/start4");
@@ -57,8 +64,8 @@ const styles = StyleSheet.create({
 		alignSelf: "stretch",
 		flexDirection: "column",
 		alignItems: "center",
-        gap: 50,
-        marginBottom: 50,
+		gap: 50,
+		marginBottom: 50,
 	},
 	image: {
 		width: 100,

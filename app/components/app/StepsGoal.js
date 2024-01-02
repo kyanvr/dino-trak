@@ -2,9 +2,9 @@ import { useQuery, useRealm } from "@realm/react";
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-import InputText from "./design/InputText";
+import InputText from "../design/InputText";
 import { StyleSheet } from "react-native";
-import colors from "../constants/colors";
+import colors from "../../constants/colors";
 
 const StepsGoal = () => {
 	const [isEditing, setEditing] = useState(false);

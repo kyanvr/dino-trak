@@ -16,6 +16,7 @@ import Button from "@components/design/Button";
 import useImagePicker from "../../hooks/useImagePicker";
 import ImagePicker from "@components/design/ImagePicker";
 import { useToast } from "react-native-toast-notifications";
+import { openHealthConnectSettings } from "react-native-health-connect";
 
 export default function Settings() {
     const [focused, setFocused] = useState(false);
@@ -112,6 +113,10 @@ export default function Settings() {
 						onPress={pickImageAsync}
 						image={selectedImage ? selectedImage : user[0].avatar}
 					/>
+				</View>
+				<View style={styles.settingsBlock}>
+					<Text style={styles.text}>Open Health Connect settings</Text>
+					<Button title="Open settings" onPress={openHealthConnectSettings} />
 				</View>
 			</ScrollView>
 		</View>

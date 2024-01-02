@@ -1,31 +1,28 @@
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import colors from "@constants/colors";
 import { router } from "expo-router";
 
-const BackButton = ({ title }) => {
+const BackButton = ({ title, onPress }) => {
 	return (
-		<Pressable onPress={() => router.back()} style={styles.button}>
+		<TouchableOpacity onPress={onPress} style={styles.button}>
 			<Text style={styles.text}>{title}</Text>
-		</Pressable>
+		</TouchableOpacity>
 	);
 };
 
 const styles = StyleSheet.create({
         button: {
-        borderBottomColor: colors.green,
+        borderBottomColor: colors["grey-500"],
         paddingHorizontal: 10,
         paddingBottom: 10,
-        marginTop: 50,
-        // alignSelf: "stretch",
         alignItems: "center",
         borderBottomWidth: 2,
 
     },
     text: {
         fontSize: 16,
-        color: colors.lightGrey,
-        fontWeight: "regular",
+        color: colors["grey-500"],
     },
 });
 

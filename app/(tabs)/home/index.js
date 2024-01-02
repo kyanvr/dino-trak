@@ -1,40 +1,50 @@
-import { useQuery, useRealm } from "@realm/react";
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, Button, Pressable } from "react-native";
+import React, { Suspense, useEffect, useState } from "react";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Pressable,
+	TouchableOpacity,
+	Button,
+} from "react-native";
 import { Redirect, router } from "expo-router";
-import Avatar from "@components/Avatar";
-import ViewContainer from "@components/design/ViewContainer";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery, useRealm } from "@realm/react";
+import Avatar from "@components/app/Avatar";
+import ViewContainer from "@components/design/ViewContainer";
 import colors from "@constants/colors";
-
 import Title from "@components/design/Title";
-import DailyCard from "../../components/DailyCard";
+import DailyCard from "@components/app/DailyCard";
+import Dino from "../../components/app/Dino";
+import { Feather } from "@expo/vector-icons";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
-	const [buddy_name, setBuddyName] = useState("");
 	const realm = useRealm();
 	const user = useQuery("User")[0];
-	const buddy = useQuery("Buddy")[0];
 
-	if (user === undefined || buddy === undefined) {
+	if (user === undefined) {
 		return <Redirect href={"/screens/startup/start"} />;
-	} else if (user.onboarding_completed === false) {
-		<Redirect href={"/screens/startup/start"} />;
+	} else if (!user.onboarding_completed) {
+		return <Redirect href={"/screens/startup/start"} />;
 	}
 
-	user.addListener((user) => {
-		setUsername(user.username);
-	});
-
-	buddy.addListener((buddy) => {
-		setBuddyName(buddy.buddy_name);
+	user.addListener((updatedUser) => {
+		setUsername(updatedUser.username);
 	});
 
 	useEffect(() => {
 		setUsername(user.username);
-		setBuddyName(buddy.buddy_name);
-	}, []);
+	}, [user]);
+
+	// useEffect(() => {
+	// 	const timeout = setTimeout(() => {
+	// 		setIsLoaded(true);
+	// 		console.log("loaded");
+	// 	}, 3000);
+
+	// 	return () => clearTimeout(timeout);
+	// }, []);
 
 	return (
 		<ViewContainer>
@@ -53,19 +63,34 @@ export default function Home() {
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
 
-			<View>
-				<Title text={"Hello there,"} subtitle={username}/>
+			<View style={{ flex: 1 }}>
+				<Title text={"Hello there,"} subtitle={username} />
 			</View>
 
-            <DailyCard />
-			
+			<View style={{ flex: 2, alignSelf: 'stretch', marginHorizontal: 20, marginBottom: 50 }}>
+				<DailyCard />
+			</View>
+
+			<View style={{ flex: 3, alignSelf: 'stretch' }}>
+				<TouchableOpacity
+					onPress={() => router.push("/home/modal")}
+					style={{ position: "absolute", top: 0, right: 20, width: 44, height: 44 }}
+				>
+					<Feather
+						name="edit"
+						size={24}
+						color={colors["green-200"]}
+					/>
+				</TouchableOpacity>
+				<Dino screen={"home"} />
+			</View>
 		</ViewContainer>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
-        paddingTop: 100,
+		paddingTop: 100,
 		alignItems: "center",
 	},
 	text: {

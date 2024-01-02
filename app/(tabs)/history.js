@@ -11,9 +11,9 @@ import { formatDate } from "../utils/dateFormat";
 import { Button } from "react-native";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useQuery, useRealm } from "@realm/react";
-import StepsGoal from "../components/StepsGoal";
+import StepsGoal from "../components/app/StepsGoal";
 import progressFormat from "../utils/progressFormat";
-import Avatar from "../components/Avatar";
+import Avatar from "../components/app/Avatar";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
@@ -121,8 +121,8 @@ export default function App() {
 						loading={loading}
 					/>
 					<Value
-						label="Flights Climbed"
-						value={healthData.flights}
+						label="Floors Climbed"
+						value={healthData.floors}
 						loading={loading}
 					/>
 					<Value

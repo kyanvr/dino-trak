@@ -1,10 +1,10 @@
 const colors = {
-	black: "#161616",
-	green: "#00FF00",
-	grey: "#383838",
-	lightGrey: "#C1C1C1",
-	darkGrey: "#282828",
-	white: "#FFFFFF",
+	// black: "#161616",
+	// green: "#00FF00",
+	// grey: "#383838",
+	// lightGrey: "#C1C1C1",
+	// darkGrey: "#282828",
+	// white: "#FFFFFF",
 	"green-900": "#14250F",
 	"green-800": "#1C4415",
 	"green-700": "#248A1A",
@@ -23,6 +23,8 @@ const colors = {
 	"grey-300": "#AAAAAA",
 	"grey-200": "#C2C2C2",
 	"grey-100": "#E0E0E0",
+	danger: "#FF0000",
+	warning: "#FFD700",
 };
 
 export default colors;

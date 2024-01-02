@@ -10,7 +10,7 @@ import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import formatNumber from "../../utils/numberFormat";
-import Avatar from "../../components/Avatar";
+import Avatar from "../../components/app/Avatar";
 
 export default function Profile() {
 	const [username, setUsername] = useState("");

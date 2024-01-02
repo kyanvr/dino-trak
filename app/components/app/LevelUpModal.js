@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Modal, View, Text, StyleSheet, Animated, Image } from "react-native";
 import dino from "@assets/dino.png";
-import colors from "../constants/colors";
+import colors from "../../constants/colors";
 import LottieView from "lottie-react-native";
 import levelup from "@assets/lottie/levelup2.json";
 
@@ -10,7 +10,7 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 	const animation = useRef(null);
 
     useEffect(() => {
-		animation.current?.play();
+		animation.current?.play()
 	}, []);
 
 	useEffect(() => {

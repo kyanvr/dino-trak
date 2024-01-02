@@ -1,15 +1,21 @@
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function _layout() {
 	return (
-		<Tabs
+		<Stack
 			screenOptions={{
 				headerShown: false,
-				tabBarStyle: { display: "none" },
+				// tabBarStyle: { display: "none" },
 			}}
 		>
-			<Tabs.Screen name="index" />
-			<Tabs.Screen name="homeSettings" />
-		</Tabs>
+			<Stack.Screen name="index" />
+			<Stack.Screen name="homeSettings" />
+			<Stack.Screen
+				name="modal"
+				options={{
+					presentation: "modal",
+				}}
+			/>
+		</Stack>
 	);
 }

@@ -15,7 +15,7 @@ const Start4 = () => {
 
 	function handlePress() {
 		realm.write(() => {
-			const buddy = new Buddy(realm, buddyNameRef.current, 1, 0, "");
+			const buddy = new Buddy(realm, buddyNameRef.current, 1, 0, "", "");
 
 			return buddy;
 		});

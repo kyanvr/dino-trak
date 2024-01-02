@@ -2,6 +2,7 @@ import { useQuery, useRealm } from '@realm/react';
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import BackButton from '@components/design/BackButton';
+import { router } from 'expo-router';
 
 const HomeSettings = () => {
 
@@ -29,6 +30,8 @@ const HomeSettings = () => {
 		realm.write(() => {
 			buddy.level = 1;
 			buddy.xp = 0;
+            buddy.unlocked_attributes = "";
+            buddy.active_attributes = "";
 		});
 
 		console.log("Cleared buddy level and XP");
@@ -36,7 +39,7 @@ const HomeSettings = () => {
 
     return (
 		<View style={styles.container}>
-            <BackButton title={'back'} />
+            <BackButton title={'back'} onPress={() => router.back()} />
 			{/* Add your settings components here */}
 			<View style={{ gap: 20 }}>
 				<Button

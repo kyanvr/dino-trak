@@ -7,16 +7,17 @@ import { Buddy } from "./models/Buddy";
 import colors from "@constants/colors";
 import { ToastProvider } from "react-native-toast-notifications";
 import "react-native-get-random-values";
+import { CombinationProvider } from "./hooks/useCombination";
 
 export default function StackLayout() {
-
 	const config = {
 		schema: [User, Buddy],
 		schemaVersion: 0,
 		deleteRealmIfMigrationNeeded: true,
 	};
 
-    // const { RealmProvider} = createRealmContext(config);
+	// uncomment this line to skip the migration if needed
+	// const { RealmProvider} = createRealmContext(config);
 
 	return (
 		<ToastProvider
@@ -24,17 +25,13 @@ export default function StackLayout() {
 			duration={5000}
 			animationType="slide-in | zoom-in"
 			animationDuration={250}
-			successColor={colors.green}
-			dangerColor="red"
-			warningColor="orange"
+			successColor={colors["green-300"]}
+			dangerColor={colors.danger}
+			warningColor={colors.warning}
 			normalColor="gray"
-			// icon={<Icon />}
-			// successIcon={<SuccessIcon />}
-			// dangerIcon={<DangerIcon />}
-			// warningIcon={<WarningIcon />}
 			textStyle={{
 				fontSize: 16,
-				color: colors.black,
+				color: colors["grey-900"],
 				fontWeight: "bold",
 			}}
 			offset={50} // offset for both top and bottom toasts
@@ -43,9 +40,11 @@ export default function StackLayout() {
 			swipeEnabled={true}
 		>
 			<RealmProvider schema={schemas}>
-				<Stack screenOptions={{ headerShown: false }}>
-					<Stack.Screen name="(tabs)" />
-				</Stack>
+				<CombinationProvider>
+					<Stack screenOptions={{ headerShown: false }}>
+						<Stack.Screen name="(tabs)" />
+					</Stack>
+				</CombinationProvider>
 			</RealmProvider>
 		</ToastProvider>
 	);

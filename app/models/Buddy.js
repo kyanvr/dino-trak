@@ -7,7 +7,8 @@ export class Buddy extends Realm.Object {
 	buddy_name;
 	level;
 	xp;
-	attributes;
+	unlocked_attributes;
+    active_attributes;
 
 	// required by realm
 	static primaryKey = "_id";
@@ -20,7 +21,8 @@ export class Buddy extends Realm.Object {
 			buddy_name: "string",
 			level: "int",
 			xp: "int",
-			attributes: "string",
+			unlocked_attributes: "string",
+            active_attributes: "string",
 			createdAt: {
 				type: "date",
 				default: new Date(),
@@ -28,14 +30,15 @@ export class Buddy extends Realm.Object {
 		},
 	};
 
-	constructor(realm, buddy_name, level, xp, attributes) {
+	constructor(realm, buddy_name, level, xp, unlocked_attributes, active_attributes) {
 		console.log("in constructor");
 		super(realm, {
 			_id: new BSON.UUID(),
 			buddy_name,
 			level,
 			xp,
-			attributes,
+			unlocked_attributes,
+            active_attributes,
 		});
 	}
 }

@@ -15,6 +15,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         paddingTop: 75,
-        backgroundColor: colors.black,
+        backgroundColor: colors['grey-900'],
     },
 });
