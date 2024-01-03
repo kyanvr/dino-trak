@@ -33,18 +33,6 @@ export const CombinationProvider = ({ children }) => {
 		setAccessoryPaths([]);
 	};
 
-
-	// const saveCombination = () => {
-	// 	const combination = {
-	// 		accessories: accessoryPaths,
-	// 	};
-
-	// 	// Save combination to storage (e.g., AsyncStorage)
-	// 	// ...
-
-	// 	console.log("Saved Combination:", combination);
-	// };
-
 	const contextValue = {
 		accessoryPaths,
 		toggleAccessory,

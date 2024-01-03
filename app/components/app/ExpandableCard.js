@@ -9,13 +9,12 @@ import {
 	Animated,
 } from "react-native";
 import colors from "../../constants/colors";
-import { debounce } from "lodash";
 import progressFormat from "../../utils/progressFormat";
 import Button from "../design/Button";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ExpandableCard({
 	title,
-	imageUrl,
 	description,
 	xp,
 	completed,
@@ -35,9 +34,11 @@ export default function ExpandableCard({
 	const [steps, setSteps] = useState(0);
 
 	useEffect(() => {
-		// Set initial health data
-		setSteps(healthData.steps);
-	}, [healthData.steps]);
+		// check if healthData is passed in
+		if (healthData.steps) {
+			setSteps(healthData.steps);
+		}
+	}, [healthData]);
 
 	useEffect(() => {
 		const [startDate, endDate] = calculateDateRange();
@@ -98,9 +99,9 @@ export default function ExpandableCard({
 		return null;
 	}
 
-    if (loading) {
-        return null;
-    }
+	if (loading) {
+		return null;
+	}
 
 	return (
 		<TouchableOpacity
@@ -109,10 +110,15 @@ export default function ExpandableCard({
 			style={styles.container}
 		>
 			<Animated.View style={styles.card}>
-				<Image
-					source={require("@assets/test.png")}
-					style={styles.image}
-				/>
+				{stepsReached && (
+					<View style={styles.checkmarkContainer}>
+						<MaterialCommunityIcons
+							name="progress-check"
+							size={24}
+							color={colors["grey-900"]}
+						/>
+					</View>
+				)}
 				<View style={styles.content}>
 					<Text style={styles.title}>{title}</Text>
 					<View style={styles.progressContainer}>
@@ -149,9 +155,6 @@ export default function ExpandableCard({
 }
 
 const styles = StyleSheet.create({
-	container: {
-		paddingHorizontal: 20,
-	},
 	card: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -161,32 +164,40 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		overflow: "hidden",
 		width: "100%",
+		position: "relative",
 	},
-	image: {
-		width: 80,
-		height: "100%",
-		marginRight: 16,
-		objectFit: "contain",
-	},
+    checkmarkContainer: {
+        position: "absolute",
+        backgroundColor: colors["green-500"],
+        borderRadius: 50,
+        top: 20,
+        right: 20,
+        width: 30,
+        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 	content: {
 		flex: 1,
+        gap: 8,
 	},
 	title: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "white",
+		color: colors["grey-100"],
 	},
 	progressContainer: {
 		marginTop: 8,
 	},
 	progressText: {
-		color: "white",
+		color: colors["grey-100"],
 	},
 	progressBar: {
 		height: 8,
 		backgroundColor: colors["grey-100"],
 		borderRadius: 4,
 		marginTop: 4,
+		flexDirection: "row",
 	},
 	progressFill: {
 		height: "100%",
@@ -195,9 +206,10 @@ const styles = StyleSheet.create({
 	},
 	additionalInfo: {
 		marginTop: 8,
+        gap: 8,
 	},
 	additionalText: {
-		color: "white",
+		color: colors["grey-200"],
 	},
 	rewardButton: {
 		backgroundColor: colors["green-500"],

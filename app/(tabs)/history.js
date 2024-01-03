@@ -102,14 +102,14 @@ export default function App() {
 					/>
 				</Pressable>
 			</View>
-			<ScrollView style={styles.container}>
+			<ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 				<RingProgress
 					radius={150}
 					strokeWidth={50}
 					progress={progress}
 				/>
 
-				<View>
+				<View style={{marginTop: 20}}>
 					<StepsGoal />
 				</View>
 
@@ -138,7 +138,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		paddingVertical: 20,
 	},
 	values: {

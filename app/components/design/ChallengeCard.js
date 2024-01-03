@@ -1,45 +1,22 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
-import colors from '../../constants/colors';
-import AbsoluteComponent from './AbsoluteComponent';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import colors from "../../constants/colors";
 
-const ChallengeCard = ({ title , description , progress, completed }) => {
-  return (
+const ChallengeCard = ({ title, description }) => {
+	return (
 		<View style={styles.container}>
-			<AbsoluteComponent>
-				<Pressable style={completed ? styles.btnCompleted : styles.btnNotCompleted}>
-					<Text style={styles.rewardTitle}>Earn reward</Text>
-				</Pressable>
-			</AbsoluteComponent>
-			<View style={completed ? styles.completed : styles.cardContainer}>
-				<Image
-					source={require("../../../assets/test.png")}
-					style={styles.image}
-				/>
-				<View>
-					<Text style={styles.title}>{title}</Text>
-					<Text style={styles.description}>{description}</Text>
-					<Text style={styles.description}>{progress}</Text>
-				</View>
+			<View>
+				<Text style={styles.title}>{title}</Text>
+				<Text style={styles.description}>{description}</Text>
 			</View>
-			
 		</View>
-  );
+	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		position: "relative",
-	},
-	image: {
-		width: 100,
-		height: 100,
-		objectFit: "cover",
-	},
-	cardContainer: {
 		width: 300,
-		// height: 150,
-		backgroundColor: colors.darkGrey,
+		backgroundColor: colors["grey-800"],
 		borderRadius: 10,
 		padding: 20,
 		justifyContent: "space-between",
@@ -49,43 +26,17 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		fontWeight: "bold",
-		color: colors.white,
+		color: colors["grey-100"],
 	},
 	description: {
 		fontSize: 16,
-		color: colors.white,
+		color: colors["grey-300"],
 	},
 	rewardTitle: {
 		fontSize: 16,
 		fontWeight: "bold",
-		color: colors.black,
+		color: colors["grey-900"],
 	},
-    completed: {
-        width: 300,
-        height: 150,
-        backgroundColor: colors.darkGrey,
-        borderRadius: 10,
-        padding: 20,
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexDirection: "row",
-        opacity: 0.5,
-    },
-    btnCompleted: {
-        // position: "absolute",
-        alignItems: "center",
-		justifyContent: "center",
-        zIndex: 999,
-        width: 150,
-        height: 50,
-        backgroundColor: colors.green,
-        borderRadius: 10,
-        padding: 10,
-        opacity: 1,
-    },
-    btnNotCompleted: {
-       display: "none",
-    }
 });
 
 export default ChallengeCard;

@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import ViewContainer from "@components/design/ViewContainer";
 import Title from "@components/design/Title";
 import useHealthData from "../../hooks/useHealthData";
-import { useRealm } from "@realm/react";
+import { useQuery, useRealm } from "@realm/react";
 import colors from "@constants/colors";
 import ProfileCard from "@components/design/ProfileCard";
-import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import formatNumber from "../../utils/numberFormat";
 import Avatar from "../../components/app/Avatar";
+import ChallengeCard from "../../components/design/ChallengeCard";
 
 export default function Profile() {
 	const [username, setUsername] = useState("");
@@ -22,10 +21,14 @@ export default function Profile() {
 			calories: 0,
 		},
 	]);
-	const date = new Date();
+	const [date, setDate] = useState(new Date());
 	const { healthData, loading, error } = useHealthData(date, false, true);
 	const realm = useRealm();
-	const user = realm.objects("User")[0];
+	const user = useQuery("User")[0];
+	const challenges = useQuery("Challenges");
+	const completedChallenges = challenges.filter(
+		(challenge) => challenge.completed === true
+	);
 
 	useEffect(() => {
 		if (!loading && !error) {
@@ -33,7 +36,7 @@ export default function Profile() {
 		} else if (error) {
 			console.log(error);
 		}
-	}, [loading, error]);
+	}, [loading, error, date]);
 
 	user.addListener((user) => {
 		setUsername(user.username);
@@ -48,40 +51,75 @@ export default function Profile() {
 				<Ionicons
 					name="ios-settings-sharp"
 					size={24}
-					color={colors.lightGrey}
+					color={colors["grey-300"]}
 				/>
 			</Pressable>
 			<Title text="Profile" />
-			<View style={styles.userContainer}>
-				<Avatar size={"large"} style={{ marginBottom: 20 }} />
-				<Text style={styles.username}>{username}</Text>
-			</View>
-			<View style={styles.innerContainer}>
-				<ProfileCard
-					value={data.steps}
-					text="Total steps"
-					icon="walking"
-					loading={data !== "undefined" ? false : true}
-				/>
-				<ProfileCard
-					value={data.calories}
-					text="Calories burned"
-					icon="fire"
-					loading={data !== "undefined" ? false : true}
-				/>
-				<ProfileCard
-					value={`${data.distance} km`}
-					text="Total distance"
-					icon="map-marked-alt"
-					loading={data !== "undefined" ? false : true}
-				/>
-				<ProfileCard
-					value={data.flights}
-					text="Flights climbed"
-					icon="stairs"
-					loading={data !== "undefined" ? false : true}
-				/>
-			</View>
+			<ScrollView contentContainerStyle={{ alignItems: "center", alignSelf: 'stretch' }} showsVerticalScrollIndicator={false}>
+				<View style={styles.userContainer}>
+					<Avatar size={"large"} style={{ marginBottom: 20 }} />
+					<Text style={styles.username}>{username}</Text>
+				</View>
+				<View style={styles.innerContainer}>
+					<ProfileCard
+						value={loading ? 0 : data.steps}
+						text="Total steps"
+						icon="walking"
+						loading={loading}
+					/>
+					<ProfileCard
+						value={loading ? 0 : data.calories}
+						text="Calories burned"
+						icon="fire"
+						loading={loading}
+					/>
+					<ProfileCard
+						value={loading ? 0 : `${data.distance} km`}
+						text="Total distance"
+						icon="map-marked-alt"
+						loading={loading}
+					/>
+					<ProfileCard
+						value={loading ? 0 : data.floors}
+						text="Flights climbed"
+						icon="stairs"
+						loading={loading}
+					/>
+				</View>
+				{completedChallenges.length > 0 && (
+					<View style={styles.challengesContainer}>
+						<Text
+							style={{
+								color: colors["grey-300"],
+								textAlign: "flex-start",
+							}}
+						>
+							Completed challenges:
+						</Text>
+						<Text
+							style={{
+								color: colors["grey-100"],
+								textAlign: "center",
+							}}
+						>
+							{completedChallenges.length}
+						</Text>
+						<View style={styles.challenges}>
+							{completedChallenges.map((challenge, index) => {
+								return (
+									<ChallengeCard
+										title={challenge.challenge_name}
+										description={
+											challenge.challenge_description
+										}
+										key={index}
+									/>
+								);
+							})}
+						</View>
+					</View>
+				)}
+			</ScrollView>
 		</ViewContainer>
 	);
 }
@@ -91,18 +129,18 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	username: {
-		fontSize: 18,
+		fontSize: 20,
 		fontWeight: "bold",
-		color: colors.white,
+		color: colors["grey-100"],
 	},
 	text: {
 		fontSize: 16,
-		color: colors.lightGrey,
+		color: colors["grey-300"],
 	},
 	value: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: colors.white,
+		color: colors["grey-100"],
 	},
 	innerContainer: {
 		flexDirection: "row",
@@ -110,7 +148,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		flexWrap: "wrap",
 		gap: 40,
-		paddingHorizontal: 40,
+		paddingHorizontal: 20,
 	},
 	avatar: {
 		width: 100,
@@ -128,5 +166,18 @@ const styles = StyleSheet.create({
 		right: 20,
 		width: 40,
 		height: 40,
+	},
+	challengesContainer: {
+		flexDirection: "column",
+		alignItems: "flex-end",
+		justifyContent: "center",
+		marginVertical: 20,
+		borderTopWidth: 2,
+		borderColor: colors["grey-600"],
+		paddingVertical: 20,
+	},
+	challenges: {
+		gap: 20,
+		marginVertical: 20,
 	},
 });

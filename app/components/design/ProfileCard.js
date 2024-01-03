@@ -9,13 +9,13 @@ const ProfileCard = ({ value, text, icon, loading }) => {
 				<MaterialCommunityIcons
 					name={icon}
 					size={40}
-					color={colors.green}
+					color={colors["green-400"]}
 				/>
 			) : (
-				<FontAwesome5 name={icon} size={40} color={colors.green} />
+				<FontAwesome5 name={icon} size={40} color={colors["green-400"]} />
 			)}
 			{loading ? (
-                <ActivityIndicator size="small" color={colors["grey-600"]} />
+                <ActivityIndicator size="small" color={colors["grey-400"]} />
             ) : (
                 <>
                     <Text style={styles.value}>{value}</Text>

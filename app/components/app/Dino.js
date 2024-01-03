@@ -7,6 +7,7 @@ import {
 	Text,
 	ScrollView,
 	Dimensions,
+    FlatList,
 } from "react-native";
 import dino from "@assets/dino.png";
 import { useCombination } from "@hooks/useCombination";
@@ -22,7 +23,6 @@ import { router } from "expo-router";
 const screenWidth = Dimensions.get("window").width;
 
 const Dino = ({ screen }) => {
-	// Local state to track changes made by the user
 	const [changesMade, setChangesMade] = useState(0);
 	const [categories, setCategories] = useState([]);
 	const [itemsByCategory, setItemsByCategory] = useState({});
@@ -35,16 +35,8 @@ const Dino = ({ screen }) => {
 	const toast = useToast();
 
 	const isAccessorySelected = (accessoryPath) => {
-		// check if the accessoryPath is in the active array
 		return accessoryPaths.includes(accessoryPath);
 	};
-
-	// console.log("active attr: ",active)
-	// console.log("accessoryPaths: ",accessoryPaths);
-	// console.log("unlockedAttributes: ", unlockedAttributes)
-	// console.log("activeAttributes: ", activeAttributes)
-	// console.log("unlockedPaths: ", unlockedPaths)\
-	// console.log("unlocked: ", unlocked);
 
 	const handlePress = () => {
 		const attributes = accessoryPaths.toString();
@@ -61,10 +53,8 @@ const Dino = ({ screen }) => {
 				animationType: "slide-in",
 			});
 
-			// Reset the local state when changes are saved
 			setChangesMade(0);
 
-			// Navigate back
 			router.back();
 		} catch (error) {
 			toast.show("Error saving buddy!", {
@@ -90,7 +80,6 @@ const Dino = ({ screen }) => {
 			return;
 		}
 
-		// Navigate back
 		router.back();
 	};
 
@@ -164,8 +153,6 @@ const Dino = ({ screen }) => {
 		}
 	}, [unlocked]);
 
-    console.log("itemsByCategory: ", itemsByCategory);
-
 	const Item = React.memo(
 		({
 			accessoryPath,
@@ -200,7 +187,6 @@ const Dino = ({ screen }) => {
 		isAccessorySelected,
 		setChangesMade,
 	}) => {
-		// Use useMemo to memoize the View component
 		return useMemo(() => {
 			return (
 				<ScrollView contentContainerStyle={styles.items}>
@@ -213,7 +199,6 @@ const Dino = ({ screen }) => {
 							<View style={styles.categoryItems}>
 								{(itemsByCategory[category] || []).map(
 									(accessoryPath, index) => (
-										// Use the Item component instead of TouchableOpacity
 										<Item
 											key={index}
 											accessoryPath={accessoryPath}

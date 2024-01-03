@@ -66,7 +66,7 @@ const LevelUpModal = ({ visible, currentLevel }) => {
                         <Text style={styles.modalText}>You unlocked a new item!</Text>
 						<Image
 							source={getAccessoryPerLevel(currentLevel)}
-							style={{ width: 50, height: 50, objectFit: "contain" }}
+							style={styles.accessory}
 						/>
 					</View>
 				</View>
@@ -127,6 +127,11 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: -50,
 		left: -50,
+		objectFit: "contain",
+	},
+	accessory: {
+		width: 50,
+		height: 50,
 		objectFit: "contain",
 	},
 });

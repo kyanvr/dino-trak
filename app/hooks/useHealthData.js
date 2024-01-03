@@ -4,9 +4,7 @@ import {
 	initialize,
 	requestPermission,
 	readRecords,
-	aggregateRecord,
 } from "react-native-health-connect";
-import { RateLimiter } from "limiter";
 
 const useHealthData = (date, weekly, monthly) => {
 	const [healthData, setHealthData] = useState({
@@ -15,20 +13,11 @@ const useHealthData = (date, weekly, monthly) => {
 		distance: 0,
 		calories: 0,
 	});
-
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(null)
-
-	const apiRateLimiter = new RateLimiter({ tokensPerInterval: 5, interval: "minute"});
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
 	const fetchData = async () => {
 		try {
-			await apiRateLimiter.removeTokens(5);
-
-			if (apiRateLimiter.getTokensRemaining() === 0) {
-				throw new Error("API rate limit reached.");
-			}
-
 			// initialize the client
 			const isInitialized = await initialize();
 			if (!isInitialized) {
@@ -119,7 +108,6 @@ const useHealthData = (date, weekly, monthly) => {
 			setLoading(false);
 		} catch (error) {
 			setError(error);
-            console.log('in useHealthData')
 			setLoading(false);
 		}
 	};

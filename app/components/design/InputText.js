@@ -5,7 +5,7 @@ import colors from "@constants/colors";
 const InputText = ({ placeholder, ...props }) => {
 	return (
 		<TextInput
-			placeholderTextColor={colors.lightGrey}
+			placeholderTextColor={colors["grey-500"]}
 			style={styles.input}
 			placeholder={placeholder}
 			{...props}
@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 		paddingVertical: 10,
 		borderRadius: 10,
-		backgroundColor: colors.darkGrey,
-		color: colors.white,
+		backgroundColor: colors["grey-700"],
+		color: colors["grey-100"],
 		fontSize: 16,
 		alignSelf: "stretch",
 	},

@@ -1,10 +1,4 @@
-import {
-	Text,
-	View,
-	StyleSheet,
-	Pressable,
-	ScrollView,
-} from "react-native";
+import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import Title from "@components/design/Title";
 import colors from "@constants/colors";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
@@ -17,9 +11,12 @@ import useImagePicker from "../../hooks/useImagePicker";
 import ImagePicker from "@components/design/ImagePicker";
 import { useToast } from "react-native-toast-notifications";
 import { openHealthConnectSettings } from "react-native-health-connect";
+import ViewContainer from "../../components/design/ViewContainer";
+import BackButton from "../../components/design/BackButton";
 
 export default function Settings() {
-    const [focused, setFocused] = useState(false);
+	const [focused, setFocused] = useState(false);
+	const [changesMade, setChangesMade] = useState(0);
 	const realm = useRealm();
 	const user = useQuery("User");
 	const buddy = useQuery("Buddy");
@@ -51,6 +48,10 @@ export default function Settings() {
 				});
 			}
 
+            setChangesMade(0);
+
+            router.back();
+
 			toast.show("Saved data!", {
 				type: "success",
 				placement: "bottom",
@@ -59,27 +60,41 @@ export default function Settings() {
 				animationType: "slide-in",
 			});
 		} catch (error) {
-            toast.show("Error saving data!", {
-                type: "danger",
-                placement: "bottom",
-                duration: 3000,
-                offset: 50,
-                animationType: "slide-in",
-            });
-        }
+			toast.show("Error saving data!", {
+				type: "danger",
+				placement: "bottom",
+				duration: 3000,
+				offset: 50,
+				animationType: "slide-in",
+			});
+		}
 	}
 
+	const handleBack = () => {
+		if (changesMade > 0) {
+			toast.show("You have unsaved changes!", {
+				type: "warning",
+				placement: "bottom",
+				duration: 3000,
+				offset: 50,
+				animationType: "slide-in",
+			});
+
+			return;
+		}
+
+		router.back();
+	};
+
 	return (
-		<View style={styles.container}>
-			<Pressable onPress={() => router.back()} style={styles.back}>
-				<AntDesign name="left" size={24} color={colors.green} />
-			</Pressable>
+		<ViewContainer>
 			<Title text="Settings" />
 			<ScrollView
 				style={styles.settings}
 				contentContainerStyle={{ alignItems: "flex-start" }}
 			>
 				<View style={styles.saveData}>
+					<BackButton title={"Back"} onPress={() => handleBack()} />
 					<Button title="Save data" onPress={() => handlePress()}>
 						<FontAwesome5
 							name="save"
@@ -96,6 +111,9 @@ export default function Settings() {
 						onChangeText={(text) => {
 							usernameRef.current = text;
 						}}
+						onFocus={() =>
+							setChangesMade((changesMade) => changesMade + 1)
+						}
 					/>
 				</View>
 				<View style={styles.settingsBlock}>
@@ -115,11 +133,16 @@ export default function Settings() {
 					/>
 				</View>
 				<View style={styles.settingsBlock}>
-					<Text style={styles.text}>Open Health Connect settings</Text>
-					<Button title="Open settings" onPress={openHealthConnectSettings} />
+					<Text style={styles.text}>
+						Open Health Connect settings
+					</Text>
+					<Button
+						title="Open settings"
+						onPress={openHealthConnectSettings}
+					/>
 				</View>
 			</ScrollView>
-		</View>
+		</ViewContainer>
 	);
 }
 
@@ -142,18 +165,18 @@ const styles = StyleSheet.create({
 	settings: {
 		alignSelf: "stretch",
 		flexDirection: "column",
-		// alignItems: "flex-start",
 	},
 	text: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: colors.white,
+		color: colors["grey-100"],
 		marginBottom: 20,
 	},
 	saveData: {
 		alignSelf: "stretch",
 		flexDirection: "row",
-		justifyContent: "flex-end",
+		justifyContent: "space-between",
+		alignItems: "center",
 		marginBottom: 20,
 	},
 	settingsBlock: {

@@ -13,7 +13,7 @@ import LevelUpModal from "../components/app/LevelUpModal";
 export default function Challenges() {
 	const [data, setData] = useState([]);
     const [date, setDate] = useState(new Date());
-	const { userLevel, userXP, awardXP, modalVisible } = useLevelSystem();
+	const { buddyLevel, buddyXP, awardXP, modalVisible } = useLevelSystem();
 	const realm = useRealm();
 	const challenges = useQuery("Challenges");
 	const buddy = useQuery("Buddy")[0];
@@ -40,10 +40,17 @@ export default function Challenges() {
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
-			<Text style={styles.text}>Your level: {buddy.level}</Text>
-			<Text style={styles.text}>Your XP: {buddy.xp}</Text>
-            <LevelUpModal visible={modalVisible} currentLevel={buddy.level} />
-            
+			<View style={{alignItems: 'flex-start', alignSelf: 'stretch', marginBottom: 20}}>
+				<Text style={styles.text}>
+					Your buddy's level: {buddy.level}
+				</Text>
+				<Text style={styles.text}>Your buddy's XP: {buddy.xp}</Text>
+				<Text style={styles.text}>
+					XP to next level: {buddyXP === 0 ? 150 : buddyXP}
+				</Text>
+			</View>
+			<LevelUpModal visible={modalVisible} currentLevel={buddy.level} />
+
 			{!loading ? (
 				<ScrollView
 					contentContainerStyle={{
@@ -51,6 +58,7 @@ export default function Challenges() {
 						alignItems: "center",
 						paddingVertical: 20,
 					}}
+                    showsVerticalScrollIndicator={false}
 				>
 					<View style={styles.container}>
 						{challenges.map((challenge, index) => {
@@ -72,7 +80,7 @@ export default function Challenges() {
 										});
 									}}
 									type={challenge.type}
-									healthData={data} // Pass healthData as a prop to ExpandableCard
+									healthData={data}
 									loading={loading}
 								/>
 							);
@@ -80,8 +88,8 @@ export default function Challenges() {
 					</View>
 				</ScrollView>
 			) : (
-                <ActivityIndicator size="large" color={colors["grey-600"]} />
-            )}
+				<ActivityIndicator size="large" color={colors["grey-600"]} />
+			)}
 		</ViewContainer>
 	);
 }
@@ -92,8 +100,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	text: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "white",
+		fontSize: 16,
+		color: colors["grey-300"]
 	},
 });

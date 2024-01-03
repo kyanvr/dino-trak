@@ -16,5 +16,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingTop: 75,
         backgroundColor: colors['grey-900'],
+        paddingHorizontal: 20,
     },
 });
