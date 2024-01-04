@@ -49,14 +49,14 @@ export default function Home() {
 					color={colors["green-200"]}
 				/>
 			</Pressable>
-			<Tooltip text={"This is a tooltip"} />
+			<Tooltip />
 			<Avatar
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
 			/>
 
 			<View style={{ flex: 1 }}>
-				<Title text={"Hello there,"} subtitle={username} />
+				<Title text={"Welcome back,"} subtitle={username} />
 			</View>
 
 			<View
