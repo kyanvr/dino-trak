@@ -9,12 +9,14 @@ import Title from "@components/design/Title";
 import InputText from "@components/design/InputText";
 import { useQuery, useRealm } from "@realm/react";
 import { router } from "expo-router";
+import { useToast } from "react-native-toast-notifications";
 
 export default function Start2() {
 	const [selectedGoals, setSelectedGoals] = useState([]);
-
 	const realm = useRealm();
 	const user = useQuery("User");
+	const toast = useToast();
+	const [dailySteps, setDailySteps] = useState("");
 
 	function handleSelect(goal) {
 		// Check if the goal is already selected
@@ -35,8 +37,33 @@ export default function Start2() {
 	}
 
 	function handlePress() {
+		if (selectedGoals.length === 0) {
+			toast.show("Select at least one goal", {
+				type: "warning",
+				placement: "bottom",
+				duration: 3000,
+				offset: 50,
+				animationType: "slide-in",
+			});
+
+			return;
+		}
+
+		if (dailySteps === "" || dailySteps === "0") {
+			toast.show("Enter a daily step target above 0", {
+				type: "warning",
+				placement: "bottom",
+				duration: 3000,
+				offset: 50,
+				animationType: "slide-in",
+			});
+
+            return;
+		}
+
 		realm.write(() => {
 			user[0].personal_goals = getSelectedTitlesString(selectedGoals);
+            user[0].daily_steps = dailySteps;
 		});
 
 		router.push("/screens/startup/start3");
@@ -77,19 +104,19 @@ export default function Start2() {
 						placeholder="Daily step target"
 						keyboardType="numeric"
 						onChangeText={(text) => {
-							realm.write(() => {
-								user[0].daily_steps = text;
-							});
+							setDailySteps(text);
 						}}
 					/>
 				</View>
-				<Button
-					onPress={() => {
-						handlePress();
-					}}
-					title="Continue"
-				/>
-				<BackButton title="Back" />
+				<View style={styles.buttonContainer}>
+					<Button
+						onPress={() => {
+							handlePress();
+						}}
+						title="Continue"
+					/>
+					<BackButton title="Back" onPress={() => router.back()} />
+				</View>
 			</ScrollView>
 		</ViewContainer>
 	);
@@ -109,33 +136,32 @@ const styles = StyleSheet.create({
 	},
 	inputContainer: {
 		marginBottom: 50,
-        alignSelf: "flex-start",
+		alignSelf: "flex-start",
 	},
 	selectedGoals: {
-		backgroundColor: colors.green,
+		backgroundColor: colors["green-200"],
 		paddingHorizontal: 20,
 		paddingVertical: 10,
 		borderRadius: 20,
 	},
 	goals: {
-		borderColor: colors.lightGrey,
+		borderColor: colors["grey-200"],
 		paddingHorizontal: 18,
 		paddingVertical: 8,
 		borderRadius: 20,
 		borderWidth: 2,
 	},
-	title: {
-		fontSize: 28,
-		fontWeight: "bold",
-		marginBottom: 50,
-		color: colors.white,
-	},
 	text: {
 		fontSize: 16,
-		color: colors.lightGrey,
+		color: colors["grey-300"],
 	},
 	selectedText: {
 		fontSize: 16,
-		color: colors.black,
+		color: colors["grey-900"],
+	},
+	buttonContainer: {
+		alignSelf: "stretch",
+		alignItems: "center",
+		gap: 20,
 	},
 });

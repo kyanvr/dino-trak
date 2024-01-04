@@ -13,17 +13,23 @@ import { useQuery, useRealm } from "@realm/react";
 import StepsGoal from "../components/app/StepsGoal";
 import progressFormat from "../utils/progressFormat";
 import Avatar from "../components/app/Avatar";
+import isObjectEmpty from "../utils/isObjectEmpty";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
-    // const [progress, setProgress] = useState(0);
-	const { healthData, loading, error } = useHealthData(date, false, false);
+	const [progress, setProgress] = useState(0);
+	const [stepsGoal, setStepsGoal] = useState(0);
+	const { dailyData, loading, error } = useHealthData(date);
 	const realm = useRealm();
 	const user = useQuery("User")[0];
-	const [stepsGoal, setStepsGoal] = useState(0);
-    const progress = progressFormat(healthData.steps, stepsGoal);
 
-    user.addListener((user) => {
+	useEffect(() => {
+		if (!loading && !isObjectEmpty(dailyData)) {
+			return setProgress(progressFormat(dailyData.steps, stepsGoal));
+		}
+	}, [dailyData, loading, stepsGoal]);
+
+	user.addListener((user) => {
 		setStepsGoal(user.daily_steps);
 	});
 
@@ -64,9 +70,9 @@ export default function App() {
 				<Pressable
 					style={{
 						justifyContent: "center",
-                        alignItems: "flex-start",
-                        width: 44,
-                        height: 44,
+						alignItems: "flex-start",
+						width: 44,
+						height: 44,
 					}}
 					onPress={() => changeDate(-1)}
 				>
@@ -86,13 +92,18 @@ export default function App() {
 						name="date-range"
 						size={24}
 						color={colors["green-200"]}
-                        style={{ marginLeft: 10 }}
+						style={{ marginLeft: 10 }}
 					/>
 				</Pressable>
 
 				<Pressable
 					onPress={() => changeDate(1)}
-					style={{ justifyContent: "center", width: 44, height: 44, alignItems: "flex-end" }}
+					style={{
+						justifyContent: "center",
+						width: 44,
+						height: 44,
+						alignItems: "flex-end",
+					}}
 				>
 					<AntDesign
 						name="right"
@@ -101,32 +112,39 @@ export default function App() {
 					/>
 				</Pressable>
 			</View>
-			<ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+			<ScrollView
+				contentContainerStyle={styles.container}
+				showsVerticalScrollIndicator={false}
+			>
 				<RingProgress
 					radius={150}
 					strokeWidth={50}
 					progress={progress}
 				/>
 
-				<View style={{marginTop: 20}}>
+				<View style={{ marginTop: 20 }}>
 					<StepsGoal />
 				</View>
 
 				<View style={styles.values}>
-					<Value label="Steps" value={healthData.steps} loading={loading} />
+					<Value
+						label="Steps"
+						value={dailyData.steps}
+						loading={loading}
+					/>
 					<Value
 						label="Distance"
-						value={`${healthData.distance} km`}
+						value={`${dailyData.distance} km`}
 						loading={loading}
 					/>
 					<Value
 						label="Floors Climbed"
-						value={healthData.floors}
+						value={dailyData.floors}
 						loading={loading}
 					/>
 					<Value
 						label="Kcal"
-						value={healthData.calories}
+						value={dailyData.calories}
 						loading={loading}
 					/>
 				</View>
@@ -167,6 +185,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		paddingHorizontal: 20,
 		backgroundColor: colors["grey-800"],
-        borderRadius: 10,
+		borderRadius: 10,
 	},
 });

@@ -12,6 +12,7 @@ import colors from "../../constants/colors";
 import progressFormat from "../../utils/progressFormat";
 import Button from "../design/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import isObjectEmpty from "../../utils/isObjectEmpty";
 
 export default function ExpandableCard({
 	title,
@@ -28,24 +29,32 @@ export default function ExpandableCard({
 	const [expanded, setExpanded] = useState(false);
 	const [animation] = useState(new Animated.Value(0));
 	const [progress, setProgress] = useState(0);
-	const [stepsReached, setStepsReached] = useState(false);
 	const [weekly, setWeekly] = useState(false);
 	const [monthly, setMonthly] = useState(false);
 	const [steps, setSteps] = useState(0);
+	const [floors, setFloors] = useState(0);
+	const [distance, setDistance] = useState(0);
+	const [calories, setCalories] = useState(0);
+	const [goalReached, setGoalReached] = useState(false);
 
 	useEffect(() => {
-		// check if healthData is passed in
-		if (healthData.steps) {
+		if (!loading && !isObjectEmpty(healthData)) {
 			setSteps(healthData.steps);
+			setFloors(healthData.floors);
+			setDistance(healthData.distance);
+			setCalories(healthData.calories);
 		}
-	}, [healthData]);
+	}, [healthData, loading]);
 
 	useEffect(() => {
 		const [startDate, endDate] = calculateDateRange();
 		setWeekly(startDate !== endDate);
 		setMonthly(startDate.getMonth() !== endDate.getMonth());
-		updateProgress();
-	}, [duration, steps, target]);
+	}, [duration]);
+
+	useEffect(() => {
+		updateProgress()
+	}, [steps, floors, distance, calories, target, duration]);
 
 	const calculateDateRange = () => {
 		const today = new Date();
@@ -74,13 +83,31 @@ export default function ExpandableCard({
 
 	const updateProgress = () => {
 		const [startDate, endDate] = calculateDateRange();
-		setStepsReached(
-			steps >= target &&
-				steps >= 0 &&
+		let metricValue = 0;
+		switch (type) {
+			case "steps":
+				metricValue = steps;
+				break;
+			case "floors":
+				metricValue = floors;
+				break;
+			case "distance":
+				metricValue = distance;
+				break;
+			case "calories":
+				metricValue = calories;
+				break;
+			default:
+				break;
+		}
+
+		setGoalReached(
+			metricValue >= target &&
+				metricValue >= 0 &&
 				startDate <= new Date() &&
 				new Date() <= endDate
 		);
-		setProgress(progressFormat(steps, target));
+		setProgress(progressFormat(metricValue, target));
 	};
 
 	const toggleCard = () => {
@@ -106,11 +133,11 @@ export default function ExpandableCard({
 	return (
 		<TouchableOpacity
 			activeOpacity={0.8}
-			onPress={toggleCard}
+			onPress={() => toggleCard()}
 			style={styles.container}
 		>
 			<Animated.View style={styles.card}>
-				{stepsReached && (
+				{goalReached && (
 					<View style={styles.checkmarkContainer}>
 						<MaterialCommunityIcons
 							name="progress-check"
@@ -140,10 +167,10 @@ export default function ExpandableCard({
 								{description}
 							</Text>
 							<Text style={styles.additionalText}>{xp} XP</Text>
-							{stepsReached && (
+							{goalReached && (
 								<Button
 									title="Complete challenge"
-									onPress={onPress}
+									onPress={() => onPress()}
 								/>
 							)}
 						</View>
@@ -166,20 +193,20 @@ const styles = StyleSheet.create({
 		width: "100%",
 		position: "relative",
 	},
-    checkmarkContainer: {
-        position: "absolute",
-        backgroundColor: colors["green-500"],
-        borderRadius: 50,
-        top: 20,
-        right: 20,
-        width: 30,
-        height: 30,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+	checkmarkContainer: {
+		position: "absolute",
+		backgroundColor: colors["green-500"],
+		borderRadius: 50,
+		top: 20,
+		right: 20,
+		width: 30,
+		height: 30,
+		justifyContent: "center",
+		alignItems: "center",
+	},
 	content: {
 		flex: 1,
-        gap: 8,
+		gap: 8,
 	},
 	title: {
 		fontSize: 18,
@@ -206,7 +233,7 @@ const styles = StyleSheet.create({
 	},
 	additionalInfo: {
 		marginTop: 8,
-        gap: 8,
+		gap: 8,
 	},
 	additionalText: {
 		color: colors["grey-200"],
@@ -221,5 +248,3 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 });
-
-// export default ExpandableCard;

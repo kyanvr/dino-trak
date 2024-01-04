@@ -26,7 +26,7 @@ const Avatar = ({ size, style }) => {
 			onPress={() => router.push("/profile")}
 			style={[styles.avatarContainer, getSizeStyles(), style]}
 		>
-			<Image source={{ uri: avatar }} style={styles.avatarImage} />
+			<Image source={{uri: avatar}} style={styles.avatarImage} />
 		</Pressable>
 	);
 };

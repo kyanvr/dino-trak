@@ -7,7 +7,7 @@ import {
 	Text,
 	ScrollView,
 	Dimensions,
-    FlatList,
+	FlatList,
 } from "react-native";
 import dino from "@assets/dino.png";
 import { useCombination } from "@hooks/useCombination";
@@ -246,6 +246,10 @@ const Dino = ({ screen }) => {
 			)}
 
 			<View style={styles.dinoContainer}>
+				<View style={styles.levelContainer}>
+					<Text style={styles.buddyText}>{buddy.buddy_name}</Text>
+					<Text >LVL {buddy.level}</Text>
+				</View>
 				<Image source={dino} style={styles.dino} />
 
 				{screen !== "home"
@@ -300,6 +304,20 @@ const styles = StyleSheet.create({
 		alignSelf: "stretch",
 		marginBottom: 100,
 	},
+	levelContainer: {
+		position: "absolute",
+		top: 0,
+		left: 0,
+		backgroundColor: colors["green-200"],
+        padding: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+	},
+    buddyText: {
+        color: colors["grey-900"],
+        fontSize: 16,
+        fontWeight: "bold",
+    },
 	dino: {
 		width: 300,
 		height: 300,
@@ -381,15 +399,15 @@ const styles = StyleSheet.create({
 		height: 100,
 		resizeMode: "contain",
 	},
-    wand: {
-        position: "absolute",
-        top: 105,
-        left: -5,
-        width: 200,
-        height: 200,
-        resizeMode: "contain",
-        transform: [{ rotate: "-30deg" }],
-    },
+	wand: {
+		position: "absolute",
+		top: 105,
+		left: -5,
+		width: 200,
+		height: 200,
+		resizeMode: "contain",
+		transform: [{ rotate: "-30deg" }],
+	},
 });
 
 export default Dino;

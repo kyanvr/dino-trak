@@ -1,11 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import colors from "@constants/colors";
-import placeholder from "@assets/avatar_placeholder.png";
 
 const ImagePicker = ({ onPress, image }) => {
+    console.log(image)
 	return (
 		<View style={styles.container}>
-			<Image source={image ? {uri: image} : {uri: placeholder}} style={styles.avatar} />
+			<Image source={{uri: image}} style={styles.avatar} />
 			<TouchableOpacity onPress={onPress} style={styles.btn}>
 				<Text style={styles.text}>Choose avatar</Text>
 			</TouchableOpacity>
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
 	},
 	btn: {
 		height: 40,
-		// width: 100,
 		borderRadius: 10,
 		backgroundColor: colors["grey-700"],
         paddingVertical: 10,
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
     text: {
-        color: colors["grey-100"],
+        color: colors["grey-300"],
     }
 });
 

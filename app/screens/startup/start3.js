@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { View, Text, TextInput, StyleSheet, Image } from "react-native";
-import colors from "@constants/colors";
 import Button from "@components/design/Button";
 import ViewContainer from "@components/design/ViewContainer";
 import InputText from "@components/design/InputText";
@@ -9,31 +8,53 @@ import { useQuery, useRealm } from "@realm/react";
 import { router } from "expo-router";
 import ImagePicker from "@components/design/ImagePicker";
 import useImagePicker from "@hooks/useImagePicker";
+import { useToast } from "react-native-toast-notifications";
+import BackButton from "@components/design/BackButton";
 
 export default function Start3() {
 	const realm = useRealm();
 	const user = useQuery("User");
 	const usernameRef = useRef("");
+	const toast = useToast();
 
-    const placeholder = require("@assets/avatar_placeholder.png");
-
-	// selectedImage is the image that will be cached to show the user
 	const { selectedImage, pickImageAsync, saveImage, getSavedImage } =
 		useImagePicker();
 
 	async function handlePress() {
 		await saveImage();
-		// savedImage is the image that will be saved to the database for later use
 		const savedImage = await getSavedImage();
 
-		realm.write(() => {
-			user[0].username = usernameRef.current;
-			if (savedImage !== undefined) {
+		if (usernameRef.current !== "") {
+			realm.write(() => {
+				user[0].username = usernameRef.current;
+			});
+		} else {
+			toast.show("Please enter a username", {
+				type: "warning",
+				placement: "bottom",
+				duration: 3000,
+				offset: 50,
+				animationType: "slide-in",
+			});
+
+			return;
+		}
+
+		if (savedImage !== undefined) {
+			realm.write(() => {
 				user[0].avatar = savedImage;
-			} else {
-                user[0].avatar = placeholder;
-            }
-		});
+			});
+		} else {
+			toast.show("Please select an avatar", {
+                type: "warning",
+                placement: "bottom",
+                duration: 3000,
+                offset: 50,
+                animationType: "slide-in",
+            });
+
+            return;
+		}
 
 		router.push("/screens/startup/start4");
 	}
@@ -50,7 +71,15 @@ export default function Start3() {
 				/>
 				<ImagePicker onPress={pickImageAsync} image={selectedImage} />
 			</View>
-			<Button title="Continue" onPress={() => handlePress()} />
+			<View style={styles.buttonContainer}>
+				<Button
+					onPress={() => {
+						handlePress();
+					}}
+					title="Continue"
+				/>
+				<BackButton title="Back" onPress={() => router.back()} />
+			</View>
 		</ViewContainer>
 	);
 }
@@ -72,5 +101,10 @@ const styles = StyleSheet.create({
 		height: 100,
 		marginBottom: 16,
 		borderRadius: 50,
+	},
+	buttonContainer: {
+		alignSelf: "stretch",
+		alignItems: "center",
+		gap: 20,
 	},
 });

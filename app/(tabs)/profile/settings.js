@@ -128,7 +128,7 @@ export default function Settings() {
 				<View style={styles.settingsBlock}>
 					<Text style={styles.text}>Change avatar</Text>
 					<ImagePicker
-						onPress={pickImageAsync}
+						onPress={() => {pickImageAsync(); setChangesMade((changesMade) => changesMade + 1)}}
 						image={selectedImage ? selectedImage : user[0].avatar}
 					/>
 				</View>

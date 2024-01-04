@@ -6,33 +6,30 @@ import useHealthData from "../../hooks/useHealthData";
 import { useQuery, useRealm } from "@realm/react";
 import colors from "@constants/colors";
 import ProfileCard from "@components/design/ProfileCard";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import Avatar from "../../components/app/Avatar";
 import ChallengeCard from "../../components/design/ChallengeCard";
+import demo_challenges from "../../constants/demo_challenges";
 
 export default function Profile() {
+	const [data, setData] = useState({});
 	const [username, setUsername] = useState("");
-	const [data, setData] = useState([
-		{
-			steps: 0,
-			flights: 0,
-			distance: 0,
-			calories: 0,
-		},
-	]);
 	const [date, setDate] = useState(new Date());
-	const { healthData, loading, error } = useHealthData(date, false, true);
+	const { monthlyData, loading, error } = useHealthData(date);
 	const realm = useRealm();
 	const user = useQuery("User")[0];
 	const challenges = useQuery("Challenges");
 	const completedChallenges = challenges.filter(
 		(challenge) => challenge.completed === true
 	);
+	const completedDemoChallenges = demo_challenges.filter(
+		(challenge) => challenge.completed === true
+	);
 
 	useEffect(() => {
 		if (!loading && !error) {
-			setData(healthData);
+			setData(monthlyData);
 		} else if (error) {
 			console.log(error);
 		}
@@ -55,7 +52,13 @@ export default function Profile() {
 				/>
 			</Pressable>
 			<Title text="Profile" />
-			<ScrollView contentContainerStyle={{ alignItems: "center", alignSelf: 'stretch' }} showsVerticalScrollIndicator={false}>
+			<ScrollView
+				contentContainerStyle={{
+					alignItems: "center",
+					alignSelf: "stretch",
+				}}
+				showsVerticalScrollIndicator={false}
+			>
 				<View style={styles.userContainer}>
 					<Avatar size={"large"} style={{ marginBottom: 20 }} />
 					<Text style={styles.username}>{username}</Text>
@@ -86,24 +89,60 @@ export default function Profile() {
 						loading={loading}
 					/>
 				</View>
+				{completedDemoChallenges.length > 0 && (
+					<View style={styles.challengesContainer}>
+						<View style={styles.completedChallengesText}>
+							<Text
+								style={{
+									color: colors["green-200"],
+									textAlign: "center",
+									marginRight: 10,
+								}}
+							>
+								{completedDemoChallenges.length} /{" "}
+								{demo_challenges.length}
+							</Text>
+							<MaterialCommunityIcons
+								name="bullseye-arrow"
+								size={24}
+								color={colors["green-200"]}
+							/>
+						</View>
+						<View style={styles.challenges}>
+							{completedDemoChallenges.map((challenge, index) => {
+								return (
+									<ChallengeCard
+										title={challenge.challenge_name}
+										description={
+											challenge.challenge_description
+										}
+										key={index}
+									/>
+								);
+							})}
+						</View>
+					</View>
+				)}
+
 				{completedChallenges.length > 0 && (
 					<View style={styles.challengesContainer}>
-						<Text
-							style={{
-								color: colors["grey-300"],
-								textAlign: "flex-start",
-							}}
-						>
-							Completed challenges:
-						</Text>
-						<Text
-							style={{
-								color: colors["grey-100"],
-								textAlign: "center",
-							}}
-						>
-							{completedChallenges.length}
-						</Text>
+						<View style={styles.completedChallengesText}>
+							<Text
+								style={{
+									color: colors["green-200"],
+									textAlign: "center",
+									marginRight: 10,
+								}}
+							>
+								{completedChallenges.length} /{" "}
+								{challenges.length}
+							</Text>
+							<MaterialCommunityIcons
+								name="bullseye-arrow"
+								size={24}
+								color={colors["green-200"]}
+							/>
+						</View>
 						<View style={styles.challenges}>
 							{completedChallenges.map((challenge, index) => {
 								return (
@@ -175,6 +214,12 @@ const styles = StyleSheet.create({
 		borderTopWidth: 2,
 		borderColor: colors["grey-600"],
 		paddingVertical: 20,
+	},
+	completedChallengesText: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		marginBottom: 10,
 	},
 	challenges: {
 		gap: 20,

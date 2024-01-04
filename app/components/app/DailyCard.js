@@ -12,14 +12,14 @@ const DailyCard = () => {
 	const [distance, setDistance] = useState(0);
 	const [calories, setCalories] = useState(0);
 
-	const { healthData, loading, error } = useHealthData(date, false, false);
+	const { dailyData, loading, error } = useHealthData(date);
 
 	useEffect(() => {
 		if (!loading && !error) {
-			setSteps(healthData.steps);
-			setFlights(healthData.floors);
-			setDistance(healthData.distance);
-			setCalories(healthData.calories);
+			setSteps(dailyData.steps);
+			setFlights(dailyData.floors);
+			setDistance(dailyData.distance);
+			setCalories(dailyData.calories);
 		} else {
 			console.log(error);
 		}

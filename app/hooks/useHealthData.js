@@ -6,15 +6,12 @@ import {
 	readRecords,
 } from "react-native-health-connect";
 
-const useHealthData = (date, weekly, monthly) => {
-	const [healthData, setHealthData] = useState({
-		steps: 0,
-		flights: 0,
-		distance: 0,
-		calories: 0,
-	});
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+const useHealthData = (date) => {
+	const [dailyData, setDailyData] = useState({});
+	const [weeklyData, setWeeklyData] = useState({});
+	const [monthlyData, setMonthlyData] = useState({});
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 
 	const fetchData = async () => {
 		try {
@@ -31,6 +28,12 @@ const useHealthData = (date, weekly, monthly) => {
 				{ accessType: "read", recordType: "FloorsClimbed" },
 				{ accessType: "read", recordType: "TotalCaloriesBurned" },
 			]);
+
+			const dailyTimeRangeFilter = {
+				operator: "between",
+				startTime: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
+				endTime: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
+			};
 
 			const getWeeklyTimeRangeFilter = (date) => {
 				const startOfWeek = new Date(date);
@@ -50,60 +53,119 @@ const useHealthData = (date, weekly, monthly) => {
 				};
 			};
 
-			const timeRangeFilter = monthly
-				? {
-						operator: "between",
-						startTime: new Date(
-							date.getFullYear(),
-							date.getMonth(),
-							1
-						).toISOString(),
-						endTime: new Date(
-							date.getFullYear(),
-							date.getMonth() + 1,
-							0
-						).toISOString(),
-				  }
-				: weekly
-				? getWeeklyTimeRangeFilter(date)
-				: {
-						operator: "between",
-						startTime: new Date(
-							date.setHours(0, 0, 0, 0)
-						).toISOString(),
-						endTime: new Date(
-							date.setHours(23, 59, 59, 999)
-						).toISOString(),
-				  };
+			const weeklyTimeRangeFilter = getWeeklyTimeRangeFilter(date);
+
+			const monthlyTimeRangeFilter = {
+				operator: "between",
+				startTime: new Date(
+					date.getFullYear(),
+					date.getMonth(),
+					1
+				).toISOString(),
+				endTime: new Date(
+					date.getFullYear(),
+					date.getMonth() + 1,
+					0
+				).toISOString(),
+			};
 
 			// Use Promise.all to wait for all asynchronous operations
-			const [steps, distance, flights, calories] = await Promise.all([
-				readRecords("Steps", { timeRangeFilter }),
-				readRecords("Distance", { timeRangeFilter }),
-				readRecords("FloorsClimbed", { timeRangeFilter }),
-				readRecords("TotalCaloriesBurned", { timeRangeFilter }),
+			const [dailySteps, dailyDistance, dailyFloors, dailyCalories] =
+				await Promise.all([
+					readRecords("Steps", {
+						timeRangeFilter: dailyTimeRangeFilter,
+					}),
+					readRecords("Distance", {
+						timeRangeFilter: dailyTimeRangeFilter,
+					}),
+					readRecords("FloorsClimbed", {
+						timeRangeFilter: dailyTimeRangeFilter,
+					}),
+					readRecords("TotalCaloriesBurned", {
+						timeRangeFilter: dailyTimeRangeFilter,
+					}),
+				]);
+
+			const [weeklySteps, weeklyDistance, weeklyFlights, weeklyCalories] =
+				await Promise.all([
+					readRecords("Steps", {
+						timeRangeFilter: weeklyTimeRangeFilter,
+					}),
+					readRecords("Distance", {
+						timeRangeFilter: weeklyTimeRangeFilter,
+					}),
+					readRecords("FloorsClimbed", {
+						timeRangeFilter: weeklyTimeRangeFilter,
+					}),
+					readRecords("TotalCaloriesBurned", {
+						timeRangeFilter: weeklyTimeRangeFilter,
+					}),
+				]);
+
+			const [
+				monthlySteps,
+				monthlyDistance,
+				monthlyFlights,
+				monthlyCalories,
+			] = await Promise.all([
+				readRecords("Steps", {
+					timeRangeFilter: monthlyTimeRangeFilter,
+				}),
+				readRecords("Distance", {
+					timeRangeFilter: monthlyTimeRangeFilter,
+				}),
+				readRecords("FloorsClimbed", {
+					timeRangeFilter: monthlyTimeRangeFilter,
+				}),
+				readRecords("TotalCaloriesBurned", {
+					timeRangeFilter: monthlyTimeRangeFilter,
+				}),
 			]);
 
-			const totalSteps = steps.reduce((sum, cur) => sum + cur.count, 0);
-			const totalDistance = distance.reduce(
-				(sum, cur) => sum + cur.distance.inMeters,
-				0
-			);
-			const totalFloors = flights.reduce(
-				(sum, cur) => sum + cur.floors,
-				0
-			);
-			const totalCalories = calories.reduce(
-				(sum, cur) => sum + cur.energy.inKilocalories,
-				0
-			);
+            const calculateTotalSteps = (data) => {
+                return data.reduce((total, record) => {
+                    return total + record.count;
+                }, 0);
+            }
 
-			setHealthData({
-				steps: totalSteps,
-				floors: totalFloors,
-				distance: (totalDistance / 1000).toFixed(2),
-				calories: totalCalories.toFixed(0),
-			});
+            const calculateTotalDistance = (data) => {
+                return data.reduce((total, record) => {
+                    return total + record.distance.inMeters;
+                }, 0);
+            }
+
+            const calculateTotalFloors = (data) => {
+                return data.reduce((total, record) => {
+                    return total + record.floors;
+                }, 0);
+            }
+
+            const calculateTotalCalories = (data) => {
+                return data.reduce((total, record) => {
+                    return total + record.energy.inKilocalories;
+                }, 0);
+            }
+
+			setDailyData({
+                steps: calculateTotalSteps(dailySteps),
+                distance: (calculateTotalDistance(dailyDistance) / 1000).toFixed(2),
+                floors: calculateTotalFloors(dailyFloors),
+                calories: calculateTotalCalories(dailyCalories).toFixed(),
+            })
+			
+            setWeeklyData({
+                steps: calculateTotalSteps(weeklySteps),
+                distance: (calculateTotalDistance(weeklyDistance) / 1000).toFixed(2),
+                floors: calculateTotalFloors(weeklyFlights),
+                calories: calculateTotalCalories(weeklyCalories).toFixed(),
+            });
+
+            setMonthlyData({
+                steps: calculateTotalSteps(monthlySteps),
+                distance: (calculateTotalDistance(monthlyDistance) / 1000).toFixed(2),
+                floors: calculateTotalFloors(monthlyFlights),
+                calories: calculateTotalCalories(monthlyCalories).toFixed(),
+            });
 
 			setLoading(false);
 		} catch (error) {
@@ -117,9 +179,9 @@ const useHealthData = (date, weekly, monthly) => {
 			return;
 		}
 		fetchData();
-	}, [date, weekly, monthly]);
+	}, [date]);
 
-	return { healthData, loading, error };
+	return { dailyData, weeklyData, monthlyData, loading, error };
 };
 
 export default useHealthData;

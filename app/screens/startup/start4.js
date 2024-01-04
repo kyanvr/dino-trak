@@ -8,13 +8,28 @@ import { useQuery, useRealm } from "@realm/react";
 import { router } from "expo-router";
 import dino from "@assets/dino.png";
 import { Buddy } from "../../models/Buddy";
+import BackButton from "@components/design/BackButton";
+import { useToast } from "react-native-toast-notifications";
 
 const Start4 = () => {
     const realm = useRealm();
 	const buddyNameRef = useRef("");
+    const toast = useToast();
 
 	function handlePress() {
-		realm.write(() => {
+		if (buddyNameRef.current === "") {
+            toast.show("Enter a name for your buddy", {
+                type: "warning",
+                placement: "bottom",
+                duration: 3000,
+                offset: 50,
+                animationType: "slide-in",
+            });
+
+            return;
+        }
+
+        realm.write(() => {
 			const buddy = new Buddy(realm, buddyNameRef.current, 1, 0, "", "");
 
 			return buddy;
@@ -24,12 +39,10 @@ const Start4 = () => {
 	}
 
 	return (
-        <ViewContainer style={styles.container}>
-				<Title text="This will be your dinosaur buddy!" />
-                <ScrollView style={styles.scroll}>
+		<ViewContainer style={styles.container}>
+			<Title text="This will be your dinosaur buddy!" />
+			<ScrollView style={styles.scroll}>
 				<View style={styles.innerContainer}>
-					{/* dino three.js */}
-					{/* instead i'll show a picture of him */}
 					<Image source={dino} style={styles.image} />
 					<InputText
 						placeholder="Buddy"
@@ -38,9 +51,17 @@ const Start4 = () => {
 						}}
 					/>
 				</View>
-				<Button title="Continue" onPress={() => handlePress()} />
-		</ScrollView>
-			</ViewContainer>
+				<View style={styles.buttonContainer}>
+					<Button
+						onPress={() => {
+							handlePress();
+						}}
+						title="Continue"
+					/>
+					<BackButton title="Back" onPress={() => router.back()} />
+				</View>
+			</ScrollView>
+		</ViewContainer>
 	);
 };
 
@@ -62,8 +83,12 @@ const styles = StyleSheet.create({
     },
     scroll: {
         flex: 1,
-        // backgroundColor: "red",
-    }
+    },
+    buttonContainer: {
+        alignSelf: "stretch",
+        alignItems: "center",
+        gap: 20,
+    },
 });
 
 export default Start4;
