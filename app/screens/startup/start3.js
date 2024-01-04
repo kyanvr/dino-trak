@@ -8,7 +8,7 @@ import Title from "@components/design/Title";
 import { useQuery, useRealm } from "@realm/react";
 import { router } from "expo-router";
 import ImagePicker from "@components/design/ImagePicker";
-import useImagePicker from "../../hooks/useImagePicker";
+import useImagePicker from "@hooks/useImagePicker";
 
 export default function Start3() {
 	const realm = useRealm();
@@ -31,7 +31,7 @@ export default function Start3() {
 			if (savedImage !== undefined) {
 				user[0].avatar = savedImage;
 			} else {
-                user[0].avatar = "";
+                user[0].avatar = placeholder;
             }
 		});
 
