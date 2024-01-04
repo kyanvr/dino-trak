@@ -8,7 +8,6 @@ import {
 	Button,
 } from "react-native";
 import { Redirect, router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery, useRealm } from "@realm/react";
 import Avatar from "@components/app/Avatar";
 import ViewContainer from "@components/design/ViewContainer";
@@ -16,7 +15,8 @@ import colors from "@constants/colors";
 import Title from "@components/design/Title";
 import DailyCard from "@components/app/DailyCard";
 import Dino from "../../components/app/Dino";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import Tooltip from "../../components/app/Tooltip";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
@@ -49,6 +49,7 @@ export default function Home() {
 					color={colors["green-200"]}
 				/>
 			</Pressable>
+			<Tooltip text={"This is a tooltip"} />
 			<Avatar
 				size={"small"}
 				style={{ position: "absolute", top: 50, right: 30 }}
@@ -58,14 +59,27 @@ export default function Home() {
 				<Title text={"Hello there,"} subtitle={username} />
 			</View>
 
-			<View style={{ flex: 2, alignSelf: 'stretch', marginHorizontal: 20, marginBottom: 50 }}>
+			<View
+				style={{
+					flex: 2,
+					alignSelf: "stretch",
+					marginHorizontal: 20,
+					marginBottom: 50,
+				}}
+			>
 				<DailyCard />
 			</View>
 
-			<View style={{ flex: 3, alignSelf: 'stretch' }}>
+			<View style={{ flex: 3, alignSelf: "stretch" }}>
 				<TouchableOpacity
 					onPress={() => router.push("/home/modal")}
-					style={{ position: "absolute", top: 0, right: 20, width: 44, height: 44 }}
+					style={{
+						position: "absolute",
+						top: 0,
+						right: 20,
+						width: 44,
+						height: 44,
+					}}
 				>
 					<Feather
 						name="edit"
@@ -80,21 +94,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		paddingTop: 100,
-		alignItems: "center",
-	},
-	text: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "white",
-	},
-	image: {
-		width: 200,
-		height: 200,
-		borderRadius: 100,
-		marginBottom: 16,
-	},
 	settings: {
 		position: "absolute",
 		top: 50,

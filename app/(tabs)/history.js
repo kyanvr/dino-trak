@@ -8,7 +8,6 @@ import colors from "../constants/colors";
 import ViewContainer from "../components/design/ViewContainer";
 import Title from "../components/design/Title";
 import { formatDate } from "../utils/dateFormat";
-import { Button } from "react-native";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useQuery, useRealm } from "@realm/react";
 import StepsGoal from "../components/app/StepsGoal";

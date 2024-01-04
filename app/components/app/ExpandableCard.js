@@ -137,12 +137,12 @@ export default function ExpandableCard({
 					{expanded && (
 						<View style={styles.additionalInfo}>
 							<Text style={styles.additionalText}>
-								Description: {description}
+								{description}
 							</Text>
-							<Text style={styles.additionalText}>XP: {xp}</Text>
+							<Text style={styles.additionalText}>{xp} XP</Text>
 							{stepsReached && (
 								<Button
-									title="Claim Reward"
+									title="Complete challenge"
 									onPress={onPress}
 								/>
 							)}
