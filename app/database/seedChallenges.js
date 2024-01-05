@@ -8,7 +8,6 @@ export default async function populateChallenges() {
 		const challengesDB = useQuery("Challenges");
 
 		if (challengesDB.length > 0) {
-			console.log("Challenges already populated");
             return;
 		}
 
@@ -28,9 +27,7 @@ export default async function populateChallenges() {
 				return newChallenge;
 			});
 		});
-
-		console.log("Challenges populated successfully!");
 	} catch (error) {
-		console.error("Error populating challenges:", error);
+		throw new Error(error);
 	}
 }

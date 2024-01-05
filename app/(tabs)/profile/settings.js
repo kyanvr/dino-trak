@@ -1,20 +1,20 @@
-import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
+import React, { useRef, useState } from "react";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Title from "@components/design/Title";
 import colors from "@constants/colors";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useQuery, useRealm } from "@realm/react";
-import { useEffect, useRef, useState } from "react";
+import { useToast } from "react-native-toast-notifications";
+import ViewContainer from "@components/design/ViewContainer";
+import BackButton from "@components/design/BackButton";
 import InputText from "@components/design/InputText";
 import Button from "@components/design/Button";
-import useImagePicker from "../../hooks/useImagePicker";
 import ImagePicker from "@components/design/ImagePicker";
-import { useToast } from "react-native-toast-notifications";
+import useImagePicker from "@hooks/useImagePicker";
 import { openHealthConnectSettings } from "react-native-health-connect";
-import ViewContainer from "../../components/design/ViewContainer";
-import BackButton from "../../components/design/BackButton";
 
-export default function Settings() {
+const Settings = () => {
 	const [focused, setFocused] = useState(false);
 	const [changesMade, setChangesMade] = useState(0);
 	const realm = useRealm();
@@ -22,37 +22,35 @@ export default function Settings() {
 	const buddy = useQuery("Buddy");
 	const usernameRef = useRef("");
 	const buddyNameRef = useRef("");
-	const { selectedImage, pickImageAsync, saveImage, getSavedImage } = useImagePicker();
+	const { selectedImage, pickImageAsync, saveImage, getSavedImage } =
+		useImagePicker();
 	const toast = useToast();
 
-	async function handlePress() {
+	const handlePress = async () => {
 		try {
-			// check if user changed username
 			if (usernameRef.current !== "") {
 				realm.write(() => {
 					user[0].username = usernameRef.current;
 				});
 			}
 
-			// check if user changed buddy name
 			if (buddyNameRef.current !== "") {
 				realm.write(() => {
 					buddy[0].buddy_name = buddyNameRef.current;
 				});
 			}
 
-			// check if user changed avatar
 			if (selectedImage) {
-                await saveImage();
-                const savedImage = await getSavedImage();
+				await saveImage();
+				const savedImage = await getSavedImage();
 				realm.write(() => {
 					user[0].avatar = savedImage;
 				});
 			}
 
-            setChangesMade(0);
+			setChangesMade(0);
 
-            router.back();
+			router.back();
 
 			toast.show("Saved data!", {
 				type: "success",
@@ -70,7 +68,7 @@ export default function Settings() {
 				animationType: "slide-in",
 			});
 		}
-	}
+	};
 
 	const handleBack = () => {
 		if (changesMade > 0) {
@@ -90,22 +88,28 @@ export default function Settings() {
 
 	return (
 		<ViewContainer>
+			{/* Settings title */}
 			<Title text="Settings" />
+
+			{/* ScrollView for the settings */}
 			<ScrollView
 				style={styles.settings}
 				contentContainerStyle={{ alignItems: "flex-start" }}
 			>
+				{/* Back button and Save Data button */}
 				<View style={styles.saveData}>
-					<BackButton title={"Back"} onPress={() => handleBack()} />
-					<Button title="Save data" onPress={() => handlePress()}>
+					<BackButton title={"Back"} onPress={handleBack} />
+					<Button title="Save data" onPress={handlePress}>
 						<FontAwesome5
 							name="save"
 							size={24}
-							color={colors.black}
+							color={colors["grey-900"]}
 							style={{ marginLeft: 10 }}
 						/>
 					</Button>
 				</View>
+
+				{/* Change username */}
 				<View style={styles.settingsBlock}>
 					<Text style={styles.text}>Change username</Text>
 					<InputText
@@ -118,6 +122,8 @@ export default function Settings() {
 						}
 					/>
 				</View>
+
+				{/* Change buddy name */}
 				<View style={styles.settingsBlock}>
 					<Text style={styles.text}>Change buddy name</Text>
 					<InputText
@@ -127,13 +133,20 @@ export default function Settings() {
 						}}
 					/>
 				</View>
+
+				{/* Change avatar */}
 				<View style={styles.settingsBlock}>
 					<Text style={styles.text}>Change avatar</Text>
 					<ImagePicker
-						onPress={() => {pickImageAsync(); setChangesMade((changesMade) => changesMade + 1)}}
+						onPress={() => {
+							pickImageAsync();
+							setChangesMade((changesMade) => changesMade + 1);
+						}}
 						image={selectedImage ? selectedImage : user[0].avatar}
 					/>
 				</View>
+
+				{/* Open Health Connect settings */}
 				<View style={styles.settingsBlock}>
 					<Text style={styles.text}>
 						Open Health Connect settings
@@ -146,24 +159,9 @@ export default function Settings() {
 			</ScrollView>
 		</ViewContainer>
 	);
-}
+};
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 50,
-		paddingHorizontal: 20,
-		backgroundColor: colors.black,
-		alignItems: "center",
-		position: "relative",
-	},
-	back: {
-		position: "absolute",
-		top: 50,
-		left: 20,
-		width: 40,
-		height: 40,
-	},
 	settings: {
 		alignSelf: "stretch",
 		flexDirection: "column",
@@ -186,3 +184,5 @@ const styles = StyleSheet.create({
 		alignSelf: "stretch",
 	},
 });
+
+export default Settings;

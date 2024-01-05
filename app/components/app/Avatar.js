@@ -1,9 +1,7 @@
 import { useQuery, useRealm } from "@realm/react";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
-import { View, Image, StyleSheet, Pressable } from "react-native";
-import useImagePicker from "../../hooks/useImagePicker";
-
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
 const Avatar = ({ size, style }) => {
 	const realm = useRealm();
@@ -24,12 +22,12 @@ const Avatar = ({ size, style }) => {
 	};
 
 	return (
-		<Pressable
+		<TouchableOpacity
 			onPress={() => router.push("/profile")}
 			style={[styles.avatarContainer, getSizeStyles(), style]}
 		>
-			<Image source={{uri: avatar}} style={styles.avatarImage} />
-		</Pressable>
+			<Image source={{ uri: avatar }} style={styles.avatarImage} />
+		</TouchableOpacity>
 	);
 };
 
@@ -37,8 +35,6 @@ const styles = StyleSheet.create({
 	avatarContainer: {
 		borderRadius: 999,
 		overflow: "hidden",
-		width: 44,
-		height: 44,
 	},
 	avatarImage: {
 		flex: 1,

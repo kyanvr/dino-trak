@@ -1,4 +1,3 @@
-// ExpandableCard.js
 import React, { useState, useEffect, memo, useCallback } from "react";
 import {
 	StyleSheet,
@@ -8,11 +7,11 @@ import {
 	Image,
 	Animated,
 } from "react-native";
-import colors from "../../constants/colors";
-import progressFormat from "../../utils/progressFormat";
-import Button from "../design/Button";
+import colors from "@constants/colors";
+import progressFormat from "@utils/progressFormat";
+import Button from "@components/design/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import isObjectEmpty from "../../utils/isObjectEmpty";
+import isObjectEmpty from "@utils/isObjectEmpty";
 
 export default function ExpandableCard({
 	title,
@@ -53,9 +52,15 @@ export default function ExpandableCard({
 	}, [duration]);
 
 	useEffect(() => {
-		updateProgress()
+		updateProgress();
 	}, [steps, floors, distance, calories, target, duration]);
 
+	// Return null if the card is completed
+	if (completed) {
+		return null;
+	}
+
+	// Calculate the date range based on the selected duration
 	const calculateDateRange = () => {
 		const today = new Date();
 		switch (duration) {
@@ -81,6 +86,7 @@ export default function ExpandableCard({
 		}
 	};
 
+	// Update progress based on health metrics
 	const updateProgress = () => {
 		const [startDate, endDate] = calculateDateRange();
 		let metricValue = 0;
@@ -110,6 +116,7 @@ export default function ExpandableCard({
 		setProgress(progressFormat(metricValue, target));
 	};
 
+	// Toggle the card's expanded state
 	const toggleCard = () => {
 		const toValue = expanded ? 0 : 1;
 
@@ -121,14 +128,6 @@ export default function ExpandableCard({
 
 		setExpanded(!expanded);
 	};
-
-	if (completed) {
-		return null;
-	}
-
-	if (loading) {
-		return null;
-	}
 
 	return (
 		<TouchableOpacity
@@ -182,6 +181,9 @@ export default function ExpandableCard({
 }
 
 const styles = StyleSheet.create({
+	container: {
+		width: "100%",
+	},
 	card: {
 		flexDirection: "row",
 		alignItems: "center",

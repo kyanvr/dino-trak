@@ -1,4 +1,4 @@
-import { Tabs, router } from "expo-router";
+import { Tabs } from "expo-router";
 import React from "react";
 import {
 	Ionicons,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useReducer } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
 	Image,
 	StyleSheet,
@@ -7,7 +7,6 @@ import {
 	Text,
 	ScrollView,
 	Dimensions,
-	FlatList,
 } from "react-native";
 import dino from "@assets/dino.png";
 import { useCombination } from "@hooks/useCombination";
@@ -85,7 +84,7 @@ const Dino = ({ screen }) => {
 
 	// Load unlocked with unlockedAttributes if it is not empty
 	useEffect(() => {
-		if (unlocked !== "") {
+		if (unlocked.length > 0) {
 			const paths = unlocked.split(",");
 			paths.forEach((path) => {
 				const attribute = path.split("_");
@@ -189,9 +188,7 @@ const Dino = ({ screen }) => {
 	}) => {
 		return useMemo(() => {
 			return (
-				<ScrollView
-					contentContainerStyle={styles.items}
-				>
+				<ScrollView contentContainerStyle={styles.items}>
 					{categories.map((category, categoryIndex) => (
 						<View
 							key={categoryIndex}
@@ -243,7 +240,7 @@ const Dino = ({ screen }) => {
 							<FontAwesome5
 								name="save"
 								size={24}
-								color={colors.black}
+								color={colors["grey-900"]}
 								style={{ marginLeft: 10 }}
 							/>
 						</Button>
@@ -255,7 +252,9 @@ const Dino = ({ screen }) => {
 				{screen === "home" && (
 					<View style={styles.levelContainer}>
 						<Text style={styles.buddyText}>{buddy.buddy_name}</Text>
-						<Text>LVL {buddy.level !== 15 ? buddy.level : 'MAX'}</Text>
+						<Text style={styles.buddyLevel}>
+							LVL {buddy.level !== 15 ? buddy.level : "MAX"}
+						</Text>
 					</View>
 				)}
 				<Image source={dino} style={styles.dino} />
@@ -298,7 +297,7 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
 		flex: 1,
-        width: screenWidth,
+		width: screenWidth,
 		paddingHorizontal: 20,
 	},
 	dinoContainer: {
@@ -327,13 +326,17 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 	},
+    buddyLevel: {
+        color: colors["grey-900"],
+        fontSize: 12,
+    },
 	dino: {
 		width: 300,
 		height: 300,
 		resizeMode: "contain",
 	},
 	items: {
-        alignSelf: "stretch",
+		alignSelf: "stretch",
 		paddingVertical: 20,
 	},
 	categoryContainer: {
@@ -347,9 +350,9 @@ const styles = StyleSheet.create({
 		textTransform: "capitalize",
 	},
 	categoryItems: {
-        flex: 1,
-        flexDirection: "row",
-        flexWrap: "wrap",
+		flex: 1,
+		flexDirection: "row",
+		flexWrap: "wrap",
 		width: "100%",
 	},
 	thumbnail: {
@@ -464,40 +467,40 @@ const styles = StyleSheet.create({
 		zIndex: -1,
 		borderRadius: 10,
 	},
-    blueTop: {
-        position: "absolute",
-        top: 100,
-        left: 70,
-        width: 160,
-        height: 160,
-        resizeMode: "contain",
-    },
-    redTop: {
-        position: "absolute",
-        top: 100,
-        left: 70,
-        width: 160,
-        height: 160,
-        resizeMode: "contain",
-    },
-    pinkTop: {
-        position: "absolute",
-        top: 100,
-        left: 70,
-        width: 160,
-        height: 160,
-        resizeMode: "contain",
-    },
-    jungleBackground: {
-        position: "absolute",
-        top: -20,
-        left: -10,
-        width: 320,
-        height: 320,
-        resizeMode: "cover",
-        zIndex: -1,
-        borderRadius: 10,
-    },
+	blueTop: {
+		position: "absolute",
+		top: 100,
+		left: 70,
+		width: 160,
+		height: 160,
+		resizeMode: "contain",
+	},
+	redTop: {
+		position: "absolute",
+		top: 100,
+		left: 70,
+		width: 160,
+		height: 160,
+		resizeMode: "contain",
+	},
+	pinkTop: {
+		position: "absolute",
+		top: 100,
+		left: 70,
+		width: 160,
+		height: 160,
+		resizeMode: "contain",
+	},
+	jungleBackground: {
+		position: "absolute",
+		top: -20,
+		left: -10,
+		width: 320,
+		height: 320,
+		resizeMode: "cover",
+		zIndex: -1,
+		borderRadius: 10,
+	},
 });
 
 export default Dino;

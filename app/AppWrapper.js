@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import colors from "./constants/colors";
+import colors from "@constants/colors";
 import { useFonts, OpenSans_400Regular } from "@expo-google-fonts/open-sans";
 import StackLayout from "./_layout";
 
@@ -33,7 +33,7 @@ export default function AppWrapper() {
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
-		backgroundColor: colors.black,
+		backgroundColor: colors["grey-900"],
 		fontFamily: "OpenSans",
 	},
 });

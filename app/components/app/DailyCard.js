@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import colors from "@constants/colors";
-import { useState, useEffect } from "react";
 import useHealthData from "@hooks/useHealthData";
 
 const DailyCard = () => {
@@ -15,6 +14,7 @@ const DailyCard = () => {
 	const { dailyData, loading, error } = useHealthData(date);
 
 	useEffect(() => {
+		// Update state with health data when it's available
 		if (!loading && !error) {
 			setSteps(dailyData.steps);
 			setFlights(dailyData.floors);
@@ -27,6 +27,7 @@ const DailyCard = () => {
 
 	return (
 		<View style={styles.container}>
+			{/* Top section with walking icon and steps */}
 			<View style={styles.top}>
 				<FontAwesome5
 					name="walking"
@@ -36,13 +37,19 @@ const DailyCard = () => {
 				<View style={styles.topTextContainer}>
 					<Text style={styles.valueText}>Track your steps</Text>
 					{!loading && !error ? (
-                        <Text style={styles.value}>{steps} steps</Text>
-                    ) : (
-                        <ActivityIndicator size="large" color={colors["grey-100"]} />
-                    )}
+						<Text style={styles.value}>{steps} steps</Text>
+					) : (
+						<ActivityIndicator
+							size="large"
+							color={colors["grey-100"]}
+						/>
+					)}
 				</View>
 			</View>
+
+			{/* Bottom section with floors climbed, distance, and calories */}
 			<View style={styles.bottom}>
+				{/* Floors Climbed */}
 				<View
 					style={[
 						styles.valueBottomContainer,
@@ -51,11 +58,16 @@ const DailyCard = () => {
 				>
 					<Text style={styles.valueTextBottom}>Floors climbed</Text>
 					{!loading && !error ? (
-                        <Text style={styles.valueBottom}>{flights}</Text>
-                    ) : (
-                        <ActivityIndicator size="large" color={colors["grey-100"]} />
-                    )}
+						<Text style={styles.valueBottom}>{flights}</Text>
+					) : (
+						<ActivityIndicator
+							size="large"
+							color={colors["grey-100"]}
+						/>
+					)}
 				</View>
+
+				{/* Distance */}
 				<View
 					style={[
 						styles.valueBottomContainer,
@@ -64,11 +76,16 @@ const DailyCard = () => {
 				>
 					<Text style={styles.valueTextBottom}>Distance</Text>
 					{!loading && !error ? (
-                        <Text style={styles.valueBottom}>{distance} km</Text>
-                    ) : (
-                        <ActivityIndicator size="large" color={colors["grey-100"]} />
-                    )}
+						<Text style={styles.valueBottom}>{distance} km</Text>
+					) : (
+						<ActivityIndicator
+							size="large"
+							color={colors["grey-100"]}
+						/>
+					)}
 				</View>
+
+				{/* Calories Burned */}
 				<View
 					style={[
 						styles.valueBottomContainer,
@@ -77,10 +94,13 @@ const DailyCard = () => {
 				>
 					<Text style={styles.valueTextBottom}>Calories burned</Text>
 					{!loading && !error ? (
-                        <Text style={styles.valueBottom}>{calories} kcal</Text>
-                    ) : (
-                        <ActivityIndicator size="large" color={colors["grey-100"]} />
-                    )}
+						<Text style={styles.valueBottom}>{calories} kcal</Text>
+					) : (
+						<ActivityIndicator
+							size="large"
+							color={colors["grey-100"]}
+						/>
+					)}
 				</View>
 			</View>
 		</View>
@@ -96,7 +116,6 @@ const styles = StyleSheet.create({
 		alignSelf: "stretch",
 		padding: 20,
 		borderRadius: 10,
-
 	},
 	top: {
 		flexDirection: "row",

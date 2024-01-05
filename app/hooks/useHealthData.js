@@ -7,6 +7,7 @@ import {
 } from "react-native-health-connect";
 
 const useHealthData = (date) => {
+	// States to store health data
 	const [dailyData, setDailyData] = useState({});
 	const [weeklyData, setWeeklyData] = useState({});
 	const [monthlyData, setMonthlyData] = useState({});
@@ -15,13 +16,13 @@ const useHealthData = (date) => {
 
 	const fetchData = async () => {
 		try {
-			// initialize the client
+			// Initialize the health data client
 			const isInitialized = await initialize();
 			if (!isInitialized) {
 				throw new Error("Health Connect initialization failed.");
 			}
 
-			// request permissions
+			// Request necessary permissions
 			await requestPermission([
 				{ accessType: "read", recordType: "Steps" },
 				{ accessType: "read", recordType: "Distance" },
@@ -29,6 +30,7 @@ const useHealthData = (date) => {
 				{ accessType: "read", recordType: "TotalCaloriesBurned" },
 			]);
 
+			// Define time range filters for daily, weekly, and monthly data
 			const dailyTimeRangeFilter = {
 				operator: "between",
 				startTime: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
@@ -37,10 +39,10 @@ const useHealthData = (date) => {
 
 			const getWeeklyTimeRangeFilter = (date) => {
 				const startOfWeek = new Date(date);
-				startOfWeek.setDate(date.getDate() - ((date.getDay() + 6) % 7)); // Set to the first day (Monday) of the current week
+				startOfWeek.setDate(date.getDate() - ((date.getDay() + 6) % 7));
 
 				const endOfWeek = new Date(date);
-				endOfWeek.setDate(date.getDate() + (7 - date.getDay())); // Set to the last day (Sunday) of the current week
+				endOfWeek.setDate(date.getDate() + (7 - date.getDay()));
 
 				return {
 					operator: "between",
@@ -122,50 +124,47 @@ const useHealthData = (date) => {
 				}),
 			]);
 
-            const calculateTotalSteps = (data) => {
-                return data.reduce((total, record) => {
-                    return total + record.count;
-                }, 0);
-            }
+			// Helper functions to calculate total values from records
+			const calculateTotalSteps = (data) =>
+				data.reduce((total, record) => total + record.count, 0);
+			const calculateTotalDistance = (data) =>
+				(
+					data.reduce(
+						(total, record) => total + record.distance.inMeters,
+						0
+					) / 1000
+				).toFixed(2);
+			const calculateTotalFloors = (data) =>
+				data.reduce((total, record) => total + record.floors, 0);
+			const calculateTotalCalories = (data) =>
+				data
+					.reduce(
+						(total, record) => total + record.energy.inKilocalories,
+						0
+					)
+					.toFixed();
 
-            const calculateTotalDistance = (data) => {
-                return data.reduce((total, record) => {
-                    return total + record.distance.inMeters;
-                }, 0);
-            }
-
-            const calculateTotalFloors = (data) => {
-                return data.reduce((total, record) => {
-                    return total + record.floors;
-                }, 0);
-            }
-
-            const calculateTotalCalories = (data) => {
-                return data.reduce((total, record) => {
-                    return total + record.energy.inKilocalories;
-                }, 0);
-            }
-
+			// Set the health data states
 			setDailyData({
-                steps: calculateTotalSteps(dailySteps),
-                distance: (calculateTotalDistance(dailyDistance) / 1000).toFixed(2),
-                floors: calculateTotalFloors(dailyFloors),
-                calories: calculateTotalCalories(dailyCalories).toFixed(),
-            })
-			
-            setWeeklyData({
-                steps: calculateTotalSteps(weeklySteps),
-                distance: (calculateTotalDistance(weeklyDistance) / 1000).toFixed(2),
-                floors: calculateTotalFloors(weeklyFlights),
-                calories: calculateTotalCalories(weeklyCalories).toFixed(),
-            });
+				steps: calculateTotalSteps(dailySteps),
+				distance: calculateTotalDistance(dailyDistance),
+				floors: calculateTotalFloors(dailyFloors),
+				calories: calculateTotalCalories(dailyCalories),
+			});
 
-            setMonthlyData({
-                steps: calculateTotalSteps(monthlySteps),
-                distance: (calculateTotalDistance(monthlyDistance) / 1000).toFixed(2),
-                floors: calculateTotalFloors(monthlyFlights),
-                calories: calculateTotalCalories(monthlyCalories).toFixed(),
-            });
+			setWeeklyData({
+				steps: calculateTotalSteps(weeklySteps),
+				distance: calculateTotalDistance(weeklyDistance),
+				floors: calculateTotalFloors(weeklyFlights),
+				calories: calculateTotalCalories(weeklyCalories),
+			});
+
+			setMonthlyData({
+				steps: calculateTotalSteps(monthlySteps),
+				distance: calculateTotalDistance(monthlyDistance),
+				floors: calculateTotalFloors(monthlyFlights),
+				calories: calculateTotalCalories(monthlyCalories),
+			});
 
 			setLoading(false);
 		} catch (error) {
@@ -175,6 +174,7 @@ const useHealthData = (date) => {
 	};
 
 	useEffect(() => {
+		// Fetch health data only for Android platform
 		if (Platform.OS !== "android") {
 			return;
 		}

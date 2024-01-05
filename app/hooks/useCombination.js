@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState } from "react";
 
+// Create a context for managing combinations
 const CombinationContext = createContext();
 
+// Create a provider component to wrap around the app and provide combination-related functionality
 export const CombinationProvider = ({ children }) => {
-	const [baseImage, setBaseImage] = useState(require("@assets/dino.png"));
+	// State to track selected accessory paths
 	const [accessoryPaths, setAccessoryPaths] = useState([]);
-    const [unlockedPaths, setUnlockedPaths] = useState([]);
+	// State to track unlocked accessory paths
+	const [unlockedPaths, setUnlockedPaths] = useState([]);
 
+	// Toggle an accessory's selection status
 	const toggleAccessory = (accessoryPath) => {
 		setAccessoryPaths((prevPaths) => {
 			if (prevPaths.includes(accessoryPath)) {
@@ -18,26 +22,29 @@ export const CombinationProvider = ({ children }) => {
 			}
 		});
 	};
-    
-    const unlockAccessory = (accessoryPath) => {
-        setUnlockedPaths((prevPaths) => {
-            // Only add the unlocked item if it's not already present
-            if (!prevPaths.includes(accessoryPath)) {
-                return [...prevPaths, accessoryPath];
-            }
-            return prevPaths
-        });
-    };
 
+	// Unlock an accessory
+	const unlockAccessory = (accessoryPath) => {
+		setUnlockedPaths((prevPaths) => {
+			// Only add the unlocked item if it's not already present
+			if (!prevPaths.includes(accessoryPath)) {
+				return [...prevPaths, accessoryPath];
+			}
+			return prevPaths;
+		});
+	};
+
+	// Clear all selected accessories
 	const clearAccessories = () => {
 		setAccessoryPaths([]);
 	};
 
+	// Context value to be provided to the entire app
 	const contextValue = {
 		accessoryPaths,
 		toggleAccessory,
-        unlockedPaths,
-        unlockAccessory,
+		unlockedPaths,
+		unlockAccessory,
 		clearAccessories,
 	};
 
@@ -48,6 +55,7 @@ export const CombinationProvider = ({ children }) => {
 	);
 };
 
+// Custom hook to access combination context
 export const useCombination = () => {
 	const context = useContext(CombinationContext);
 	if (!context) {

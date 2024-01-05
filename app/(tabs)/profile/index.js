@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import ViewContainer from "@components/design/ViewContainer";
 import Title from "@components/design/Title";
-import useHealthData from "../../hooks/useHealthData";
+import useHealthData from "@hooks/useHealthData";
 import { useQuery, useRealm } from "@realm/react";
 import colors from "@constants/colors";
 import ProfileCard from "@components/design/ProfileCard";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import Avatar from "../../components/app/Avatar";
-import ChallengeCard from "../../components/design/ChallengeCard";
-import demo_challenges from "../../constants/demo_challenges";
+import Avatar from "@components/app/Avatar";
+import ChallengeCard from "@components/design/ChallengeCard";
+import demo_challenges from "@constants/demo_challenges";
 
-export default function Profile() {
+const Profile = () => {
 	const [data, setData] = useState({});
 	const [username, setUsername] = useState("");
 	const [date, setDate] = useState(new Date());
@@ -28,6 +28,7 @@ export default function Profile() {
 	);
 
 	useEffect(() => {
+		// Update the data when health data changes
 		if (!loading && !error) {
 			setData(monthlyData);
 		} else if (error) {
@@ -35,12 +36,14 @@ export default function Profile() {
 		}
 	}, [loading, error, date]);
 
+	// Update the username when user data changes
 	user.addListener((user) => {
 		setUsername(user.username);
 	});
 
 	return (
 		<ViewContainer style={styles.container}>
+			{/* Settings button */}
 			<Pressable
 				onPress={() => router.push("/profile/settings")}
 				style={styles.settings}
@@ -51,7 +54,11 @@ export default function Profile() {
 					color={colors["grey-300"]}
 				/>
 			</Pressable>
+
+			{/* Profile title */}
 			<Title text="Profile" />
+
+			{/* ScrollView for the profile details */}
 			<ScrollView
 				contentContainerStyle={{
 					alignItems: "center",
@@ -59,10 +66,13 @@ export default function Profile() {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
+				{/* User information */}
 				<View style={styles.userContainer}>
 					<Avatar size={"large"} style={{ marginBottom: 20 }} />
 					<Text style={styles.username}>{username}</Text>
 				</View>
+
+				{/* Health data cards */}
 				<View style={styles.innerContainer}>
 					<ProfileCard
 						value={loading ? 0 : data.steps}
@@ -89,6 +99,8 @@ export default function Profile() {
 						loading={loading}
 					/>
 				</View>
+
+				{/* Completed Demo Challenges */}
 				{completedDemoChallenges.length > 0 && (
 					<View style={styles.challengesContainer}>
 						<View style={styles.completedChallengesText}>
@@ -109,21 +121,20 @@ export default function Profile() {
 							/>
 						</View>
 						<View style={styles.challenges}>
-							{completedDemoChallenges.map((challenge, index) => {
-								return (
-									<ChallengeCard
-										title={challenge.challenge_name}
-										description={
-											challenge.challenge_description
-										}
-										key={index}
-									/>
-								);
-							})}
+							{completedDemoChallenges.map((challenge, index) => (
+								<ChallengeCard
+									title={challenge.challenge_name}
+									description={
+										challenge.challenge_description
+									}
+									key={index}
+								/>
+							))}
 						</View>
 					</View>
 				)}
 
+				{/* Completed Challenges */}
 				{completedChallenges.length > 0 && (
 					<View style={styles.challengesContainer}>
 						<View style={styles.completedChallengesText}>
@@ -144,24 +155,22 @@ export default function Profile() {
 							/>
 						</View>
 						<View style={styles.challenges}>
-							{completedChallenges.map((challenge, index) => {
-								return (
-									<ChallengeCard
-										title={challenge.challenge_name}
-										description={
-											challenge.challenge_description
-										}
-										key={index}
-									/>
-								);
-							})}
+							{completedChallenges.map((challenge, index) => (
+								<ChallengeCard
+									title={challenge.challenge_name}
+									description={
+										challenge.challenge_description
+									}
+									key={index}
+								/>
+							))}
 						</View>
 					</View>
 				)}
 			</ScrollView>
 		</ViewContainer>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	container: {
@@ -172,15 +181,6 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		color: colors["grey-100"],
 	},
-	text: {
-		fontSize: 16,
-		color: colors["grey-300"],
-	},
-	value: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: colors["grey-100"],
-	},
 	innerContainer: {
 		flexDirection: "row",
 		justifyContent: "center",
@@ -188,12 +188,6 @@ const styles = StyleSheet.create({
 		flexWrap: "wrap",
 		gap: 40,
 		paddingHorizontal: 20,
-	},
-	avatar: {
-		width: 100,
-		height: 100,
-		borderRadius: 50,
-		marginBottom: 16,
 	},
 	userContainer: {
 		alignItems: "center",
@@ -226,3 +220,5 @@ const styles = StyleSheet.create({
 		marginVertical: 20,
 	},
 });
+
+export default Profile;

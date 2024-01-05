@@ -1,45 +1,40 @@
-import React, { Suspense, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	Pressable,
-	TouchableOpacity,
-	Button,
-} from "react-native";
-import { Redirect, router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { View, TouchableOpacity, Redirect, StyleSheet } from "react-native";
 import { useQuery, useRealm } from "@realm/react";
-import Avatar from "@components/app/Avatar";
+import { Feather } from "@expo/vector-icons";
 import ViewContainer from "@components/design/ViewContainer";
 import colors from "@constants/colors";
 import Title from "@components/design/Title";
 import DailyCard from "@components/app/DailyCard";
-import Dino from "../../components/app/Dino";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import Tooltip from "../../components/app/Tooltip";
+import Dino from "@components/app/Dino";
+import Tooltip from "@components/app/Tooltip";
+import Avatar from "@components/app/Avatar";
+import { router } from "expo-router";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
 	const realm = useRealm();
 	const user = useQuery("User")[0];
 
-	if (user === undefined) {
-		return <Redirect href={"/screens/startup/start"} />;
-	} else if (!user.onboarding_completed) {
+	// Redirect if user is not defined or onboarding is not completed
+	if (user === undefined || !user.onboarding_completed) {
 		return <Redirect href={"/screens/startup/start"} />;
 	}
 
+	// Update the username when user data changes
 	user.addListener((updatedUser) => {
 		setUsername(updatedUser.username);
 	});
 
+	// Update the username on component mount or when user changes
 	useEffect(() => {
 		setUsername(user.username);
 	}, [user]);
 
 	return (
 		<ViewContainer>
-			<Pressable
+			{/* Settings button, only for development purposes */}
+			{/* <Pressable
 				onPress={() => router.push("/home/homeSettings")}
 				style={styles.settings}
 			>
@@ -48,17 +43,23 @@ export default function Home() {
 					size={24}
 					color={colors["green-200"]}
 				/>
-			</Pressable>
+			</Pressable> */}
+
+			{/* Tooltip component */}
 			<Tooltip />
+
+			{/* Avatar component */}
 			<Avatar
 				size={"small"}
-				style={{ position: "absolute", top: 50, right: 30 }}
+				style={{ position: "absolute", top: 50, right: 20 }}
 			/>
 
+			{/* Welcome message */}
 			<View style={{ flex: 1 }}>
 				<Title text={"Welcome back,"} subtitle={username} />
 			</View>
 
+			{/* DailyCard component */}
 			<View
 				style={{
 					flex: 2,
@@ -70,7 +71,10 @@ export default function Home() {
 				<DailyCard />
 			</View>
 
-			<View style={{ flex: 3, alignSelf: "stretch", alignItems: 'center' }}>
+			{/* Edit button and Dino component */}
+			<View
+				style={{ flex: 3, alignSelf: "stretch", alignItems: "center" }}
+			>
 				<TouchableOpacity
 					onPress={() => router.push("/home/modal")}
 					style={{

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import icon from "@assets/icon.png";
 import colors from "@constants/colors";
@@ -6,7 +6,6 @@ import { AntDesign } from "@expo/vector-icons";
 import ViewContainer from "@components/design/ViewContainer";
 import { router } from "expo-router";
 import { useRealm } from "@realm/react";
-import "react-native-get-random-values";
 import { User } from "../../models/User";
 
 export default function Start() {

@@ -9,15 +9,14 @@ import {
 } from "react-native";
 import ViewContainer from "@components/design/ViewContainer";
 import Title from "@components/design/Title";
-import ExpandableCard from "../components/app/ExpandableCard";
+import ExpandableCard from "@components/app/ExpandableCard";
 import { useQuery, useRealm } from "@realm/react";
 import useLevelSystem from "@hooks/useLevelSystem";
-import Avatar from "../components/app/Avatar";
-import useHealthData from "../hooks/useHealthData";
-import colors from "../constants/colors";
-import LevelUpModal from "../components/app/LevelUpModal";
-import demo_challenges from "../constants/demo_challenges";
-import { Ionicons } from "@expo/vector-icons";
+import Avatar from "@components/app/Avatar";
+import useHealthData from "@hooks/useHealthData";
+import colors from "@constants/colors";
+import LevelUpModal from "@components/app/LevelUpModal";
+import demo_challenges from "@constants/demo_challenges";
 
 export default function Challenges() {
 	const [date, setDate] = useState(new Date());
@@ -39,13 +38,16 @@ export default function Challenges() {
 		}
 	}, [username]);
 
-    user.addListener((updatedUser) => {
-        if (updatedUser.username === "Artevelde" || updatedUser.username === "artevelde") {
-            setDemoUser(true);
-        } else {
-            setDemoUser(false);
-        }
-    });
+	user.addListener((updatedUser) => {
+		if (
+			updatedUser.username === "Artevelde" ||
+			updatedUser.username === "artevelde"
+		) {
+			setDemoUser(true);
+		} else {
+			setDemoUser(false);
+		}
+	});
 
 	const handleFilterChange = (filter) => {
 		setSelectedFilter(filter.toLowerCase());
@@ -57,12 +59,19 @@ export default function Challenges() {
 
 	return (
 		<ViewContainer>
+			{/* Challenges title */}
 			<Title text="Challenges" />
+
+			{/* Avatar for the user */}
 			<Avatar
 				size={"small"}
-				style={{ position: "absolute", top: 50, right: 30 }}
+				style={{ position: "absolute", top: 50, right: 20 }}
 			/>
+
+			{/* Level Up Modal */}
 			<LevelUpModal visible={modalVisible} currentLevel={buddy.level} />
+
+			{/* Filter buttons for Day, Week, Month */}
 			<View style={styles.filterContainer}>
 				<TouchableOpacity
 					style={[
@@ -129,6 +138,8 @@ export default function Challenges() {
 					</Text>
 				</TouchableOpacity>
 			</View>
+
+			{/* Challenges content */}
 			{!loading ? (
 				<ScrollView
 					contentContainerStyle={{
@@ -139,6 +150,7 @@ export default function Challenges() {
 					showsVerticalScrollIndicator={false}
 				>
 					<View style={styles.container}>
+						{/* Render demo challenges for demo user */}
 						{demoUser &&
 							demo_challenges.map((challenge, index) => {
 								return (
@@ -164,6 +176,8 @@ export default function Challenges() {
 									/>
 								);
 							})}
+
+						{/* Show option to view real challenges for demo user */}
 						{demoUser && (
 							<TouchableOpacity
 								onPress={toggleShowRealChallenges}
@@ -178,15 +192,15 @@ export default function Challenges() {
 								</Text>
 							</TouchableOpacity>
 						)}
+
+						{/* Render real challenges based on selected filter for non-demo user */}
 						{showRealChallenges &&
 							challenges.map((challenge, index) => {
-								// Check if the challenge should be included based on the selected filter
 								const shouldInclude =
 									selectedFilter === "all" ||
 									challenge.duration.toLowerCase() ===
 										selectedFilter;
 
-								// Render the ExpandableCard only if it should be included
 								return shouldInclude ? (
 									<ExpandableCard
 										key={index}
@@ -219,15 +233,14 @@ export default function Challenges() {
 								) : null;
 							})}
 
+						{/* Render challenges for non-demo user */}
 						{!demoUser &&
 							challenges.map((challenge, index) => {
-								// Check if the challenge should be included based on the selected filter
 								const shouldInclude =
 									selectedFilter === "all" ||
 									challenge.duration.toLowerCase() ===
 										selectedFilter;
 
-								// Render the ExpandableCard only if it should be included
 								return shouldInclude ? (
 									<ExpandableCard
 										key={index}
@@ -262,6 +275,7 @@ export default function Challenges() {
 					</View>
 				</ScrollView>
 			) : (
+				// Loading indicator while data is loading
 				<ActivityIndicator size="large" color={colors["grey-600"]} />
 			)}
 		</ViewContainer>

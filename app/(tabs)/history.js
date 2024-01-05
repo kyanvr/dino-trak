@@ -1,20 +1,20 @@
+import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import RingProgress from "../components/design/RingProgress";
-import useHealthData from "../hooks/useHealthData";
-import Value from "../components/design/Value";
-import colors from "../constants/colors";
-import ViewContainer from "../components/design/ViewContainer";
-import Title from "../components/design/Title";
-import { formatDate } from "../utils/dateFormat";
+import RingProgress from "@components/design/RingProgress";
+import useHealthData from "@hooks/useHealthData";
+import Value from "@components/design/Value";
+import colors from "@constants/colors";
+import ViewContainer from "@components/design/ViewContainer";
+import Title from "@components/design/Title";
+import { formatDate } from "@utils/dateFormat";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useQuery, useRealm } from "@realm/react";
-import StepsGoal from "../components/app/StepsGoal";
-import progressFormat from "../utils/progressFormat";
-import Avatar from "../components/app/Avatar";
-import isObjectEmpty from "../utils/isObjectEmpty";
-import ProgressModal from "../components/app/ProgressModal";
+import StepsGoal from "@components/app/StepsGoal";
+import progressFormat from "@utils/progressFormat";
+import Avatar from "@components/app/Avatar";
+import isObjectEmpty from "@utils/isObjectEmpty";
+import ProgressModal from "@components/app/ProgressModal";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
@@ -25,42 +25,47 @@ export default function App() {
 	const realm = useRealm();
 	const user = useQuery("User")[0];
 
+	// Update progress when daily data changes
 	useEffect(() => {
 		if (!loading && !isObjectEmpty(dailyData)) {
 			return setProgress(progressFormat(dailyData.steps, stepsGoal));
 		}
 	}, [dailyData, loading, stepsGoal]);
 
+	// Set initial steps goal
 	useEffect(() => {
 		setStepsGoal(user.daily_steps);
 	}, [user]);
 
+	// Update steps goal when user data changes
 	user.addListener((user) => {
 		setStepsGoal(user.daily_steps);
 	});
 
+	// Handle progress completion
 	const onProgressComplete = () => {
 		if (progress === 100) {
-            setModalVisible(true);
-            setTimeout(() => {
-                setModalVisible(false);
-            }, 3000);
-        }
+			setModalVisible(true);
+			setTimeout(() => {
+				setModalVisible(false);
+			}, 3000);
+		}
 	};
 
+	// Change date by a specified number of days
 	const changeDate = (numDays) => {
-		const currentDate = new Date(date); // Create a copy of the current date
-		// Update the date by adding/subtracting the number of days
+		const currentDate = new Date(date);
 		currentDate.setDate(currentDate.getDate() + numDays);
-
-		setDate(currentDate); // Update the state variable
+		setDate(currentDate);
 	};
 
+	// Handle date change
 	const onChange = (event, selectedDate) => {
 		const currentDate = selectedDate;
 		setDate(currentDate);
 	};
 
+	// Show date picker
 	const showMode = (currentMode) => {
 		DateTimePickerAndroid.open({
 			value: date,
@@ -76,11 +81,14 @@ export default function App() {
 
 	return (
 		<ViewContainer>
+			{/* Title and Avatar */}
 			<Title text="History" />
 			<Avatar
 				size={"small"}
-				style={{ position: "absolute", top: 50, right: 30 }}
+				style={{ position: "absolute", top: 50, right: 20 }}
 			/>
+
+			{/* Date Picker */}
 			<View style={styles.datePicker}>
 				<Pressable
 					style={{
@@ -128,25 +136,28 @@ export default function App() {
 				</Pressable>
 			</View>
 
+			{/* Progress Modal */}
 			<ProgressModal visible={modalVisible} />
 
+			{/* Health Data */}
 			<ScrollView
 				contentContainerStyle={styles.container}
 				showsVerticalScrollIndicator={false}
 			>
+				{/* Ring Progress */}
 				<RingProgress
 					radius={150}
 					strokeWidth={50}
 					progress={progress}
-					onAnimationComplete={() => {
-						onProgressComplete();
-					}}
+					onAnimationComplete={onProgressComplete}
 				/>
 
+				{/* Steps Goal */}
 				<View style={{ marginTop: 20 }}>
 					<StepsGoal />
 				</View>
 
+				{/* Health Data Values */}
 				<View style={styles.values}>
 					<Value
 						label="Steps"

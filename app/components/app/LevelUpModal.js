@@ -4,15 +4,16 @@ import dino from "@assets/dino.png";
 import colors from "@constants/colors";
 import LottieView from "lottie-react-native";
 import levelup from "@assets/lottie/levelup2.json";
-import levels from "../../constants/levels";
-import accessories from "../../constants/accessories";
+import levels from "@constants/levels";
+import accessories from "@constants/accessories";
 
 const LevelUpModal = ({ visible, currentLevel }) => {
+	// Animation setup
 	const animatedValue = new Animated.Value(0);
 	const animation = useRef(null);
 
-    useEffect(() => {
-		animation.current?.play()
+	useEffect(() => {
+		animation.current?.play();
 	}, []);
 
 	useEffect(() => {
@@ -23,20 +24,25 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 		}).start();
 	}, [visible]);
 
-    const getAccessory = (accessory) => {
-        return accessories[accessory]
-    }
-    const getAccessoryPerLevel = (level) => {
-        if (level < 2) return null;
-        const accessory = levels[level - 2].attribute;
-        return getAccessory(accessory);
-    }
+	// Helper function to get accessory based on level
+	const getAccessory = (accessory) => {
+		return accessories[accessory];
+	};
+
+	// Helper function to get the unlocked accessory for the current level
+	const getAccessoryPerLevel = (level) => {
+		if (level < 2) return null;
+		const accessory = levels[level - 2].attribute;
+		return getAccessory(accessory);
+	};
 
 	return (
 		<Modal transparent visible={visible} animationType="slide">
 			<View style={styles.modalContainer}>
+				{/* Dino image */}
 				<Image source={dino} style={styles.dino} />
 
+				{/* Lottie animation */}
 				<View
 					style={{
 						flex: 1,
@@ -56,14 +62,17 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 					/>
 				</View>
 
+				{/* Modal content */}
 				<View style={styles.modalContent}>
 					<Text style={styles.modalText}>Congratulations!</Text>
 					<Text style={styles.modalText}>
 						Your buddy reached level{" "}
 						<Text style={styles.level}>{currentLevel}</Text>
 					</Text>
-					<View style={{alignItems: 'center'}}>
-                        <Text style={styles.modalText}>You unlocked a new item!</Text>
+					<View style={{ alignItems: "center" }}>
+						<Text style={styles.modalText}>
+							You unlocked a new item!
+						</Text>
 						<Image
 							source={getAccessoryPerLevel(currentLevel)}
 							style={styles.accessory}
@@ -71,6 +80,7 @@ const LevelUpModal = ({ visible, currentLevel }) => {
 					</View>
 				</View>
 
+				{/* Triangle shape at the bottom */}
 				<View style={styles.triangle} />
 			</View>
 		</Modal>

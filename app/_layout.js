@@ -8,10 +8,12 @@ import colors from "@constants/colors";
 import { ToastProvider } from "react-native-toast-notifications";
 import "react-native-get-random-values";
 import { CombinationProvider } from "./hooks/useCombination";
+import { Challenges } from "./models/Challenges";
 
 export default function StackLayout() {
+    // config for when we need to migrate the schema
 	const config = {
-		schema: [User, Buddy],
+		schema: [User, Buddy, Challenges],
 		schemaVersion: 0,
 		deleteRealmIfMigrationNeeded: true,
 	};
@@ -34,7 +36,7 @@ export default function StackLayout() {
 				color: colors["grey-900"],
 				fontWeight: "bold",
 			}}
-			offset={50} // offset for both top and bottom toasts
+			offset={50}
 			offsetTop={30}
 			offsetBottom={40}
 			swipeEnabled={true}

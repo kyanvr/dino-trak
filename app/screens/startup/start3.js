@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { View, Text, TextInput, StyleSheet, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Button from "@components/design/Button";
 import ViewContainer from "@components/design/ViewContainer";
 import InputText from "@components/design/InputText";
@@ -46,14 +46,14 @@ export default function Start3() {
 			});
 		} else {
 			toast.show("Please select an avatar", {
-                type: "warning",
-                placement: "bottom",
-                duration: 3000,
-                offset: 50,
-                animationType: "slide-in",
-            });
+				type: "warning",
+				placement: "bottom",
+				duration: 3000,
+				offset: 50,
+				animationType: "slide-in",
+			});
 
-            return;
+			return;
 		}
 
 		router.push("/screens/startup/start4");

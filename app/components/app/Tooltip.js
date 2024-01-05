@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tooltip = () => {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 		position: "absolute",
         alignSelf: "flex-start",
         zIndex: 100,
-        top: 100,
+        top: 75,
         left: 20,
 	},
 	tooltipContainer: {

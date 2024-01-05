@@ -6,14 +6,16 @@ import LottieView from "lottie-react-native";
 import levelup from "@assets/lottie/levelup2.json";
 
 const ProgressModal = ({ visible }) => {
+	// Animation setup
 	const animatedValue = new Animated.Value(0);
 	const animation = useRef(null);
 
-    useEffect(() => {
-		animation.current?.play()
+	useEffect(() => {
+		animation.current?.play();
 	}, []);
 
 	useEffect(() => {
+		// Animate modal visibility change
 		Animated.timing(animatedValue, {
 			toValue: visible ? 1 : 0,
 			duration: 500,
@@ -24,8 +26,10 @@ const ProgressModal = ({ visible }) => {
 	return (
 		<Modal transparent visible={visible} animationType="slide">
 			<View style={styles.modalContainer}>
+				{/* Dino image */}
 				<Image source={dino} style={styles.dino} />
 
+				{/* Lottie animation */}
 				<View
 					style={{
 						flex: 1,
@@ -45,13 +49,16 @@ const ProgressModal = ({ visible }) => {
 					/>
 				</View>
 
+				{/* Modal content */}
 				<View style={styles.modalContent}>
 					<Text style={styles.modalText}>Congratulations!</Text>
 					<Text style={styles.modalText}>
-						You've reached your <Text style={styles.target}>daily target</Text>!
+						You've reached your{" "}
+						<Text style={styles.target}>daily target</Text>!
 					</Text>
 				</View>
 
+				{/* Triangle shape at the bottom */}
 				<View style={styles.triangle} />
 			</View>
 		</Modal>

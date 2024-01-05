@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import colors from "@constants/colors";
-import { router } from "expo-router";
 
 const BackButton = ({ title, onPress }) => {
 	return (

@@ -58,12 +58,12 @@ export default function Start2() {
 				animationType: "slide-in",
 			});
 
-            return;
+			return;
 		}
 
 		realm.write(() => {
 			user[0].personal_goals = getSelectedTitlesString(selectedGoals);
-            user[0].daily_steps = dailySteps;
+			user[0].daily_steps = dailySteps;
 		});
 
 		router.push("/screens/startup/start3");

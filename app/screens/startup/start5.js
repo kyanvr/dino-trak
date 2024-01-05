@@ -1,10 +1,5 @@
 import React from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-    ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Title from "@components/design/Title";
 import Button from "@components/design/Button";
 import ViewContainer from "@components/design/ViewContainer";
@@ -101,14 +96,14 @@ const styles = StyleSheet.create({
 	},
 	innerContainer: {
 		alignItems: "center",
-        alignSelf: "stretch",
-        width: "100%", 
+		alignSelf: "stretch",
+		width: "100%",
 		gap: 10,
 	},
-    buttonContainer: {
-        alignSelf: "stretch",
-        alignItems: "center",
-        gap: 20,
-        marginBottom: 50,
-    },
+	buttonContainer: {
+		alignSelf: "stretch",
+		alignItems: "center",
+		gap: 20,
+		marginBottom: 50,
+	},
 });
