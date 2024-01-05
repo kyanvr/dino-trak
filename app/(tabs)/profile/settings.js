@@ -22,10 +22,10 @@ export default function Settings() {
 	const buddy = useQuery("Buddy");
 	const usernameRef = useRef("");
 	const buddyNameRef = useRef("");
-	const { selectedImage, pickImageAsync } = useImagePicker();
+	const { selectedImage, pickImageAsync, saveImage, getSavedImage } = useImagePicker();
 	const toast = useToast();
 
-	function handlePress() {
+	async function handlePress() {
 		try {
 			// check if user changed username
 			if (usernameRef.current !== "") {
@@ -43,8 +43,10 @@ export default function Settings() {
 
 			// check if user changed avatar
 			if (selectedImage) {
+                await saveImage();
+                const savedImage = await getSavedImage();
 				realm.write(() => {
-					user[0].avatar = selectedImage;
+					user[0].avatar = savedImage;
 				});
 			}
 

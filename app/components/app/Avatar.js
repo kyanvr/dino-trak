@@ -2,6 +2,8 @@ import { useQuery, useRealm } from "@realm/react";
 import { Link, router } from "expo-router";
 import React from "react";
 import { View, Image, StyleSheet, Pressable } from "react-native";
+import useImagePicker from "../../hooks/useImagePicker";
+
 
 const Avatar = ({ size, style }) => {
 	const realm = useRealm();

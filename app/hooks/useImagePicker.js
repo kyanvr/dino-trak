@@ -4,6 +4,7 @@ import * as MediaLibrary from "expo-media-library";
 
 export default function useImagePicker() {
 	const [selectedImage, setSelectedImage] = useState(null);
+
 	const pickImageAsync = async () => {
 		try {
 			const { status } =
@@ -15,12 +16,14 @@ export default function useImagePicker() {
 				return;
 			} else {
 				let result = await ImagePicker.launchImageLibraryAsync({
-					mediaTypes: ImagePicker.MediaTypeOptions.All,
+					mediaTypes: ImagePicker.MediaTypeOptions.Images,
 					allowsEditing: false,
-					quality: 1,
+					quality: 0.8,
+                    maxWidth: 200,
+                    maxHeight: 200,
 				});
 				if (!result.canceled) {
-					setSelectedImage(result.assets[0].uri);
+					setSelectedImage(result.assets[0].uri)
 				}
 			}
 		} catch (error) {
@@ -40,9 +43,9 @@ export default function useImagePicker() {
     const getSavedImage = async () => {
         try {
             const album = await MediaLibrary.getAlbumAsync("dino-trak");
-            const assets = await MediaLibrary.getAssetsAsync({album: album, sortBy: MediaLibrary.SortBy.creationTime});
-            const asset = await MediaLibrary.getAssetInfoAsync(assets.assets[assets.assets.length - 1]);
-            return asset.uri;
+            const assets = await MediaLibrary.getAssetsAsync({album: album, sortBy: MediaLibrary.SortBy.modificationTime, first: 1});
+            const asset = assets.assets[0].uri;
+            return asset;
         } catch (error) {
             console.log(error);
         }
