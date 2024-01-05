@@ -189,14 +189,20 @@ const Dino = ({ screen }) => {
 	}) => {
 		return useMemo(() => {
 			return (
-				<ScrollView contentContainerStyle={styles.items}>
+				<ScrollView
+					contentContainerStyle={styles.items}
+				>
 					{categories.map((category, categoryIndex) => (
 						<View
 							key={categoryIndex}
 							style={styles.categoryContainer}
 						>
 							<Text style={styles.categoryTitle}>{category}</Text>
-							<View style={styles.categoryItems}>
+							<View
+								style={styles.categoryItems}
+								// horizontal={true}
+								// nestedScrollEnabled={true}
+							>
 								{(itemsByCategory[category] || []).map(
 									(accessoryPath, index) => (
 										<Item
@@ -246,10 +252,12 @@ const Dino = ({ screen }) => {
 			)}
 
 			<View style={styles.dinoContainer}>
-				<View style={styles.levelContainer}>
-					<Text style={styles.buddyText}>{buddy.buddy_name}</Text>
-					<Text >LVL {buddy.level}</Text>
-				</View>
+				{screen === "home" && (
+					<View style={styles.levelContainer}>
+						<Text style={styles.buddyText}>{buddy.buddy_name}</Text>
+						<Text>LVL {buddy.level !== 15 ? buddy.level : 'MAX'}</Text>
+					</View>
+				)}
 				<Image source={dino} style={styles.dino} />
 
 				{screen !== "home"
@@ -290,6 +298,7 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
 		flex: 1,
+        width: screenWidth,
 		paddingHorizontal: 20,
 	},
 	dinoContainer: {
@@ -309,33 +318,27 @@ const styles = StyleSheet.create({
 		top: 0,
 		left: 0,
 		backgroundColor: colors["green-200"],
-        padding: 5,
-        paddingHorizontal: 10,
-        borderRadius: 5,
+		padding: 5,
+		paddingHorizontal: 10,
+		borderRadius: 5,
 	},
-    buddyText: {
-        color: colors["grey-900"],
-        fontSize: 16,
-        fontWeight: "bold",
-    },
+	buddyText: {
+		color: colors["grey-900"],
+		fontSize: 16,
+		fontWeight: "bold",
+	},
 	dino: {
 		width: 300,
 		height: 300,
 		resizeMode: "contain",
 	},
 	items: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		alignItems: "flex-start",
-		alignSelf: "stretch",
-		width: screenWidth,
+        alignSelf: "stretch",
 		paddingVertical: 20,
 	},
 	categoryContainer: {
 		marginBottom: 30,
-		alignItems: "flex-start",
 		alignSelf: "stretch",
-		width: "100%",
 	},
 	categoryTitle: {
 		fontSize: 16,
@@ -344,11 +347,9 @@ const styles = StyleSheet.create({
 		textTransform: "capitalize",
 	},
 	categoryItems: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		justifyContent: "flex-start",
-		alignItems: "center",
-		alignSelf: "stretch",
+        flex: 1,
+        flexDirection: "row",
+        flexWrap: "wrap",
 		width: "100%",
 	},
 	thumbnail: {
@@ -369,7 +370,7 @@ const styles = StyleSheet.create({
 	},
 	hat: {
 		position: "absolute",
-		top: -68,
+		top: -50,
 		left: 100,
 		width: 100,
 		height: 100,
@@ -377,10 +378,10 @@ const styles = StyleSheet.create({
 	},
 	sunglasses: {
 		position: "absolute",
-		top: -24,
-		left: 90,
-		width: 120,
-		height: 120,
+		top: -40,
+		left: 80,
+		width: 140,
+		height: 140,
 		resizeMode: "contain",
 	},
 	shield: {
@@ -408,6 +409,95 @@ const styles = StyleSheet.create({
 		resizeMode: "contain",
 		transform: [{ rotate: "-30deg" }],
 	},
+	armor: {
+		position: "absolute",
+		top: 85,
+		left: 60,
+		width: 180,
+		height: 180,
+		resizeMode: "contain",
+	},
+	castleBackground: {
+		position: "absolute",
+		top: -20,
+		left: -10,
+		width: 320,
+		height: 320,
+		resizeMode: "cover",
+		zIndex: -1,
+		borderRadius: 10,
+	},
+	scarf: {
+		position: "absolute",
+		top: 60,
+		left: 68,
+		width: 160,
+		height: 160,
+		resizeMode: "contain",
+		zIndex: 100,
+	},
+	forestBackground: {
+		position: "absolute",
+		top: -60,
+		left: -10,
+		width: 320,
+		height: 360,
+		resizeMode: "cover",
+		zIndex: -1,
+		borderRadius: 10,
+	},
+	aviator: {
+		position: "absolute",
+		top: -30,
+		left: 90,
+		width: 120,
+		height: 120,
+		resizeMode: "contain",
+	},
+	volcanoBackground: {
+		position: "absolute",
+		top: -20,
+		left: -10,
+		width: 320,
+		height: 320,
+		resizeMode: "cover",
+		zIndex: -1,
+		borderRadius: 10,
+	},
+    blueTop: {
+        position: "absolute",
+        top: 100,
+        left: 70,
+        width: 160,
+        height: 160,
+        resizeMode: "contain",
+    },
+    redTop: {
+        position: "absolute",
+        top: 100,
+        left: 70,
+        width: 160,
+        height: 160,
+        resizeMode: "contain",
+    },
+    pinkTop: {
+        position: "absolute",
+        top: 100,
+        left: 70,
+        width: 160,
+        height: 160,
+        resizeMode: "contain",
+    },
+    jungleBackground: {
+        position: "absolute",
+        top: -20,
+        left: -10,
+        width: 320,
+        height: 320,
+        resizeMode: "cover",
+        zIndex: -1,
+        borderRadius: 10,
+    },
 });
 
 export default Dino;

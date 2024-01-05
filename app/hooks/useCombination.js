@@ -39,7 +39,6 @@ export const CombinationProvider = ({ children }) => {
         unlockedPaths,
         unlockAccessory,
 		clearAccessories,
-		// saveCombination,
 	};
 
 	return (

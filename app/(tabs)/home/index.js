@@ -70,7 +70,7 @@ export default function Home() {
 				<DailyCard />
 			</View>
 
-			<View style={{ flex: 3, alignSelf: "stretch" }}>
+			<View style={{ flex: 3, alignSelf: "stretch", alignItems: 'center' }}>
 				<TouchableOpacity
 					onPress={() => router.push("/home/modal")}
 					style={{

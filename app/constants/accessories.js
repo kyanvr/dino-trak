@@ -1,10 +1,19 @@
 const accessories = {
 	hat: require("@assets/accessories/hat.png"),
 	sunglasses: require("@assets/accessories/sunglasses.png"),
-	// tie: require("@assets/accessories/tie.png"),
 	shield: require("@assets/accessories/shield.png"),
 	sword: require("@assets/accessories/sword.png"),
-	wand: require("@assets/accessories/wand.png"),
+	armor: require("@assets/accessories/armor.png"),
+	blueTop: require("@assets/accessories/blue_top.png"),
+	redTop: require("@assets/accessories/red_top.png"),
+	pinkTop: require("@assets/accessories/pink_top.png"),
+	castleBackground: require("@assets/accessories/castleBackground.png"),
+	volcanoBackground: require("@assets/accessories/volcanoBackground.png"),
+	forestBackground: require("@assets/accessories/forestBackground.png"),
+	jungleBackground: require("@assets/accessories/jungleBackground.png"),
+	scarf: require("@assets/accessories/scarf.png"),
+	santaHat: require("@assets/accessories/santa_hat.png"),
+    aviator: require("@assets/accessories/aviator.png"),
 };
 
 export default accessories;

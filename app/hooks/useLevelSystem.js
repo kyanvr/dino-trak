@@ -37,12 +37,15 @@ const useLevelSystem = () => {
 
 		if (currentLevel === 1) return;
 
+        console.log("currentLevel", currentLevel);
+
         setUnlockedLevels((prevLevels) => {
             return [...prevLevels, currentLevel];
         })
 
 		// Check if the user has reached a new level
 		const isNewLevel = !unlockedLevels.includes(currentLevel)
+        console.log("isNewLevel", isNewLevel);
 
 		if (isNewLevel) {
 			unlockItemsForLevel(currentLevel);
@@ -56,7 +59,10 @@ const useLevelSystem = () => {
 	};
 
 	const unlockItemsForLevel = (level) => {
+        console.log("level", level);
         const modifiedLevel = level - 2;
+
+        console.log("modifiedLevel", modifiedLevel);
 
 		setUnlockedItems((prevItems) => {
 			return [...prevItems, levels[modifiedLevel]]

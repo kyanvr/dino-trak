@@ -17,13 +17,13 @@ import useHealthData from "../hooks/useHealthData";
 import colors from "../constants/colors";
 import LevelUpModal from "../components/app/LevelUpModal";
 import demo_challenges from "../constants/demo_challenges";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Challenges() {
 	const [date, setDate] = useState(new Date());
 	const [demoUser, setDemoUser] = useState(false);
 	const [selectedFilter, setSelectedFilter] = useState("all");
+	const [showRealChallenges, setShowRealChallenges] = useState(false);
 	const realm = useRealm();
 	const challenges = useQuery("Challenges");
 	const buddy = useQuery("Buddy")[0];
@@ -41,6 +41,10 @@ export default function Challenges() {
 
 	const handleFilterChange = (filter) => {
 		setSelectedFilter(filter.toLowerCase());
+	};
+
+	const toggleShowRealChallenges = () => {
+		setShowRealChallenges(!showRealChallenges);
 	};
 
 	return (
@@ -152,57 +156,101 @@ export default function Challenges() {
 									/>
 								);
 							})}
-
 						{demoUser && (
-							<Text
-								style={{
-									color: colors["grey-300"],
-									marginVertical: 40,
-								}}
+							<TouchableOpacity
+								onPress={toggleShowRealChallenges}
 							>
-								Real challenges
-							</Text>
-						)}
-
-						{challenges.map((challenge, index) => {
-							// Check if the challenge should be included based on the selected filter
-							const shouldInclude =
-								selectedFilter === "all" ||
-								challenge.duration.toLowerCase() ===
-									selectedFilter;
-
-							// Render the ExpandableCard only if it should be included
-							return shouldInclude ? (
-								<ExpandableCard
-									key={index}
-									title={challenge.challenge_name}
-									completed={challenge.completed}
-									xp={challenge.xp}
-									description={
-										challenge.challenge_description
-									}
-									duration={challenge.duration}
-									target={challenge.challenge_goal}
-									onPress={() => {
-										awardXP(challenge.xp);
-										realm.write(() => {
-											challenge.completed = true;
-										});
+								<Text
+									style={{
+										color: colors["grey-300"],
+										marginVertical: 40,
 									}}
-									type={challenge.type}
-									healthData={
-										challenge.duration.toLowerCase() ===
-										"day"
-											? dailyData
-											: challenge.duration.toLowerCase() ===
-											  "week"
-											? weeklyData
-											: monthlyData
-									}
-									loading={loading}
-								/>
-							) : null;
-						})}
+								>
+									Show real challenges
+								</Text>
+							</TouchableOpacity>
+						)}
+						{showRealChallenges &&
+							challenges.map((challenge, index) => {
+								// Check if the challenge should be included based on the selected filter
+								const shouldInclude =
+									selectedFilter === "all" ||
+									challenge.duration.toLowerCase() ===
+										selectedFilter;
+
+								// Render the ExpandableCard only if it should be included
+								return shouldInclude ? (
+									<ExpandableCard
+										key={index}
+										title={challenge.challenge_name}
+										completed={challenge.completed}
+										xp={challenge.xp}
+										description={
+											challenge.challenge_description
+										}
+										duration={challenge.duration}
+										target={challenge.challenge_goal}
+										onPress={() => {
+											awardXP(challenge.xp);
+											realm.write(() => {
+												challenge.completed = true;
+											});
+										}}
+										type={challenge.type}
+										healthData={
+											challenge.duration.toLowerCase() ===
+											"day"
+												? dailyData
+												: challenge.duration.toLowerCase() ===
+												  "week"
+												? weeklyData
+												: monthlyData
+										}
+										loading={loading}
+									/>
+								) : null;
+							})}
+
+						{!demoUser &&
+							challenges.map((challenge, index) => {
+								// Check if the challenge should be included based on the selected filter
+								const shouldInclude =
+									selectedFilter === "all" ||
+									challenge.duration.toLowerCase() ===
+										selectedFilter;
+
+								// Render the ExpandableCard only if it should be included
+								return shouldInclude ? (
+									<ExpandableCard
+										key={index}
+										title={challenge.challenge_name}
+										completed={challenge.completed}
+										xp={challenge.xp}
+										description={
+											challenge.challenge_description
+										}
+										duration={challenge.duration}
+										target={challenge.challenge_goal}
+										onPress={() => {
+											awardXP(challenge.xp);
+											realm.write(() => {
+												challenge.completed = true;
+											});
+										}}
+										type={challenge.type}
+										healthData={
+											challenge.duration.toLowerCase() ===
+											"day"
+												? dailyData
+												: challenge.duration.toLowerCase() ===
+												  "week"
+												? weeklyData
+												: monthlyData
+										}
+										loading={loading}
+									/>
+								) : null;
+							})}
 					</View>
 				</ScrollView>
 			) : (
@@ -242,6 +290,6 @@ const styles = StyleSheet.create({
 	},
 	selectedText: {
 		color: colors["grey-900"],
-        fontWeight: "bold",
+		fontWeight: "bold",
 	},
 });
