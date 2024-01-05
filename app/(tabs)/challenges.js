@@ -39,6 +39,14 @@ export default function Challenges() {
 		}
 	}, [username]);
 
+    user.addListener((updatedUser) => {
+        if (updatedUser.username === "Artevelde" || updatedUser.username === "artevelde") {
+            setDemoUser(true);
+        } else {
+            setDemoUser(false);
+        }
+    });
+
 	const handleFilterChange = (filter) => {
 		setSelectedFilter(filter.toLowerCase());
 	};

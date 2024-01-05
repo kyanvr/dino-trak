@@ -3,7 +3,7 @@ import { AntDesign } from "@expo/vector-icons";
 import colors from "@constants/colors";
 import CircularProgress from "react-native-circular-progress-indicator";
 
-const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
+const RingProgress = ({ radius = 100, strokeWidth = 35, progress, onAnimationComplete }) => {
 	return (
 		<View
 			style={{
@@ -14,16 +14,17 @@ const RingProgress = ({ radius = 100, strokeWidth = 35, progress }) => {
 		>
 			<CircularProgress
 				value={progress}
-                maxValue={100}
+				maxValue={100}
 				inActiveStrokeColor={colors["green-100"]}
-                activeStrokeColor={colors["green-500"]}
+				activeStrokeColor={colors["green-500"]}
 				inActiveStrokeOpacity={0.2}
 				progressValueColor={colors["grey-100"]}
 				valueSuffix={"%"}
-                activeStrokeWidth={strokeWidth}
-                inActiveStrokeWidth={strokeWidth}
-                radius={radius}
-                progressValueFontSize={strokeWidth}
+				activeStrokeWidth={strokeWidth}
+				inActiveStrokeWidth={strokeWidth}
+				radius={radius}
+				progressValueFontSize={strokeWidth}
+				onAnimationComplete={onAnimationComplete}
 			/>
 			<AntDesign
 				name="arrowright"

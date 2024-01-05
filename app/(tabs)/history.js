@@ -14,11 +14,13 @@ import StepsGoal from "../components/app/StepsGoal";
 import progressFormat from "../utils/progressFormat";
 import Avatar from "../components/app/Avatar";
 import isObjectEmpty from "../utils/isObjectEmpty";
+import ProgressModal from "../components/app/ProgressModal";
 
 export default function App() {
 	const [date, setDate] = useState(new Date());
 	const [progress, setProgress] = useState(0);
 	const [stepsGoal, setStepsGoal] = useState(0);
+	const [modalVisible, setModalVisible] = useState(false);
 	const { dailyData, loading, error } = useHealthData(date);
 	const realm = useRealm();
 	const user = useQuery("User")[0];
@@ -29,9 +31,22 @@ export default function App() {
 		}
 	}, [dailyData, loading, stepsGoal]);
 
+	useEffect(() => {
+		setStepsGoal(user.daily_steps);
+	}, [user]);
+
 	user.addListener((user) => {
 		setStepsGoal(user.daily_steps);
 	});
+
+	const onProgressComplete = () => {
+		if (progress === 100) {
+            setModalVisible(true);
+            setTimeout(() => {
+                setModalVisible(false);
+            }, 3000);
+        }
+	};
 
 	const changeDate = (numDays) => {
 		const currentDate = new Date(date); // Create a copy of the current date
@@ -112,6 +127,9 @@ export default function App() {
 					/>
 				</Pressable>
 			</View>
+
+			<ProgressModal visible={modalVisible} />
+
 			<ScrollView
 				contentContainerStyle={styles.container}
 				showsVerticalScrollIndicator={false}
@@ -120,6 +138,9 @@ export default function App() {
 					radius={150}
 					strokeWidth={50}
 					progress={progress}
+					onAnimationComplete={() => {
+						onProgressComplete();
+					}}
 				/>
 
 				<View style={{ marginTop: 20 }}>

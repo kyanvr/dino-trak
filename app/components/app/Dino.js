@@ -438,10 +438,10 @@ const styles = StyleSheet.create({
 	},
 	forestBackground: {
 		position: "absolute",
-		top: -60,
+		top: -20,
 		left: -10,
 		width: 320,
-		height: 360,
+		height: 320,
 		resizeMode: "cover",
 		zIndex: -1,
 		borderRadius: 10,
