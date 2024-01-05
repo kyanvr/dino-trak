@@ -12,7 +12,6 @@ const accessories = {
 	forestBackground: require("@assets/accessories/forestBackground.png"),
 	jungleBackground: require("@assets/accessories/jungleBackground.png"),
 	scarf: require("@assets/accessories/scarf.png"),
-	santaHat: require("@assets/accessories/santa_hat.png"),
     aviator: require("@assets/accessories/aviator.png"),
 };
 

@@ -1,11 +1,11 @@
 import { useQuery, useRealm } from '@realm/react';
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet, Button } from 'react-native';
 import BackButton from '@components/design/BackButton';
 import { router } from 'expo-router';
 
 const HomeSettings = () => {
-
+    // this is only for development purposes
     const realm = useRealm();
     const user = useQuery("User")[0];
     const buddy = useQuery("Buddy")[0];
