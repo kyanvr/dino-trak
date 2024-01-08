@@ -10,6 +10,7 @@
 ```
 yarn
 ```
+or
 ```
 npm install
 ```
