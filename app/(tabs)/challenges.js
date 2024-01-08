@@ -21,6 +21,12 @@ import demo_challenges from "@constants/demo_challenges";
 export default function Challenges() {
 	const [date, setDate] = useState(new Date());
 	const [demoUser, setDemoUser] = useState(false);
+    const [demoData, setDemoData] = useState({
+        "steps": 10,
+        "floors": 10,
+        "distance": 10,
+        "calories": 10,
+    });
 	const [selectedFilter, setSelectedFilter] = useState("all");
 	const [showRealChallenges, setShowRealChallenges] = useState(false);
 	const realm = useRealm();
@@ -171,7 +177,7 @@ export default function Challenges() {
 											});
 										}}
 										type={challenge.type}
-										healthData={dailyData}
+										healthData={demoData}
 										loading={loading}
 									/>
 								);
