@@ -7,6 +7,8 @@
 
 - Build/Run on Android 🤖
 
+## 📦 Install dependencies
+
 ```
 yarn
 ```
@@ -14,6 +16,9 @@ or
 ```
 npm install
 ```
+
+## 🚀 Build and run the app
+
 ```
 yarn android
 ```
