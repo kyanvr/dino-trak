@@ -29,6 +29,9 @@ const Dino = ({ screen }) => {
 		useCombination();
 	const realm = useRealm();
 	const buddy = useQuery("Buddy")[0];
+    if (buddy === undefined) {
+        return null;
+    }
 	const unlocked = buddy.unlocked_attributes;
 	const active = buddy.active_attributes;
 	const toast = useToast();

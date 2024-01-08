@@ -2,9 +2,20 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import colors from "@constants/colors";
 
 const ImagePicker = ({ onPress, image }) => {
+    if (image === null) {
+        return (
+            <View style={styles.container}>
+                <Image source={require("@assets/avatar_placeholder.png")} style={styles.avatar} />
+                <TouchableOpacity onPress={onPress} style={styles.btn}>
+                    <Text style={styles.text}>Choose avatar</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
 	return (
 		<View style={styles.container}>
-			<Image source={{ uri: image }} style={styles.avatar} />
+			<Image source={{uri: image}} style={styles.avatar} />
 			<TouchableOpacity onPress={onPress} style={styles.btn}>
 				<Text style={styles.text}>Choose avatar</Text>
 			</TouchableOpacity>

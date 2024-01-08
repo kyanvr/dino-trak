@@ -1,3 +1,4 @@
+import "react-native-get-random-values";
 import { RealmProvider, createRealmContext, useRealm } from "@realm/react";
 import { Stack } from "expo-router";
 import React from "react";
@@ -6,7 +7,6 @@ import { User } from "./models/User";
 import { Buddy } from "./models/Buddy";
 import colors from "@constants/colors";
 import { ToastProvider } from "react-native-toast-notifications";
-import "react-native-get-random-values";
 import { CombinationProvider } from "./hooks/useCombination";
 import { Challenges } from "./models/Challenges";
 

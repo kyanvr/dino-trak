@@ -4,5 +4,5 @@ import populateChallenges from "./database/seedChallenges";
 export default function index() {
 	populateChallenges();
 
-	return <Redirect href="/home" />;
+	return <Redirect href="/screens/startup/start" />;
 }

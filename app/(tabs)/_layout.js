@@ -13,7 +13,11 @@ export default function _layout() {
 		<Tabs
 			screenOptions={{
 				headerShown: false,
-				tabBarStyle: { backgroundColor: colors["grey-900"], borderTopColor: colors['grey-600'], height: 60,  },
+				tabBarStyle: {
+					backgroundColor: colors["grey-900"],
+					borderTopColor: colors["grey-600"],
+					height: 60,
+				},
 			}}
 		>
 			<Tabs.Screen
@@ -24,7 +28,11 @@ export default function _layout() {
 						<MaterialIcons
 							name="dashboard"
 							size={24}
-							color={focused ? colors['green-400'] :colors['grey-600']}
+							color={
+								focused
+									? colors["grey-100"]
+									: colors["grey-600"]
+							}
 						/>
 					),
 				}}
@@ -37,7 +45,11 @@ export default function _layout() {
 						<Feather
 							name="target"
 							size={24}
-							color={focused ? colors['green-400'] : colors['grey-600']}
+							color={
+								focused
+									? colors["grey-100"]
+									: colors["grey-600"]
+							}
 						/>
 					),
 				}}
@@ -50,7 +62,11 @@ export default function _layout() {
 						<Ionicons
 							name="stats-chart"
 							size={24}
-							color={focused ? colors['green-400'] : colors['grey-600']}
+							color={
+								focused
+									? colors["grey-100"]
+									: colors["grey-600"]
+							}
 						/>
 					),
 				}}
@@ -63,7 +79,11 @@ export default function _layout() {
 						<FontAwesome
 							name="user"
 							size={24}
-							color={focused ? colors['green-400'] : colors['grey-600']}
+							color={
+								focused
+									? colors["grey-100"]
+									: colors["grey-600"]
+							}
 						/>
 					),
 				}}

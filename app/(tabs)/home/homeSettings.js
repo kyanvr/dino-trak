@@ -40,7 +40,6 @@ const HomeSettings = () => {
     return (
 		<View style={styles.container}>
             <BackButton title={'back'} onPress={() => router.back()} />
-			{/* Add your settings components here */}
 			<View style={{ gap: 20 }}>
 				<Button
 					title="Delete all data"

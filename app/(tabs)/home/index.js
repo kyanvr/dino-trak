@@ -10,6 +10,7 @@ import Dino from "@components/app/Dino";
 import Tooltip from "@components/app/Tooltip";
 import Avatar from "@components/app/Avatar";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Home() {
 	const [username, setUsername] = useState("");
@@ -17,8 +18,8 @@ export default function Home() {
 	const user = useQuery("User")[0];
 
 	// Redirect if user is not defined or onboarding is not completed
-	if (user === undefined || !user.onboarding_completed) {
-		return <Redirect href={"/screens/startup/start"} />;
+	if (user === undefined) {
+		return <Redirect to="/onboarding" />;
 	}
 
 	// Update the username when user data changes
@@ -34,7 +35,7 @@ export default function Home() {
 	return (
 		<ViewContainer>
 			{/* Settings button, only for development purposes */}
-			{/* <Pressable
+			{/* <TouchableOpacity
 				onPress={() => router.push("/home/homeSettings")}
 				style={styles.settings}
 			>
@@ -43,7 +44,7 @@ export default function Home() {
 					size={24}
 					color={colors["green-200"]}
 				/>
-			</Pressable> */}
+			</TouchableOpacity> */}
 
 			{/* Tooltip component */}
 			<Tooltip />
